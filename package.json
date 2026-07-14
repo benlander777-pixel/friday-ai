@@ -1,0 +1,49 @@
+{
+  "name": "friday-ai",
+  "version": "1.0.0",
+  "description": "F.R.I.D.A.Y. — Personal AI Assistant",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --x64",
+    "dev": "electron . --dev"
+  },
+  "build": {
+    "appId": "com.friday.ai",
+    "productName": "FRIDAY",
+    "icon": "assets/icon.png",
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerHeaderBitmap": "assets/installer-header.bmp",
+      "deleteAppDataOnUninstall": false
+    },
+    "extraResources": [
+      {
+        "from": "server.py",
+        "to": "server.py"
+      },
+      {
+        "from": "config.py",
+        "to": "config.py"
+      },
+      {
+        "from": "static",
+        "to": "static"
+      }
+    ],
+    "files": [
+      "main.js",
+      "preload.js",
+      "assets/**"
+    ]
+  },
+  "devDependencies": {
+    "electron": "^29.4.6",
+    "electron-builder": "^24.13.3"
+  }
+}

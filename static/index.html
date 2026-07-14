@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F.R.I.D.A.Y.</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap');
+:root{
+  --red:#c0392b;--red-b:#e74c3c;--gold:#d4a017;--gold-b:#f0c040;
+  --bg:#0a0301;--panel:rgba(20,6,4,.9);--text:#e8cda0;
+  --dim:rgba(212,160,23,.42);--bdr:rgba(212,160,23,.17);--bdr-hi:rgba(212,160,23,.55);
+  --rbdr:rgba(192,57,43,.32);--gold-glow:rgba(212,160,23,.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--gold);font-family:'Share Tech Mono',monospace;height:100vh;overflow:hidden;user-select:none;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(212,160,23,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(212,160,23,.022) 1px,transparent 1px);background-size:38px 38px;pointer-events:none;z-index:0;}
+#titlebar{position:fixed;top:0;left:0;right:0;height:32px;background:rgba(8,2,1,.95);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:1000;-webkit-app-region:drag;}
+#titlebar .tl-logo{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:4px;color:var(--gold);opacity:.7;}
+#titlebar .tl-logo span{color:var(--red-b);}
+.win-btns{display:flex;gap:4px;-webkit-app-region:no-drag;}
+.wb{width:28px;height:20px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;font-family:monospace;}
+.wb:hover{background:rgba(212,160,23,.1);color:var(--gold-b);}
+.wb.close:hover{background:rgba(192,57,43,.25);border-color:var(--red-b);color:var(--red-b);}
+#app{position:relative;z-index:1;display:grid;grid-template-rows:48px 1fr 58px;grid-template-columns:200px 1fr 240px;height:100vh;gap:6px;padding:6px;padding-top:38px;}
+.co{position:fixed;width:30px;height:30px;pointer-events:none;z-index:20;}
+.tl{top:32px;left:0;border-top:1px solid rgba(212,160,23,.45);border-left:1px solid rgba(212,160,23,.45);}
+.tr{top:32px;right:0;border-top:1px solid rgba(212,160,23,.45);border-right:1px solid rgba(212,160,23,.45);}
+.bl{bottom:0;left:0;border-bottom:1px solid rgba(212,160,23,.45);border-left:1px solid rgba(212,160,23,.45);}
+.br{bottom:0;right:0;border-bottom:1px solid rgba(212,160,23,.45);border-right:1px solid rgba(212,160,23,.45);}
+#hdr{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bdr);padding:0 12px;position:relative;}
+.logo{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:900;letter-spacing:5px;color:var(--gold-b);text-shadow:0 0 14px var(--gold);}
+.logo span{color:var(--red-b);}
+.hm{display:flex;align-items:center;gap:12px;font-size:9px;color:var(--dim);letter-spacing:2px;}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--red-b);box-shadow:0 0 7px var(--red-b);animation:pu 2.2s infinite;}
+.sdot.on{background:var(--gold);box-shadow:0 0 7px var(--gold);}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.3}}
+.hr{display:flex;gap:8px;}
+.chip{padding:3px 8px;border:1px solid var(--bdr);font-size:9px;color:var(--dim);}
+.chip b{color:var(--gold-b);}
+.sline{position:absolute;bottom:-1px;left:0;height:1px;background:var(--gold);box-shadow:0 0 7px var(--gold);animation:sc 5s linear infinite;opacity:.35;}
+@keyframes sc{0%{width:0;left:0}50%{width:100%;left:0}50.01%{width:0;left:100%}100%{width:0;left:0}}
+#vpill{display:flex;align-items:center;gap:6px;padding:3px 9px;border:1px solid var(--bdr);font-size:9px;letter-spacing:1px;cursor:pointer;transition:all .13s;}
+#vpill.listening{border-color:var(--red-b);color:var(--red-b);background:rgba(192,57,43,.08);}
+#vpill.awake{border-color:var(--gold-b);color:var(--gold-b);background:rgba(212,160,23,.1);animation:vpa .8s infinite;}
+@keyframes vpa{0%,100%{box-shadow:none}50%{box-shadow:0 0 10px rgba(212,160,23,.25)}}
+.vdot{width:5px;height:5px;border-radius:50%;background:currentColor;}
+.pnl{background:var(--panel);border:1px solid var(--bdr);padding:10px;position:relative;backdrop-filter:blur(5px);}
+.pnl::before{content:'';position:absolute;top:0;left:0;width:22px;height:2px;background:var(--gold);box-shadow:0 0 6px var(--gold);}
+.plbl{font-size:8px;letter-spacing:3px;color:var(--dim);margin-bottom:8px;text-transform:uppercase;}
+#lp{grid-row:2;grid-column:1;display:flex;flex-direction:column;gap:6px;}
+.arc{display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:7px;}
+.arc-ring{width:70px;height:70px;border-radius:50%;border:2px solid rgba(192,57,43,.4);display:flex;align-items:center;justify-content:center;position:relative;}
+.arc-ring::before{content:'';position:absolute;inset:5px;border-radius:50%;border:1px solid rgba(212,160,23,.18);}
+.arc-ring::after{content:'';position:absolute;inset:12px;border-radius:50%;border:1px solid rgba(192,57,43,.18);}
+.arc-core{width:28px;height:28px;border-radius:50%;background:radial-gradient(circle,rgba(220,80,40,.7)0%,rgba(180,60,20,.2)100%);border:1px solid var(--red-b);box-shadow:0 0 18px var(--red),0 0 40px rgba(192,57,43,.2);animation:ag 2s ease-in-out infinite;}
+@keyframes ag{0%,100%{box-shadow:0 0 18px var(--red),0 0 40px rgba(192,57,43,.2)}50%{box-shadow:0 0 28px var(--red-b),0 0 55px rgba(192,57,43,.32)}}
+.albl{font-size:8px;color:var(--dim);text-align:center;letter-spacing:1px;line-height:1.7;}
+.qb{display:flex;align-items:center;gap:7px;padding:7px 9px;border:1px solid var(--bdr);background:transparent;color:var(--gold);font-size:10px;cursor:pointer;width:100%;text-align:left;letter-spacing:1px;margin-bottom:3px;font-family:'Share Tech Mono',monospace;transition:all .13s;}
+.qb:hover{background:var(--gold-glow);border-color:var(--bdr-hi);color:var(--gold-b);}
+.qb:active{transform:scale(.98);}
+#ca{grid-row:2;grid-column:2;display:flex;flex-direction:column;border:1px solid var(--bdr);background:var(--panel);backdrop-filter:blur(5px);position:relative;overflow:hidden;}
+#ca::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--red-b),var(--gold-b),transparent);}
+.chdr{padding:8px 13px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;font-size:9px;letter-spacing:2px;color:var(--dim);}
+#msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;}
+#msgs::-webkit-scrollbar{width:2px;}
+#msgs::-webkit-scrollbar-thumb{background:var(--bdr);}
+.msg{display:flex;gap:8px;animation:mi .18s ease;}
+@keyframes mi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.msg.u{flex-direction:row-reverse;}
+.av{width:26px;height:26px;border-radius:50%;border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0;font-family:'Orbitron',sans-serif;}
+.msg.u .av{background:rgba(212,160,23,.1);color:var(--gold-b);}
+.msg.f .av{background:rgba(192,57,43,.15);color:var(--red-b);box-shadow:0 0 8px rgba(192,57,43,.3);}
+.bub{max-width:78%;padding:9px 12px;border:1px solid var(--bdr);font-size:12px;line-height:1.65;}
+.msg.u .bub{background:rgba(212,160,23,.06);border-color:rgba(212,160,23,.28);color:var(--gold-b);}
+.msg.f .bub{background:rgba(10,3,1,.7);border-color:var(--rbdr);color:var(--text);}
+.mt{font-size:8px;color:var(--dim);margin-top:3px;letter-spacing:1px;}
+.atag{display:inline-flex;align-items:center;gap:4px;font-size:9px;padding:2px 7px;background:rgba(212,160,23,.07);border:1px solid rgba(212,160,23,.22);color:var(--gold);margin-top:5px;letter-spacing:1px;}
+.typing{display:flex;gap:4px;align-items:center;padding:9px 12px;border:1px solid var(--rbdr);background:rgba(10,3,1,.7);width:fit-content;}
+.td{width:4px;height:4px;border-radius:50%;background:var(--red-b);animation:ty 1.2s infinite;}
+.td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
+@keyframes ty{0%,100%{opacity:.2;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+#offbar{display:none;padding:7px 12px;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.25);color:var(--red-b);font-size:10px;letter-spacing:1px;text-align:center;}
+#offbar.show{display:block;}
+#rp{grid-row:2;grid-column:3;display:flex;flex-direction:column;gap:6px;overflow-y:auto;}
+#rp::-webkit-scrollbar{width:2px;}
+#rp::-webkit-scrollbar-thumb{background:var(--bdr);}
+.sp-now{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.sp-art{width:40px;height:40px;border:1px solid var(--bdr);background:rgba(0,0,0,.4);flex-shrink:0;object-fit:cover;}
+.sp-art-ph{width:40px;height:40px;border:1px solid var(--bdr);background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.sp-info{flex:1;overflow:hidden;}
+.sp-track{font-size:11px;color:var(--gold-b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sp-artist{font-size:9px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sp-controls{display:flex;gap:4px;margin-top:6px;}
+.sc-btn{flex:1;padding:5px;border:1px solid var(--bdr);background:transparent;color:var(--gold);font-size:11px;cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;}
+.sc-btn:hover{background:var(--gold-glow);border-color:var(--bdr-hi);}
+.sp-bar{height:3px;background:rgba(212,160,23,.1);margin-top:6px;}
+.sp-prog{height:100%;background:var(--gold);box-shadow:0 0 4px var(--gold);transition:width .5s linear;}
+.sp-offline{font-size:10px;color:var(--dim);text-align:center;padding:12px 0;}
+.meter{margin-bottom:8px;}
+.mhdr{display:flex;justify-content:space-between;font-size:9px;color:var(--dim);margin-bottom:3px;}
+.mbar{height:4px;background:rgba(212,160,23,.1);}
+.mf{height:100%;background:var(--gold);box-shadow:0 0 5px var(--gold);transition:width .9s ease;}
+.mf.warm{background:#c08020;box-shadow:0 0 5px #c08020;}
+.mf.hot{background:var(--red-b);box-shadow:0 0 5px var(--red-b);}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:6px;}
+.sg{padding:5px 7px;border:1px solid var(--bdr);background:rgba(5,2,0,.5);}
+.sg .sl{font-size:7px;color:var(--dim);letter-spacing:2px;margin-bottom:2px;}
+.sg .sv{font-size:12px;color:var(--gold-b);font-family:'Orbitron',sans-serif;font-weight:500;}
+.sg .sv.alert{color:var(--red-b);}
+.cores-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-top:4px;}
+.core-cell{padding:3px 4px;border:1px solid var(--bdr);text-align:center;}
+.core-cell .cn{font-size:7px;color:var(--dim);letter-spacing:1px;}
+.core-cell .cv{font-size:10px;color:var(--gold-b);font-family:'Orbitron',sans-serif;}
+.core-cell.hot-core .cv{color:var(--red-b);}
+.proc-row{display:flex;align-items:center;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(212,160,23,.05);font-size:9px;}
+.proc-name{color:var(--text);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.proc-cpu{color:var(--gold);min-width:36px;text-align:right;}
+.proc-cpu.hot{color:var(--red-b);}
+.cam-wrap{border:1px solid var(--rbdr);overflow:hidden;position:relative;aspect-ratio:4/3;background:#050101;}
+.cam-wrap::before,.cam-wrap::after{content:'';position:absolute;width:12px;height:12px;z-index:3;pointer-events:none;}
+.cam-wrap::before{top:3px;left:3px;border-top:1px solid var(--gold);border-left:1px solid var(--gold);}
+.cam-wrap::after{bottom:3px;right:3px;border-bottom:1px solid var(--gold);border-right:1px solid var(--gold);}
+#cam-video{width:100%;height:100%;object-fit:cover;display:block;transform:scaleX(-1);}
+.cam-off{display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:4/3;background:rgba(0,0,0,.5);border:1px solid var(--rbdr);cursor:pointer;gap:6px;}
+.cam-off:hover{border-color:var(--bdr-hi);}
+.cam-bio{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;}
+.bio-cell{padding:5px 7px;border:1px solid var(--bdr);background:rgba(5,2,0,.5);}
+.bio-cell .bl_{font-size:7px;color:var(--dim);letter-spacing:2px;margin-bottom:2px;}
+.bio-cell .bv{font-size:12px;color:var(--gold-b);font-family:'Orbitron',sans-serif;}
+.bio-cell .bv.hi{color:var(--red-b);}
+.stress-wrap{margin-top:6px;}
+.stress-lbl{display:flex;justify-content:space-between;font-size:8px;color:var(--dim);margin-bottom:3px;}
+.sbar{height:5px;background:rgba(212,160,23,.1);}
+.sfill{height:100%;background:var(--gold);box-shadow:0 0 5px var(--gold);transition:width .6s ease;}
+.sfill.med{background:#c08020;box-shadow:0 0 5px #c08020;}
+.sfill.hi{background:var(--red-b);box-shadow:0 0 5px var(--red-b);animation:sp2 .6s infinite;}
+@keyframes sp2{0%,100%{opacity:1}50%{opacity:.55}}
+.cam-toggle{padding:2px 8px;font-size:8px;letter-spacing:2px;border:1px solid var(--bdr);background:transparent;color:var(--dim);cursor:pointer;font-family:'Share Tech Mono',monospace;float:right;transition:all .13s;}
+.pp-league-btn{float:none;}
+.pp-league-btn.active{background:rgba(212,160,23,.12);border-color:var(--bdr-hi);color:var(--gold-b);}
+.pp-card{border:1px solid var(--bdr);background:rgba(5,2,0,.55);padding:8px;margin-bottom:6px;}
+.pp-card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.pp-leg{display:flex;justify-content:space-between;font-size:9px;padding:2px 0;border-bottom:1px solid rgba(212,160,23,.05);}
+.pp-leg:last-child{border-bottom:none;}
+.pp-pick-more{color:var(--gold-b);}
+.pp-pick-less{color:var(--red-b);}
+.cam-toggle:hover{border-color:var(--bdr-hi);color:var(--gold);}
+.log-e{font-size:9px;color:var(--dim);padding:3px 0;border-bottom:1px solid rgba(212,160,23,.04);letter-spacing:.5px;line-height:1.5;}
+.log-e .lt{color:rgba(212,160,23,.28);margin-right:5px;}
+.log-e.ok .lt{color:rgba(212,160,23,.5);}
+.log-e.warn{color:rgba(192,57,43,.65);}
+#loglist{max-height:90px;overflow-y:auto;}
+#loglist::-webkit-scrollbar{width:2px;}
+#loglist::-webkit-scrollbar-thumb{background:var(--bdr);}
+#foot{grid-column:1/-1;display:flex;align-items:center;gap:7px;border-top:1px solid var(--bdr);padding-top:7px;position:relative;}
+#foot::before{content:'FRIDAY INPUT TERMINAL';position:absolute;top:-9px;left:13px;font-size:8px;letter-spacing:3px;color:var(--dim);background:var(--bg);padding:0 7px;}
+#inw{flex:1;display:flex;align-items:center;gap:8px;border:1px solid var(--bdr);padding:0 12px;height:40px;background:rgba(10,3,1,.5);}
+.pfx{color:var(--red-b);font-size:13px;font-family:'Orbitron',sans-serif;opacity:.65;flex-shrink:0;}
+#inp{flex:1;background:transparent;border:none;color:var(--gold-b);font-family:'Share Tech Mono',monospace;font-size:12px;outline:none;letter-spacing:.5px;}
+#inp::placeholder{color:var(--dim);}
+.sbtn{padding:0 16px;height:40px;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.5);color:var(--red-b);font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:3px;cursor:pointer;transition:all .13s;}
+.sbtn:hover{background:rgba(192,57,43,.22);}
+.sbtn:active{transform:scale(.98);}
+.sbtn:disabled{opacity:.4;cursor:not-allowed;}
+.cbtn{padding:0 10px;height:40px;background:transparent;border:1px solid var(--bdr);color:var(--dim);font-family:'Share Tech Mono',monospace;font-size:10px;cursor:pointer;transition:all .13s;letter-spacing:1px;}
+.cbtn:hover{border-color:var(--rbdr);color:var(--red-b);}
+#toast{position:fixed;bottom:72px;right:12px;background:rgba(18,4,2,.97);border:1px solid var(--red-b);border-left:3px solid var(--red-b);padding:10px 14px;font-size:11px;color:var(--text);max-width:260px;z-index:200;display:none;box-shadow:0 0 16px rgba(192,57,43,.22);}
+#toast.show{display:block;animation:si .2s ease;}
+@keyframes si{from{transform:translateX(16px);opacity:0}to{transform:translateX(0);opacity:1}}
+#toast-title{font-size:9px;color:var(--red-b);letter-spacing:2px;margin-bottom:4px;font-family:'Orbitron',sans-serif;}
+.tc{float:right;cursor:pointer;color:var(--dim);margin-left:8px;}
+</style>
+</head>
+<body>
+<div id="titlebar">
+  <div class="tl-logo">F.R.I.D.A.Y.<span> // </span>MARK VII</div>
+  <div class="win-btns">
+    <button class="wb" onclick="if(window.friday)window.friday.minimize()">&#8212;</button>
+    <button class="wb" onclick="if(window.friday)window.friday.maximize()">&#9633;</button>
+    <button class="wb close" onclick="if(window.friday)window.friday.close()">&#10005;</button>
+  </div>
+</div>
+
+<!-- LOCK SCREEN -->
+<div id="lock-screen" style="display:none;position:fixed;inset:0;background:#0a0301;z-index:9999;flex-direction:column;align-items:center;justify-content:center;gap:20px;">
+  <div style="font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;letter-spacing:8px;color:var(--gold-b);text-shadow:0 0 20px var(--gold)">F.R.I.D.A.Y.</div>
+  <div style="font-size:10px;color:var(--dim);letter-spacing:3px">IDENTITY VERIFICATION REQUIRED</div>
+
+  <!-- Arc reactor animation on lock screen -->
+  <div style="margin:10px 0">
+    <div class="arc-ring" style="width:100px;height:100px;"><div class="arc-core" style="width:40px;height:40px;"></div></div>
+  </div>
+
+  <!-- Face scan view -->
+  <div id="lock-face-view" style="display:none;flex-direction:column;align-items:center;gap:10px">
+    <div style="position:relative;border:1px solid var(--rbdr);">
+      <video id="lock-video" autoplay muted playsinline style="width:280px;height:210px;object-fit:cover;display:block;transform:scaleX(-1)"></video>
+      <div style="position:absolute;top:4px;left:4px;width:14px;height:14px;border-top:1px solid var(--gold);border-left:1px solid var(--gold)"></div>
+      <div style="position:absolute;bottom:4px;right:4px;width:14px;height:14px;border-bottom:1px solid var(--gold);border-right:1px solid var(--gold)"></div>
+    </div>
+    <div id="lock-face-status" style="font-size:10px;color:var(--dim);letter-spacing:2px">SCANNING...</div>
+    <div id="lock-face-bar" style="width:280px;height:4px;background:rgba(212,160,23,.1)"><div id="lock-face-fill" style="height:100%;background:var(--gold);width:0%;transition:width .4s"></div></div>
+  </div>
+
+  <!-- PIN fallback -->
+  <div id="lock-pin-view" style="display:none;flex-direction:column;align-items:center;gap:10px">
+    <div style="font-size:10px;color:var(--dim);letter-spacing:2px">ENTER PIN</div>
+    <input id="lock-pin-input" type="password" maxlength="8" placeholder="&#9679;&#9679;&#9679;&#9679;"
+      style="background:rgba(0,0,0,.5);border:1px solid var(--bdr-hi);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:20px;text-align:center;padding:10px 20px;outline:none;letter-spacing:8px;width:200px"/>
+    <button onclick="submitPin()" style="padding:8px 24px;border:1px solid rgba(212,160,23,.5);background:rgba(212,160,23,.08);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:3px;cursor:pointer">VERIFY</button>
+    <div id="lock-pin-error" style="font-size:9px;color:var(--red-b);letter-spacing:2px"></div>
+  </div>
+
+  <div style="display:flex;gap:12px;margin-top:8px">
+    <button id="lock-face-btn" onclick="startFaceScan()" style="padding:7px 16px;border:1px solid var(--bdr-hi);background:rgba(212,160,23,.08);color:var(--gold);font-family:Share Tech Mono,monospace;font-size:9px;letter-spacing:2px;cursor:pointer">&#128247; FACE SCAN</button>
+    <button onclick="showPinView()" style="padding:7px 16px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-family:Share Tech Mono,monospace;font-size:9px;letter-spacing:2px;cursor:pointer">&#128274; PIN</button>
+  </div>
+  <div id="lock-enroll-hint" style="font-size:8px;color:rgba(212,160,23,.25);letter-spacing:1px;margin-top:4px"></div>
+</div>
+<div class="co tl"></div><div class="co tr"></div><div class="co bl"></div><div class="co br"></div>
+<div id="toast"><span class="tc" onclick="closeToast()">&#10005;</span><div id="toast-title">FRIDAY ALERT</div><div id="toast-body"></div></div>
+<canvas id="cam-canvas" style="display:none" width="160" height="120"></canvas>
+<div id="app">
+<header id="hdr">
+  <div class="logo">F.R.I.D.A.Y.<span> //</span> MARK VII</div>
+  <div class="hm">
+    <div class="sdot" id="sdot"></div>
+    <span id="stxt">CONNECTING...</span>
+    <span style="opacity:.3">|</span>
+    <span id="mdl" style="color:var(--gold)">—</span>
+    <span style="opacity:.3">|</span>
+    <div id="vpill" class="chip" onclick="toggleVoice()">
+      <span class="vdot" id="vdot" style="background:var(--dim)"></span>
+      <span id="vtxt">VOICE OFF</span>
+    </div>
+    <div id="mute-btn" class="chip" onclick="toggleMute()" title="Mute/Unmute FRIDAY's voice" style="cursor:pointer">
+      <span id="mute-icon">&#128266;</span>
+      <span id="mute-txt">SPEAK ON</span>
+    </div>
+    <div class="chip" onclick="lockFriday()" title="Lock FRIDAY" style="cursor:pointer;color:var(--red-b);border-color:var(--rbdr)">
+      &#128274; LOCK
+    </div>
+  </div>
+  <div class="hr">
+    <div class="chip">CPU <b id="h-cpu">—</b></div>
+    <div class="chip">MEM <b id="h-mem">—</b></div>
+    <div class="chip">DISK <b id="h-disk">—</b></div>
+    <div class="chip" id="clk">--:--:--</div>
+  </div>
+  <div class="sline"></div>
+</header>
+<aside id="lp">
+  <div class="pnl">
+    <div class="arc">
+      <div class="arc-ring"><div class="arc-core"></div></div>
+      <div class="albl">ARC REACTOR<br>ONLINE</div>
+    </div>
+  </div>
+  <div class="pnl" style="flex:1">
+    <div class="plbl">QUICK COMMANDS</div>
+    <button class="qb" onclick="qc('Open Chrome browser')">&#127758; BROWSER</button>
+    <button class="qb" onclick="qc('Open Notepad')">&#128221; NOTEPAD</button>
+    <button class="qb" onclick="qc('Open File Explorer')">&#128193; FILE EXPLORER</button>
+    <button class="qb" onclick="qc('Open Calculator')">&#128290; CALCULATOR</button>
+    <button class="qb" onclick="qc('Clean my desktop')">&#129529; CLEAN DESKTOP</button>
+    <button class="qb" onclick="qc('Scan my system for junk files')">&#128269; SCAN SYSTEM</button>
+    <button class="qb" onclick="qc('Play some music')">&#127925; PLAY MUSIC</button>
+    <button class="qb" onclick="qc('Pause music')">&#9208; PAUSE MUSIC</button>
+    <button class="qb" onclick="qc('Set volume to 50 percent')">&#128266; VOLUME 50%</button>
+    <button class="qb" onclick="qc('What is on my screen right now?')">&#128247; ANALYSE SCREEN</button>
+    <button class="qb" onclick="qc('Explain what is in my clipboard')">&#128203; CLIPBOARD</button>
+    <button class="qb" onclick="qc('Run my morning routine')">&#127775; MORNING ROUTINE</button>
+    <button class="qb" onclick="qc('Show me the latest news')">&#128240; NEWS BRIEF</button>
+    <button class="qb" onclick="qc('Check my network status')">&#127760; NETWORK STATUS</button>
+    <button class="qb" onclick="qc('Show me some parlay ideas for today')">&#127942; PARLAY IDEAS</button>
+    <button class="qb" onclick="qc('Open Task Manager')">&#9889; TASK MANAGER</button>
+    <button class="qb" onclick="qc('Lock my computer')" style="border-color:var(--rbdr);color:var(--red-b)">&#128274; LOCK PC</button>
+    <button class="qb" onclick="enrollFace()" style="border-color:var(--rbdr);color:var(--red-b)">&#128247; ENROLL FACE</button>
+    <button class="qb" onclick="setPin()">&#128272; SET PIN</button>
+  </div>
+</aside>
+<main id="ca">
+  <div class="chdr">
+    <span>NEURAL INTERFACE — ACTIVE</span>
+    <span id="mc">0 EXCHANGES</span>
+  </div>
+  <div id="offbar">&#9888; OLLAMA OFFLINE — Run: ollama serve</div>
+  <div id="msgs"></div>
+</main>
+<aside id="rp">
+  <div class="pnl">
+    <div class="plbl">SPOTIFY</div>
+    <div id="sp-online" style="display:none">
+      <div class="sp-now">
+        <div class="sp-art-ph" id="sp-art-ph">&#9835;</div>
+        <img class="sp-art" id="sp-art" style="display:none" alt="art"/>
+        <div class="sp-info">
+          <div class="sp-track" id="sp-track">—</div>
+          <div class="sp-artist" id="sp-artist">—</div>
+        </div>
+      </div>
+      <div class="sp-bar"><div class="sp-prog" id="sp-prog" style="width:0%"></div></div>
+      <div class="sp-controls">
+        <button class="sc-btn" onclick="spCtrl('prev')">&#9198;</button>
+        <button class="sc-btn" onclick="spCtrl('resume')">&#9654;</button>
+        <button class="sc-btn" onclick="spCtrl('pause')">&#9208;</button>
+        <button class="sc-btn" onclick="spCtrl('next')">&#9197;</button>
+      </div>
+    </div>
+    <div id="sp-offline" class="sp-offline">Spotify not connected.<br><span style="font-size:8px;letter-spacing:1px">Authorise on first launch.</span></div>
+  </div>
+  <div class="pnl">
+    <div class="plbl">VISUAL MONITOR <button class="cam-toggle" id="cam-btn" onclick="toggleCam()">ENABLE</button></div>
+    <div id="cam-off" class="cam-off" onclick="toggleCam()">
+      <div style="font-size:22px;opacity:.3">&#128247;</div>
+      <div style="font-size:9px;color:var(--dim);letter-spacing:2px">CLICK TO ENABLE</div>
+    </div>
+    <div id="cam-live" style="display:none">
+      <div class="cam-wrap"><video id="cam-video" autoplay muted playsinline></video></div>
+      <div class="cam-bio">
+        <div class="bio-cell"><div class="bl_">STRESS</div><div class="bv" id="stress-lbl">--</div></div>
+        <div class="bio-cell"><div class="bl_">MOTION</div><div class="bv" id="motion-lbl">--</div></div>
+      </div>
+      <div class="stress-wrap">
+        <div class="stress-lbl"><span>BIOMETRIC INDEX</span><span id="stress-pct">0%</span></div>
+        <div class="sbar"><div class="sfill" id="sfill" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="pnl">
+    <div class="plbl">PROCESSOR</div>
+    <div class="stat-grid">
+      <div class="sg"><div class="sl">USAGE</div><div class="sv" id="s-cpu">—</div></div>
+      <div class="sg"><div class="sl">FREQ</div><div class="sv" id="s-freq">—</div></div>
+      <div class="sg"><div class="sl">CORES</div><div class="sv" id="s-cores">—</div></div>
+      <div class="sg"><div class="sl">TEMP</div><div class="sv" id="s-temp">—</div></div>
+    </div>
+    <div class="meter"><div class="mhdr"><span>LOAD</span><span id="cpu-pct">—</span></div><div class="mbar"><div class="mf" id="cpu-bar" style="width:0%"></div></div></div>
+    <div class="plbl" style="margin-top:5px">CORE MAP</div>
+    <div class="cores-grid" id="cores-grid"></div>
+  </div>
+  <div class="pnl">
+    <div class="plbl">MEMORY</div>
+    <div class="stat-grid">
+      <div class="sg"><div class="sl">USED</div><div class="sv" id="s-mused">—</div></div>
+      <div class="sg"><div class="sl">TOTAL</div><div class="sv" id="s-mtotal">—</div></div>
+      <div class="sg"><div class="sl">AVAIL</div><div class="sv" id="s-mavail">—</div></div>
+      <div class="sg"><div class="sl">SWAP</div><div class="sv" id="s-swap">—</div></div>
+    </div>
+    <div class="meter"><div class="mhdr"><span>RAM</span><span id="mem-pct">—</span></div><div class="mbar"><div class="mf" id="mem-bar" style="width:0%"></div></div></div>
+    <div class="meter"><div class="mhdr"><span>SWAP</span><span id="swap-pct">—</span></div><div class="mbar"><div class="mf" id="swap-bar" style="width:0%"></div></div></div>
+  </div>
+  <div class="pnl">
+    <div class="plbl">STORAGE</div>
+    <div class="stat-grid">
+      <div class="sg"><div class="sl">USED</div><div class="sv" id="s-dused">—</div></div>
+      <div class="sg"><div class="sl">FREE</div><div class="sv" id="s-dfree">—</div></div>
+    </div>
+    <div class="meter"><div class="mhdr"><span>DISK</span><span id="disk-pct">—</span></div><div class="mbar"><div class="mf" id="disk-bar" style="width:0%"></div></div></div>
+    <div class="plbl" style="margin-top:6px">NETWORK</div>
+    <div class="stat-grid">
+      <div class="sg"><div class="sl">SENT</div><div class="sv" id="s-nsent">—</div></div>
+      <div class="sg"><div class="sl">RECV</div><div class="sv" id="s-nrecv">—</div></div>
+    </div>
+  </div>
+  <div class="pnl" id="gpu-panel" style="display:none">
+    <div class="plbl">GPU</div>
+    <div id="gpu-info"></div>
+  </div>
+  <div class="pnl">
+    <div class="plbl">TOP PROCESSES</div>
+    <div id="proc-list"></div>
+    <div class="plbl" style="margin-top:8px">UPTIME</div>
+    <div class="stat-grid" style="margin-bottom:8px">
+      <div class="sg" style="grid-column:1/-1"><div class="sl">SYSTEM UP</div><div class="sv" id="s-uptime">—</div></div>
+    </div>
+    <div class="plbl">ACTIVITY LOG</div>
+    <div id="loglist"></div>
+  </div>
+
+  <!-- NEWS -->
+  <div class="pnl">
+    <div class="plbl">HEADLINES <button class="cam-toggle" onclick="loadNews()" style="float:right">REFRESH</button></div>
+    <div style="display:flex;gap:4px;margin-bottom:6px">
+      <button onclick="loadNews('fox')" class="cam-toggle" style="flex:1">FOX</button>
+      <button onclick="loadNews('cyber')" class="cam-toggle" style="flex:1">CYBER</button>
+      <button onclick="loadNews('espn')" class="cam-toggle" style="flex:1">ESPN</button>
+    </div>
+    <div id="news-list"><div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">Loading...</div></div>
+  </div>
+
+  <!-- PRIZEPICKS -->
+  <div class="pnl">
+    <div class="plbl">PRIZEPICKS <button class="cam-toggle" onclick="loadParlays()" style="float:right">NEW PARLAYS</button></div>
+    <div style="font-size:7px;color:var(--dim);letter-spacing:1px;margin-bottom:6px;line-height:1.4">Live projections — exploratory combos, not predictions</div>
+    <div style="display:flex;gap:3px;margin-bottom:6px;flex-wrap:wrap">
+      <button onclick="pp_toggleLeague('NFL')" id="pp-nfl" class="cam-toggle pp-league-btn active" style="flex:1">NFL</button>
+      <button onclick="pp_toggleLeague('NBA')" id="pp-nba" class="cam-toggle pp-league-btn active" style="flex:1">NBA</button>
+      <button onclick="pp_toggleLeague('MLB')" id="pp-mlb" class="cam-toggle pp-league-btn active" style="flex:1">MLB</button>
+      <button onclick="pp_toggleLeague('NHL')" id="pp-nhl" class="cam-toggle pp-league-btn active" style="flex:1">NHL</button>
+    </div>
+    <div style="display:flex;gap:4px;margin-bottom:8px;align-items:center">
+      <span style="font-size:8px;color:var(--dim)">LEGS:</span>
+      <select id="pp-legs" style="background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold);font-family:Share Tech Mono,monospace;font-size:9px;padding:3px 6px;outline:none">
+        <option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option>
+      </select>
+      <span style="font-size:8px;color:var(--dim);margin-left:6px">VIEW:</span>
+      <button onclick="pp_setView('parlays')" id="pp-view-parlays" class="cam-toggle" style="background:rgba(212,160,23,.1)">PARLAYS</button>
+      <button onclick="pp_setView('raw')" id="pp-view-raw" class="cam-toggle">RAW LINES</button>
+    </div>
+    <div id="pp-content"><div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">Click NEW PARLAYS to load today's lines.</div></div>
+  </div>
+
+  <!-- NETWORK -->
+  <div class="pnl">
+    <div class="plbl">NETWORK <button class="cam-toggle" onclick="runSpeedTest()" style="float:right">SPEED TEST</button></div>
+    <div class="stat-grid">
+      <div class="sg"><div class="sl">STATUS</div><div class="sv" id="net-status">—</div></div>
+      <div class="sg"><div class="sl">PING</div><div class="sv" id="net-ping">—</div></div>
+      <div class="sg"><div class="sl">LOCAL IP</div><div class="sv" id="net-ip" style="font-size:10px">—</div></div>
+      <div class="sg"><div class="sl">DEVICES</div><div class="sv" id="net-devices">—</div></div>
+    </div>
+    <div id="net-speed" style="font-size:9px;color:var(--dim);margin-top:4px"></div>
+    <div id="device-list" style="margin-top:6px"></div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="pnl">
+    <div class="plbl">NOTES <button class="cam-toggle" onclick="showAddNote()" style="float:right">+ NEW</button></div>
+    <div id="add-note-form" style="display:none;margin-bottom:8px">
+      <input id="note-title" placeholder="Title" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:10px;padding:5px 8px;margin-bottom:4px;outline:none"/>
+      <textarea id="note-body" placeholder="Note..." rows="3" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:10px;padding:5px 8px;margin-bottom:4px;outline:none;resize:vertical"></textarea>
+      <div style="display:flex;gap:4px">
+        <button onclick="submitNote()" style="flex:1;padding:6px;border:1px solid rgba(212,160,23,.5);background:rgba(212,160,23,.08);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:9px;cursor:pointer">SAVE</button>
+        <button onclick="document.getElementById('add-note-form').style.display='none'" style="padding:6px 10px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-family:Share Tech Mono,monospace;font-size:9px;cursor:pointer">CANCEL</button>
+      </div>
+    </div>
+    <div id="notes-list"><div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">No notes yet.</div></div>
+  </div>
+
+  <!-- ROUTINES -->
+  <div class="pnl">
+    <div class="plbl">ROUTINES <button class="cam-toggle" onclick="openRoutineBuilder()" style="float:right">+ NEW</button></div>
+    <div id="routines-list"></div>
+  </div>
+
+  <!-- ROUTINE BUILDER MODAL -->
+  <div id="routine-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;align-items:center;justify-content:center;">
+    <div style="background:var(--panel);border:1px solid var(--bdr-hi);width:480px;max-height:80vh;overflow-y:auto;padding:18px;position:relative;">
+      <div style="font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:3px;color:var(--gold-b);margin-bottom:4px" id="routine-modal-title">NEW ROUTINE</div>
+      <div style="font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:14px">Build a sequence of actions FRIDAY will run in order</div>
+
+      <input id="rb-name" placeholder="Routine name (e.g. morning)" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:11px;padding:7px 9px;margin-bottom:6px;outline:none"/>
+      <input id="rb-desc" placeholder="Short description" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:11px;padding:7px 9px;margin-bottom:12px;outline:none"/>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div class="plbl" style="margin:0">STEPS</div>
+        <div style="display:flex;gap:4px">
+          <button onclick="toggleStepView('visual')" id="view-visual-btn" class="cam-toggle" style="background:rgba(212,160,23,.1)">VISUAL</button>
+          <button onclick="toggleStepView('text')" id="view-text-btn" class="cam-toggle">TEXT</button>
+        </div>
+      </div>
+
+      <!-- Visual step builder -->
+      <div id="rb-visual-view">
+        <div id="rb-steps-list" style="margin-bottom:8px"></div>
+        <button onclick="addStep()" style="width:100%;padding:8px;border:1px dashed var(--bdr-hi);background:transparent;color:var(--gold);font-family:Share Tech Mono,monospace;font-size:10px;cursor:pointer;letter-spacing:1px;margin-bottom:12px">+ ADD STEP</button>
+      </div>
+
+      <!-- Text editor view -->
+      <div id="rb-text-view" style="display:none">
+        <div style="font-size:8px;color:var(--dim);margin-bottom:4px;letter-spacing:1px">JSON steps array — edit directly for quick changes</div>
+        <textarea id="rb-text-json" rows="10" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:10px;padding:8px;outline:none;resize:vertical;margin-bottom:12px"></textarea>
+      </div>
+
+      <div style="display:flex;gap:6px">
+        <button onclick="saveRoutineFromBuilder()" style="flex:1;padding:9px;border:1px solid rgba(212,160,23,.5);background:rgba(212,160,23,.1);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:2px;cursor:pointer">SAVE ROUTINE</button>
+        <button onclick="closeRoutineBuilder()" style="padding:9px 16px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-family:Share Tech Mono,monospace;font-size:10px;cursor:pointer">CANCEL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN -->
+  <div class="pnl">
+    <div class="plbl">SCREEN AWARENESS</div>
+    <div style="display:flex;gap:4px;margin-bottom:6px">
+      <button onclick="captureScreen()" class="cam-toggle" style="flex:1">CAPTURE</button>
+      <button onclick="analyseScreen()" class="cam-toggle" style="flex:1">ANALYSE</button>
+      <button onclick="actClipboard()" class="cam-toggle" style="flex:1">CLIPBOARD</button>
+    </div>
+    <div id="screen-result" style="font-size:9px;color:var(--text);line-height:1.6;max-height:120px;overflow-y:auto"></div>
+  </div>
+  <div class="pnl" id="email-panel">
+    <div class="plbl">INBOX <button class="cam-toggle" onclick="refreshEmail()" style="float:right">REFRESH</button></div>
+    <div id="email-summary" style="font-size:10px;color:var(--text);line-height:1.6;margin-bottom:8px">Loading...</div>
+    <div class="plbl" style="margin-top:4px">TODAY'S CALENDAR</div>
+    <div id="cal-summary" style="font-size:10px;color:var(--text);line-height:1.6">Loading...</div>
+  </div>
+
+  <!-- SCHEDULED TASKS -->
+  <div class="pnl">
+    <div class="plbl">SCHEDULED TASKS <button class="cam-toggle" onclick="showAddTask()" style="float:right">+ ADD</button></div>
+    <div id="task-list"><div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">No tasks scheduled.</div></div>
+    <div id="add-task-form" style="display:none;margin-top:8px">
+      <input id="task-name" placeholder="Task name" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:10px;padding:5px 8px;margin-bottom:4px;outline:none"/>
+      <select id="task-type" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold);font-family:Share Tech Mono,monospace;font-size:10px;padding:5px;margin-bottom:4px;outline:none">
+        <option value="play_music">Play Music</option>
+        <option value="launch_app">Launch App</option>
+        <option value="scan_filesystem">Clean System</option>
+        <option value="clean_desktop">Clean Desktop</option>
+        <option value="speak">Announcement</option>
+      </select>
+      <input id="task-data" placeholder="Query / App name / Message" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:10px;padding:5px 8px;margin-bottom:4px;outline:none"/>
+      <input id="task-schedule" placeholder='e.g. "every weekday at 8am"' style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:10px;padding:5px 8px;margin-bottom:6px;outline:none"/>
+      <div style="display:flex;gap:4px">
+        <button onclick="submitTask()" style="flex:1;padding:6px;border:1px solid rgba(212,160,23,.5);background:rgba(212,160,23,.08);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:9px;cursor:pointer;letter-spacing:1px">SCHEDULE</button>
+        <button onclick="document.getElementById('add-task-form').style.display='none'" style="padding:6px 10px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-family:Share Tech Mono,monospace;font-size:9px;cursor:pointer">CANCEL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEMORY -->
+  <div class="pnl">
+    <div class="plbl">FRIDAY MEMORY</div>
+    <div id="memory-panel"><div style="font-size:9px;color:var(--dim);text-align:center;padding:8px 0">Loading...</div></div>
+  </div>
+</aside>
+<footer id="foot">
+  <div id="inw">
+    <span class="pfx">&#9654;</span>
+    <input type="text" id="inp" placeholder="Give me a directive, Boss... or say 'Friday'" autocomplete="off"/>
+  </div>
+  <button class="sbtn" id="sbtn" onclick="send()">TRANSMIT</button>
+  <button class="cbtn" onclick="clearChat()">CLEAR</button>
+</footer>
+</div>
+<script>
+const API='http://127.0.0.1:5000';
+let msgCount=0;
+
+function tick(){document.getElementById('clk').textContent=new Date().toLocaleTimeString('en-US',{hour12:false});}
+tick();setInterval(tick,1000);
+
+function addLog(txt,type=''){
+  const l=document.getElementById('loglist');
+  const d=document.createElement('div');d.className='log-e '+type;
+  const t=new Date().toLocaleTimeString('en-US',{hour12:false});
+  d.innerHTML='<span class="lt">['+t+']</span>'+txt;
+  l.insertBefore(d,l.firstChild);
+  while(l.children.length>30)l.removeChild(l.lastChild);
+}
+
+let toastT;
+function showToast(title,body){
+  document.getElementById('toast-title').textContent=title;
+  document.getElementById('toast-body').textContent=body;
+  document.getElementById('toast').classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(closeToast,9000);
+}
+function closeToast(){document.getElementById('toast').classList.remove('show');}
+
+function addMsg(role,text,actions){
+  actions=actions||[];
+  const msgs=document.getElementById('msgs');
+  const d=document.createElement('div');d.className='msg '+role;
+  msgCount++;document.getElementById('mc').textContent=msgCount+' EXCHANGES';
+  let ah='';
+  actions.forEach(function(a){ah+='<div class="atag">&#9889; '+a.type.toUpperCase().replace(/_/g,' ')+': '+Object.values(a).slice(1).join(' ')+'</div>';});
+  const t=new Date().toLocaleTimeString('en-US',{hour12:false});
+  d.innerHTML='<div class="av">'+(role==='user'?'YOU':'FR')+'</div><div><div class="bub">'+text.replace(/\n/g,'<br>')+ah+'</div><div class="mt">'+t+'</div></div>';
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+  if(role==='friday')speakResponse(text);
+}
+
+function addScanConfirmPrompt(scanMsg){
+  const msgs=document.getElementById('msgs');
+  const d=document.createElement('div');d.className='msg f';d.id='scan-confirm-msg';
+  const t=new Date().toLocaleTimeString('en-US',{hour12:false});
+  d.innerHTML='<div class="av">FR</div><div><div class="bub">'+scanMsg.replace(/\n/g,'<br>')+'<div style="display:flex;gap:6px;margin-top:10px"><button onclick="confirmClean()" style="flex:1;padding:7px;border:1px solid rgba(212,160,23,.5);background:rgba(212,160,23,.1);color:#f0c040;font-family:Share Tech Mono,monospace;font-size:10px;cursor:pointer;letter-spacing:2px">YES — CLEAN IT</button><button onclick="cancelClean()" style="flex:1;padding:7px;border:1px solid rgba(192,57,43,.4);background:rgba(192,57,43,.08);color:#e74c3c;font-family:Share Tech Mono,monospace;font-size:10px;cursor:pointer;letter-spacing:2px">CANCEL</button></div></div><div class="mt">'+t+'</div></div>';
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+  speakResponse(scanMsg);
+}
+
+async function confirmClean(){
+  const btn=document.getElementById('scan-confirm-msg');
+  if(btn)btn.remove();
+  addMsg('user','Yes, go ahead and clean it.');
+  showTyping();
+  try{
+    const res=await fetch(API+'/api/filesystem/confirm',{method:'POST'});
+    const data=await res.json();hideTyping();
+    addMsg('friday',data.message||'Done.');
+    addLog('File system cleaned','ok');
+  }catch(e){hideTyping();addMsg('friday','Error during clean. Please try again.');}
+}
+
+async function cancelClean(){
+  const btn=document.getElementById('scan-confirm-msg');
+  if(btn)btn.remove();
+  await fetch(API+'/api/filesystem/cancel',{method:'POST'}).catch(()=>{});
+  addMsg('friday','Understood, Boss. Clean cancelled. Everything left untouched.');
+  addLog('Clean cancelled');
+}
+function showTyping(){const msgs=document.getElementById('msgs');const d=document.createElement('div');d.className='msg f';d.id='typ';d.innerHTML='<div class="av">FR</div><div class="typing"><div class="td"></div><div class="td"></div><div class="td"></div></div>';msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}
+function hideTyping(){const t=document.getElementById('typ');if(t)t.remove();}
+
+async function send(){
+  const inp=document.getElementById('inp'),btn=document.getElementById('sbtn');
+  const text=inp.value.trim();if(!text)return;
+  inp.value='';btn.disabled=true;
+  addMsg('user',text);addLog('User: '+text.substring(0,38)+'...');showTyping();
+  try{
+    const res=await fetch(API+'/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text})});
+    const data=await res.json();hideTyping();
+    if(data.error==='connection'){document.getElementById('offbar').classList.add('show');addMsg('friday',data.response);addLog('Ollama offline','warn');}
+    else{
+      document.getElementById('offbar').classList.remove('show');
+      // Check if a scan action was triggered — show confirm prompt instead of normal message
+      const hasScan = data.actions && data.actions.some(function(a){return a.type==='scan_filesystem';});
+      const scanResult = data.action_results && data.action_results.find(function(r){return r && r.scan;});
+      if(hasScan && scanResult && scanResult.message){
+        addScanConfirmPrompt(scanResult.message);
+      } else {
+        addMsg('friday',data.response,data.actions||[]);
+        if(data.actions&&data.actions.length)data.actions.forEach(function(a){addLog('Action: '+a.type,'ok');});
+      }
+      addLog('FRIDAY responded','ok');
+    }
+  }catch(e){hideTyping();addMsg('friday','Backend offline. Start the app properly.');addLog('Server offline','warn');}
+  btn.disabled=false;inp.focus();
+}
+async function clearChat(){
+  document.getElementById('msgs').innerHTML='';msgCount=0;document.getElementById('mc').textContent='0 EXCHANGES';
+  await fetch(API+'/api/clear',{method:'POST'}).catch(function(){});
+  addLog('Session cleared');greet();
+}
+function qc(cmd){document.getElementById('inp').value=cmd;send();}
+document.getElementById('inp').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey)send();});
+
+// ── MUTE ─────────────────────────────────────────────────────────────────────
+let isMuted = false;
+
+function toggleMute(){
+  isMuted = !isMuted;
+  const icon = document.getElementById('mute-icon');
+  const txt  = document.getElementById('mute-txt');
+  const btn  = document.getElementById('mute-btn');
+  if(isMuted){
+    icon.textContent = '&#128264;';
+    txt.textContent  = 'MUTED';
+    btn.style.color  = 'var(--red-b)';
+    btn.style.borderColor = 'var(--rbdr)';
+    window.speechSynthesis.cancel();
+    addLog('FRIDAY muted');
+  } else {
+    icon.textContent = '&#128266;';
+    txt.textContent  = 'SPEAK ON';
+    btn.style.color  = 'var(--dim)';
+    btn.style.borderColor = 'var(--bdr)';
+    addLog('FRIDAY unmuted');
+    speakResponse('Voice restored, Boss.');
+  }
+}
+
+// ── IMPROVED TTS ──────────────────────────────────────────────────────────────
+function speakResponse(text){
+  if(isMuted || !window.speechSynthesis) return;
+  const clean = text.replace(/ACTION:.*$/gm,'').replace(/<[^>]+>/g,'').trim();
+  if(!clean) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(clean);
+  utt.rate   = 1.0;
+  utt.pitch  = 0.85;
+  utt.volume = 1;
+
+  // Pick best available voice — prefer neural/AI voices, then female
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = voices.find(v =>
+    /microsoft zira|microsoft eva|microsoft hazel|google uk english female|samantha|karen|victoria|moira|tessa|fiona/i.test(v.name)
+  ) || voices.find(v =>
+    /female|woman|girl/i.test(v.name) && v.lang.startsWith('en')
+  ) || voices.find(v => v.lang.startsWith('en'));
+
+  if(preferred) utt.voice = preferred;
+  window.speechSynthesis.speak(utt);
+}
+
+// ── IMPROVED VOICE RECOGNITION ────────────────────────────────────────────────
+let recognition = null;
+let voiceEnabled = false;
+let voiceAwake   = false;
+let voiceProcessing = false;
+let voiceSilenceTimer = null;
+let interimTranscript = '';
+
+const WAKE_WORD  = 'friday';
+const SLEEP_WORD = 'sleep friday';
+const MUTE_WORD  = 'mute friday';
+const UNMUTE_WORD = 'unmute friday';
+
+function toggleVoice(){ voiceEnabled ? stopVoice() : startVoice(); }
+
+function startVoice(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){ showToast('VOICE ERROR','Speech recognition not available.'); return; }
+
+  recognition = new SR();
+  recognition.continuous     = true;
+  recognition.interimResults = true;   // capture partial results for faster wake word
+  recognition.lang           = 'en-US';
+  recognition.maxAlternatives = 3;     // consider multiple alternatives
+
+  recognition.onstart = function(){
+    voiceEnabled = true;
+    updateVoiceUI('sleeping');
+    addLog('Voice: listening for "Friday"','ok');
+  };
+
+  recognition.onresult = function(e){
+    let finalTranscript   = '';
+    let interimTranscript = '';
+
+    for(let i = e.resultIndex; i < e.results.length; i++){
+      const t = e.results[i][0].transcript.toLowerCase().trim();
+      if(e.results[i].isFinal){
+        finalTranscript += t + ' ';
+      } else {
+        interimTranscript += t;
+      }
+    }
+
+    // Check interim for wake word — faster response
+    const combined = (interimTranscript + ' ' + finalTranscript).trim();
+
+    if(!voiceAwake){
+      if(combined.includes(WAKE_WORD)){
+        voiceAwake = true;
+        updateVoiceUI('awake');
+        addLog('FRIDAY awake','ok');
+        speakResponse('Yes, Boss?');
+      }
+      return;
+    }
+
+    // Only act on final results when awake
+    if(!finalTranscript.trim()) return;
+    const text = finalTranscript.trim();
+
+    // Sleep command
+    if(text.includes(SLEEP_WORD)){
+      voiceAwake = false;
+      updateVoiceUI('sleeping');
+      addLog('FRIDAY sleeping');
+      speakResponse('Going quiet, Boss.');
+      return;
+    }
+
+    // Mute/unmute by voice
+    if(text.includes(MUTE_WORD)){ if(!isMuted) toggleMute(); return; }
+    if(text.includes(UNMUTE_WORD)){ if(isMuted) toggleMute(); return; }
+
+    // Ignore very short noise captures
+    const clean = text.replace(WAKE_WORD,'').trim();
+    if(clean.length < 3 || voiceProcessing) return;
+
+    // Debounce — don't send the same phrase twice
+    clearTimeout(voiceSilenceTimer);
+    voiceSilenceTimer = setTimeout(function(){
+      if(clean.length > 2){
+        voiceProcessing = true;
+        document.getElementById('inp').value = clean;
+        send().finally(function(){ voiceProcessing = false; });
+      }
+    }, 400);
+  };
+
+  recognition.onerror = function(e){
+    if(e.error === 'no-speech') return; // normal — don't log
+    if(e.error === 'aborted')   return; // happens on restart — normal
+    addLog('Voice error: ' + e.error, 'warn');
+    if(e.error === 'not-allowed'){
+      showToast('MIC BLOCKED','Microphone access was denied. Check browser permissions.');
+      stopVoice();
+    }
+  };
+
+  recognition.onend = function(){
+    if(voiceEnabled){
+      try{ recognition.start(); }catch(e){}
+    }
+  };
+
+  try{ recognition.start(); }
+  catch(e){ addLog('Voice start failed: '+e.message,'warn'); }
+}
+
+function stopVoice(){
+  voiceEnabled = false; voiceAwake = false;
+  clearTimeout(voiceSilenceTimer);
+  if(recognition){ try{ recognition.stop(); }catch(e){} }
+  updateVoiceUI('off');
+  addLog('Voice disabled');
+}
+
+function updateVoiceUI(state){
+  const pill = document.getElementById('vpill');
+  const dot  = document.getElementById('vdot');
+  const txt  = document.getElementById('vtxt');
+  pill.className = 'chip';
+  if(state === 'off'){
+    dot.style.background = 'var(--dim)';
+    txt.textContent = 'VOICE OFF';
+  } else if(state === 'sleeping'){
+    pill.classList.add('listening');
+    dot.style.background = 'var(--red-b)';
+    txt.textContent = 'LISTENING';
+  } else if(state === 'awake'){
+    pill.classList.add('awake');
+    dot.style.background = 'var(--gold-b)';
+    txt.textContent = 'AWAKE';
+  }
+}
+
+// ── LOCK SCREEN ───────────────────────────────────────────────────────────────
+let lockStream = null;
+let lockScanInterval = null;
+let lockCanvas = document.createElement('canvas');
+lockCanvas.width  = 320;
+lockCanvas.height = 240;
+
+function lockFriday(){
+  document.getElementById('lock-screen').style.display = 'flex';
+  // Check face enrollment status
+  fetch(API+'/api/face/status').then(r=>r.json()).then(function(d){
+    const hint = document.getElementById('lock-enroll-hint');
+    if(!d.enrolled){
+      hint.textContent = 'No face enrolled — use PIN, or enroll via Settings';
+      document.getElementById('lock-face-btn').style.opacity = '0.4';
+      document.getElementById('lock-face-btn').onclick = function(){
+        showToast('NOT ENROLLED','No face enrolled yet. Use PIN or go to Settings to enroll.');
+      };
+    } else {
+      hint.textContent = '';
+      document.getElementById('lock-face-btn').style.opacity = '1';
+      document.getElementById('lock-face-btn').onclick = startFaceScan;
+      // Auto-start face scan if enrolled
+      startFaceScan();
+    }
+  }).catch(function(){
+    showPinView();
+  });
+}
+
+function unlockFriday(){
+  stopFaceScan();
+  document.getElementById('lock-screen').style.display = 'none';
+  document.getElementById('lock-face-view').style.display = 'none';
+  document.getElementById('lock-pin-view').style.display = 'none';
+  document.getElementById('lock-pin-input').value = '';
+  document.getElementById('lock-pin-error').textContent = '';
+  speakResponse('Welcome back, Boss.');
+  addLog('FRIDAY unlocked','ok');
+}
+
+async function startFaceScan(){
+  document.getElementById('lock-face-view').style.display = 'flex';
+  document.getElementById('lock-pin-view').style.display  = 'none';
+  document.getElementById('lock-face-status').textContent = 'SCANNING...';
+  document.getElementById('lock-face-fill').style.width   = '0%';
+
+  try{
+    lockStream = await navigator.mediaDevices.getUserMedia({video:{width:320,height:240,facingMode:'user'},audio:false});
+    const v = document.getElementById('lock-video');
+    v.srcObject = lockStream;
+    await v.play();
+
+    let attempts = 0;
+    const maxAttempts = 20;
+
+    lockScanInterval = setInterval(async function(){
+      attempts++;
+      if(attempts > maxAttempts){
+        clearInterval(lockScanInterval);
+        document.getElementById('lock-face-status').textContent = 'SCAN FAILED — Try PIN';
+        stopFaceScan();
+        showPinView();
+        return;
+      }
+
+      // Progress bar
+      document.getElementById('lock-face-fill').style.width = Math.round((attempts/maxAttempts)*100)+'%';
+
+      // Capture frame
+      const ctx = lockCanvas.getContext('2d');
+      ctx.drawImage(v, 0, 0, 320, 240);
+      const frameB64 = lockCanvas.toDataURL('image/jpeg',0.7).split(',')[1];
+
+      const res = await fetch(API+'/api/face/verify',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({frame:frameB64})
+      });
+      const d = await res.json();
+
+      if(d.verified){
+        document.getElementById('lock-face-status').textContent = 'IDENTITY CONFIRMED — '+d.confidence+'%';
+        document.getElementById('lock-face-fill').style.background = 'var(--gold-b)';
+        clearInterval(lockScanInterval);
+        setTimeout(unlockFriday, 600);
+      } else if(d.confidence > 0){
+        document.getElementById('lock-face-status').textContent = 'SCANNING... '+d.confidence+'%';
+      }
+    }, 800);
+
+  }catch(e){
+    document.getElementById('lock-face-status').textContent = 'CAMERA ERROR — Use PIN';
+    showPinView();
+  }
+}
+
+function stopFaceScan(){
+  clearInterval(lockScanInterval);
+  if(lockStream){ lockStream.getTracks().forEach(t=>t.stop()); lockStream=null; }
+}
+
+function showPinView(){
+  stopFaceScan();
+  document.getElementById('lock-face-view').style.display = 'none';
+  document.getElementById('lock-pin-view').style.display  = 'flex';
+  setTimeout(function(){ document.getElementById('lock-pin-input').focus(); },100);
+}
+
+async function submitPin(){
+  const pin = document.getElementById('lock-pin-input').value;
+  if(!pin){ return; }
+  const res  = await fetch(API+'/api/pin/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin})});
+  const d    = await res.json();
+  if(d.verified){
+    unlockFriday();
+  } else {
+    document.getElementById('lock-pin-error').textContent = 'INCORRECT PIN';
+    document.getElementById('lock-pin-input').value = '';
+    document.getElementById('lock-pin-input').focus();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  const pinInput = document.getElementById('lock-pin-input');
+  if(pinInput){
+    pinInput.addEventListener('keydown', function(e){ if(e.key==='Enter') submitPin(); });
+  }
+});
+
+// ── Face enroll from settings ─────────────────────────────────────────────────
+async function enrollFace(){
+  showToast('ENROLLING','Look at your camera. Collecting 25 face samples...');
+  addLog('Face enrollment started...');
+  const res = await fetch(API+'/api/face/enroll',{method:'POST'});
+  const d   = await res.json();
+  if(d.success){
+    showToast('ENROLLED',d.message);
+    addLog('Face enrolled successfully','ok');
+    speakResponse('Face enrolled successfully, Boss. I will recognise you next time.');
+  } else {
+    showToast('ENROLL FAILED',d.message);
+    addLog('Face enroll failed: '+d.message,'warn');
+  }
+}
+
+async function setPin(){
+  // Show a simple in-app PIN setup dialog
+  const modal = document.createElement('div');
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:600;display:flex;align-items:center;justify-content:center;';
+  modal.innerHTML=`
+    <div style="background:var(--panel);border:1px solid var(--bdr-hi);padding:24px;width:280px;text-align:center">
+      <div style="font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:3px;color:var(--gold-b);margin-bottom:16px">SET PIN</div>
+      <input id="pin-new" type="password" maxlength="8" placeholder="Enter new PIN"
+        style="width:100%;background:rgba(0,0,0,.5);border:1px solid var(--bdr-hi);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:18px;text-align:center;padding:10px;outline:none;letter-spacing:6px;margin-bottom:10px"/>
+      <input id="pin-confirm" type="password" maxlength="8" placeholder="Confirm PIN"
+        style="width:100%;background:rgba(0,0,0,.5);border:1px solid var(--bdr-hi);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:18px;text-align:center;padding:10px;outline:none;letter-spacing:6px;margin-bottom:14px"/>
+      <div id="pin-err" style="font-size:9px;color:var(--red-b);margin-bottom:10px;min-height:14px"></div>
+      <div style="display:flex;gap:8px">
+        <button id="pin-save-btn" style="flex:1;padding:9px;border:1px solid rgba(212,160,23,.5);background:rgba(212,160,23,.1);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:2px;cursor:pointer">SAVE</button>
+        <button onclick="this.closest('div[style]').remove()" style="padding:9px 14px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-family:Share Tech Mono,monospace;font-size:10px;cursor:pointer">CANCEL</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+  document.getElementById('pin-new').focus();
+
+  document.getElementById('pin-save-btn').onclick = async function(){
+    const p1 = document.getElementById('pin-new').value;
+    const p2 = document.getElementById('pin-confirm').value;
+    const err = document.getElementById('pin-err');
+    if(p1.length < 4){ err.textContent='PIN must be at least 4 digits.'; return; }
+    if(p1 !== p2){ err.textContent='PINs do not match.'; return; }
+    const res = await fetch(API+'/api/pin/set',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:p1})});
+    const d = await res.json();
+    if(d.success){
+      modal.remove();
+      showToast('PIN SET','PIN saved successfully, Boss.');
+      speakResponse('PIN set, Boss.');
+    } else {
+      err.textContent = d.message || 'Error saving PIN.';
+    }
+  };
+
+  // Enter key on confirm field saves
+  document.getElementById('pin-confirm').addEventListener('keydown', function(e){
+    if(e.key==='Enter') document.getElementById('pin-save-btn').click();
+  });
+}
+
+// Metrics
+function cls(v,hi,warn){return v>=hi?'hot':v>=warn?'warm':'';}
+function renderBar(id,pct,hi,warn){hi=hi||85;warn=warn||65;var el=document.getElementById(id);if(!el)return;el.style.width=pct+'%';el.className='mf '+cls(pct,hi,warn);}
+
+async function updateMetrics(){
+  try{
+    const res=await fetch(API+'/api/system');const d=await res.json();if(d.error)return;
+    document.getElementById('h-cpu').textContent=d.cpu+'%';
+    document.getElementById('h-mem').textContent=d.memory+'%';
+    document.getElementById('h-disk').textContent=d.disk_percent+'%';
+    document.getElementById('s-cpu').textContent=d.cpu+'%';document.getElementById('s-cpu').className='sv '+(d.cpu>=85?'alert':'');
+    document.getElementById('s-freq').textContent=d.cpu_freq?d.cpu_freq+'GHz':'—';
+    document.getElementById('s-cores').textContent=(d.cpu_cores&&d.cpu_threads)?d.cpu_cores+'C/'+d.cpu_threads+'T':'—';
+    var te=document.getElementById('s-temp');te.textContent=d.cpu_temp?d.cpu_temp+'°C':'N/A';te.className='sv '+(d.cpu_temp>=85?'alert':'');
+    document.getElementById('cpu-pct').textContent=d.cpu+'%';renderBar('cpu-bar',d.cpu,85,65);
+    var cg=document.getElementById('cores-grid');
+    if(d.per_cpu&&d.per_cpu.length){cg.innerHTML='';d.per_cpu.forEach(function(v,i){var c=document.createElement('div');c.className='core-cell'+(v>=85?' hot-core':'');c.innerHTML='<div class="cn">C'+i+'</div><div class="cv">'+v+'%</div>';cg.appendChild(c);});}
+    document.getElementById('s-mused').textContent=d.memory_used+'GB';
+    document.getElementById('s-mtotal').textContent=d.memory_total+'GB';
+    document.getElementById('s-mavail').textContent=d.memory_available+'GB';
+    document.getElementById('s-swap').textContent=d.swap_total>0?d.swap_used+'GB':'None';
+    document.getElementById('mem-pct').textContent=d.memory+'%';renderBar('mem-bar',d.memory,90,75);
+    document.getElementById('swap-pct').textContent=d.swap_percent+'%';renderBar('swap-bar',d.swap_percent,80,50);
+    document.getElementById('s-dused').textContent=d.disk_used+'GB';
+    document.getElementById('s-dfree').textContent=Math.round(d.disk_total-d.disk_used)+'GB';
+    document.getElementById('disk-pct').textContent=d.disk_percent+'%';renderBar('disk-bar',d.disk_percent,90,75);
+    var fmtMb=function(v){return v>=1024?Math.round(v/1024)+'GB':v+'MB';};
+    document.getElementById('s-nsent').textContent=fmtMb(d.net_sent);
+    document.getElementById('s-nrecv').textContent=fmtMb(d.net_recv);
+    if(d.gpu&&d.gpu.length){
+      document.getElementById('gpu-panel').style.display='block';
+      var gi=document.getElementById('gpu-info');gi.innerHTML='';
+      d.gpu.forEach(function(g){gi.innerHTML+='<div style="font-size:9px;color:var(--text);margin-bottom:5px">'+g.name+'</div><div class="stat-grid" style="margin-bottom:4px"><div class="sg"><div class="sl">LOAD</div><div class="sv '+(g.load>=85?'alert':'')+'">'+g.load+'%</div></div><div class="sg"><div class="sl">TEMP</div><div class="sv '+(g.temp>=85?'alert':'')+'">'+g.temp+'°C</div></div><div class="sg"><div class="sl">V-MEM</div><div class="sv">'+g.mem_used+'MB</div></div><div class="sg"><div class="sl">TOTAL</div><div class="sv">'+g.mem_total+'MB</div></div></div><div class="meter"><div class="mhdr"><span>GPU</span><span>'+g.load+'%</span></div><div class="mbar"><div class="mf '+cls(g.load,85,65)+'" style="width:'+g.load+'%"></div></div></div>';});
+    }
+    if(d.processes&&d.processes.length){var pl=document.getElementById('proc-list');pl.innerHTML='';d.processes.forEach(function(p){var r=document.createElement('div');r.className='proc-row';r.innerHTML='<span class="proc-name">'+p.name+'</span><span class="proc-cpu '+(p.cpu>=20?'hot':'')+'">'+p.cpu+'%</span>';pl.appendChild(r);});}
+    document.getElementById('s-uptime').textContent=d.uptime||'—';
+    if(d.cpu>=90)addLog('High CPU: '+d.cpu+'%','warn');
+  }catch(e){}
+}
+
+async function checkOllama(){
+  try{
+    const res=await fetch(API+'/api/ollama/status');const d=await res.json();
+    var dot=document.getElementById('sdot'),txt=document.getElementById('stxt');
+    if(d.online){dot.className='sdot on';txt.textContent='OLLAMA ONLINE';if(d.models.length)document.getElementById('mdl').textContent=d.models[0];}
+    else{dot.className='sdot';txt.textContent='OLLAMA OFFLINE';document.getElementById('offbar').classList.add('show');}
+  }catch(e){document.getElementById('sdot').className='sdot';document.getElementById('stxt').textContent='SERVER OFFLINE';}
+}
+
+async function updateSpotify(){
+  try{
+    const res=await fetch(API+'/api/spotify/status');const d=await res.json();
+    if(!d.connected){document.getElementById('sp-online').style.display='none';document.getElementById('sp-offline').style.display='block';return;}
+    document.getElementById('sp-online').style.display='block';document.getElementById('sp-offline').style.display='none';
+    if(d.playing&&d.track){
+      document.getElementById('sp-track').textContent=d.track||'—';
+      document.getElementById('sp-artist').textContent=d.artist||'—';
+      if(d.album_art){document.getElementById('sp-art').src=d.album_art;document.getElementById('sp-art').style.display='block';document.getElementById('sp-art-ph').style.display='none';}
+      else{document.getElementById('sp-art').style.display='none';document.getElementById('sp-art-ph').style.display='flex';}
+      var pct=d.duration>0?Math.round((d.progress/d.duration)*100):0;
+      document.getElementById('sp-prog').style.width=pct+'%';
+    }
+  }catch(e){}
+}
+async function spCtrl(action){
+  try{await fetch(API+'/api/spotify/control',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:action})});setTimeout(updateSpotify,600);}catch(e){}
+}
+
+// Webcam
+var camActive=false,camStream=null,lastFrame=null,motionHist=[],stressLvl=0,alertCD=0,camLoop;
+var ALERTS=[
+  {t:'STRESS DETECTED',b:'Elevated activity detected, Boss. Consider stepping away.'},
+  {t:'HIGH MOVEMENT',b:'You seem restless. Maybe grab a drink and take a breather?'},
+  {t:'BIOMETRIC ALERT',b:"I'm picking up tension. A short break might help."},
+  {t:'FRIDAY ADVISORY',b:'Movement patterns suggest fatigue. Take five, Boss.'},
+];
+function toggleCam(){camActive?stopCam():startCam();}
+async function startCam(){
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({video:{width:320,height:240,facingMode:'user'},audio:false});
+    var v=document.getElementById('cam-video');v.srcObject=camStream;await v.play();
+    document.getElementById('cam-off').style.display='none';document.getElementById('cam-live').style.display='block';
+    document.getElementById('cam-btn').textContent='DISABLE';camActive=true;addLog('Visual monitor on','ok');
+    setTimeout(analyzeFrame,600);
+  }catch(e){addLog('Camera denied','warn');showToast('CAMERA ERROR','Allow camera permissions.');}
+}
+function stopCam(){
+  if(camStream)camStream.getTracks().forEach(function(t){t.stop();});camStream=null;clearTimeout(camLoop);
+  document.getElementById('cam-off').style.display='flex';document.getElementById('cam-live').style.display='none';
+  document.getElementById('cam-btn').textContent='ENABLE';camActive=false;lastFrame=null;motionHist=[];addLog('Visual monitor off');
+}
+function analyzeFrame(){
+  if(!camActive)return;
+  var v=document.getElementById('cam-video');if(v.readyState<2){camLoop=setTimeout(analyzeFrame,300);return;}
+  var c=document.getElementById('cam-canvas'),ctx=c.getContext('2d');
+  ctx.drawImage(v,0,0,160,120);var frame=ctx.getImageData(0,0,160,120);
+  var ms=0;
+  if(lastFrame){var diff=0;for(var i=0;i<frame.data.length;i+=16){diff+=((Math.abs(frame.data[i]-lastFrame.data[i])+Math.abs(frame.data[i+1]-lastFrame.data[i+1])+Math.abs(frame.data[i+2]-lastFrame.data[i+2]))/3);}ms=Math.min(100,Math.round(diff/60));}
+  lastFrame=frame;motionHist.push(ms);if(motionHist.length>20)motionHist.shift();
+  var avg=motionHist.reduce(function(a,b){return a+b;},0)/motionHist.length;
+  stressLvl=Math.round(stressLvl*.7+avg*.3);stressLvl=Math.min(100,Math.max(0,stressLvl));
+  var sl=stressLvl<25?'CALM':stressLvl<55?'MODERATE':stressLvl<78?'ELEVATED':'HIGH';
+  var ml=ms<10?'STILL':ms<30?'LOW':ms<60?'ACTIVE':'HIGH';
+  var sle=document.getElementById('stress-lbl');sle.textContent=sl;sle.className='bv'+(stressLvl>=55?' hi':'');
+  var mle=document.getElementById('motion-lbl');mle.textContent=ml;mle.className='bv'+(ms>=60?' hi':'');
+  document.getElementById('stress-pct').textContent=stressLvl+'%';
+  var sb=document.getElementById('sfill');sb.style.width=stressLvl+'%';sb.className='sfill'+(stressLvl>=78?' hi':stressLvl>=45?' med':'');
+  alertCD--;
+  if(stressLvl>=72&&alertCD<=0){alertCD=120;var a=ALERTS[Math.floor(Math.random()*ALERTS.length)];showToast(a.t,a.b);speakResponse(a.b);addLog('Biometric alert','warn');}
+  camLoop=setTimeout(analyzeFrame,500);
+}
+
+function greet(){
+  var h=new Date().getHours();
+  var g=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+  // Fetch daily briefing from server
+  fetch(API+'/api/briefing').then(function(r){return r.json();}).then(function(d){
+    var msg = d.briefing || (g+", Boss. All systems online. Say \"Friday\" to wake me.");
+    addMsg('friday', msg);
+  }).catch(function(){
+    addMsg('friday',g+", Boss. All systems online. Say \"Friday\" to wake me, \"Sleep Friday\" to put me back to sleep.");
+  });
+}
+
+// Poll for health alerts every 8 seconds
+function pollAlerts(){
+  fetch(API+'/api/alerts/poll').then(function(r){return r.json();}).then(function(d){
+    if(d.alerts&&d.alerts.length){
+      d.alerts.forEach(function(a){
+        showToast(a.title, a.message);
+        if(a.speak) speakResponse(a.message);
+        addLog('Alert: '+a.title,'warn');
+      });
+    }
+  }).catch(function(){});
+}
+
+// Load memory panel
+async function loadMemory(){
+  try{
+    const [factsRes, playlistsRes, remindersRes] = await Promise.all([
+      fetch(API+'/api/memory/facts'),
+      fetch(API+'/api/memory/playlists'),
+      fetch(API+'/api/memory/reminders')
+    ]);
+    const facts = await factsRes.json();
+    const playlists = await playlistsRes.json();
+    const reminders = await remindersRes.json();
+
+    var mp = document.getElementById('memory-panel');
+    if(!mp) return;
+    var html = '';
+
+    if(facts.facts&&facts.facts.length){
+      html += '<div class="plbl" style="margin-top:0">KNOWN FACTS</div>';
+      facts.facts.forEach(function(f){
+        html += '<div class="proc-row"><span class="proc-name" style="color:var(--dim)">'+f.key+'</span><span class="proc-cpu" style="color:var(--gold);font-size:9px">'+f.value+'</span></div>';
+      });
+    }
+
+    if(playlists.playlists&&playlists.playlists.length){
+      html += '<div class="plbl" style="margin-top:8px">SAVED PLAYLISTS</div>';
+      playlists.playlists.forEach(function(p){
+        html += '<div class="proc-row"><span class="proc-name">'+p.name+'</span><span class="proc-cpu" style="color:var(--dim);font-size:8px">'+p.query.substring(0,16)+'</span></div>';
+      });
+    }
+
+    if(reminders.reminders&&reminders.reminders.length){
+      var pending = reminders.reminders.filter(function(r){return !r.fired;});
+      if(pending.length){
+        html += '<div class="plbl" style="margin-top:8px">REMINDERS</div>';
+        pending.forEach(function(r){
+          html += '<div class="proc-row"><span class="proc-name">'+r.message.substring(0,18)+'</span><span class="proc-cpu" style="color:var(--dim);font-size:8px">'+r.time+'</span></div>';
+        });
+      }
+    }
+
+    if(!html) html = '<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px 0">Nothing remembered yet.<br>Tell me your name or preferences!</div>';
+    mp.innerHTML = html;
+  }catch(e){}
+}
+
+// News
+async function loadNews(cat){
+  cat=cat||'all';
+  const nl=document.getElementById('news-list');
+  nl.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:4px">Loading...</div>';
+  try{
+    const res=await fetch(API+'/api/news?category='+cat);
+    const d=await res.json();
+    nl.innerHTML='';
+    var items=d.items||(cat==='all'?[...(d.fox||[]),...(d.cyber||[]),...(d.espn||[])]:[] );
+    if(!items.length){nl.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center">No headlines.</div>';return;}
+    items.slice(0,8).forEach(function(h){
+      var r=document.createElement('div');
+      r.style.cssText='font-size:9px;color:var(--text);padding:3px 0;border-bottom:1px solid rgba(212,160,23,.05);line-height:1.4;cursor:pointer;';
+      r.textContent=h.title;
+      r.onclick=function(){if(h.link)window.open(h.link,'_blank');};
+      nl.appendChild(r);
+    });
+  }catch(e){nl.innerHTML='<div style="font-size:9px;color:var(--dim)">News unavailable.</div>';}
+}
+
+// PrizePicks
+let ppActiveLeagues = new Set(['NFL','NBA','MLB','NHL']);
+let ppViewMode = 'parlays';
+
+function pp_toggleLeague(lg){
+  const btn=document.getElementById('pp-'+lg.toLowerCase());
+  if(ppActiveLeagues.has(lg)){
+    ppActiveLeagues.delete(lg);
+    btn.classList.remove('active');
+  } else {
+    ppActiveLeagues.add(lg);
+    btn.classList.add('active');
+  }
+}
+
+function pp_setView(mode){
+  ppViewMode=mode;
+  document.getElementById('pp-view-parlays').style.background = mode==='parlays' ? 'rgba(212,160,23,.1)' : 'transparent';
+  document.getElementById('pp-view-raw').style.background = mode==='raw' ? 'rgba(212,160,23,.1)' : 'transparent';
+  if(mode==='raw') loadRawLines();
+  else loadParlays();
+}
+
+async function loadParlays(){
+  ppViewMode='parlays';
+  pp_setView('parlays');
+  const content=document.getElementById('pp-content');
+  content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px">Fetching live lines and building parlays...</div>';
+
+  const leagues=Array.from(ppActiveLeagues);
+  if(!leagues.length){
+    content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">Select at least one league.</div>';
+    return;
+  }
+  const legs=parseInt(document.getElementById('pp-legs').value);
+
+  try{
+    const res=await fetch(API+'/api/prizepicks/parlays',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({leagues,legs,count:3})});
+    const d=await res.json();
+    content.innerHTML='';
+    if(!d.parlays||!d.parlays.length){
+      content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px">No lines available right now \u2014 games may not be posted yet for today.</div>';
+      return;
+    }
+    d.parlays.forEach(function(parlay,idx){
+      const card=document.createElement('div');
+      card.className='pp-card';
+      let legsHtml='';
+      parlay.legs.forEach(function(leg){
+        const pickClass = leg.pick==='MORE' ? 'pp-pick-more' : 'pp-pick-less';
+        legsHtml+='<div class="pp-leg"><span style="color:var(--text)">'+leg.player+' <span style="color:var(--dim)">('+leg.league+')</span></span>'+
+          '<span>'+leg.stat_type+' <b class="'+pickClass+'">'+leg.pick+'</b> '+leg.line+'</span></div>';
+      });
+      card.innerHTML='<div class="pp-card-hdr"><span style="font-size:10px;color:var(--gold-b);letter-spacing:1px">PARLAY '+(idx+1)+' \u2014 '+parlay.leg_count+' LEGS</span></div>'+legsHtml;
+      content.appendChild(card);
+    });
+  }catch(e){
+    content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px">Could not reach PrizePicks. Try again shortly.</div>';
+  }
+}
+
+async function loadRawLines(){
+  pp_setView('raw');
+  const content=document.getElementById('pp-content');
+  content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px">Loading live lines...</div>';
+
+  const leagues=Array.from(ppActiveLeagues);
+  if(!leagues.length){
+    content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">Select at least one league.</div>';
+    return;
+  }
+
+  try{
+    content.innerHTML='';
+    for(const lg of leagues){
+      const res=await fetch(API+'/api/prizepicks/projections?league='+lg);
+      const d=await res.json();
+      const props=d.projections||[];
+      if(!props.length)continue;
+      const hdr=document.createElement('div');
+      hdr.style.cssText='font-size:9px;color:var(--gold-b);letter-spacing:2px;margin:6px 0 4px;';
+      hdr.textContent=lg+' ('+props.length+' lines)';
+      content.appendChild(hdr);
+      props.slice(0,6).forEach(function(p){
+        const row=document.createElement('div');
+        row.className='pp-leg';
+        row.innerHTML='<span style="color:var(--text)">'+p.player+'</span><span>'+p.stat_type+': '+p.line+'</span>';
+        content.appendChild(row);
+      });
+    }
+    if(!content.innerHTML){
+      content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px">No lines posted yet for selected leagues.</div>';
+    }
+  }catch(e){
+    content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px">Could not load lines.</div>';
+  }
+}
+
+// Network
+async function updateNetwork(){
+  try{
+    const res=await fetch(API+'/api/network/status');
+    const d=await res.json();
+    document.getElementById('net-status').textContent=d.online?'ONLINE':'OFFLINE';
+    document.getElementById('net-status').className='sv'+(d.online?'':' alert');
+    document.getElementById('net-ping').textContent=d.ping_ms?Math.round(d.ping_ms)+'ms':'—';
+    document.getElementById('net-ip').textContent=d.local_ip||'—';
+    document.getElementById('net-devices').textContent=(d.devices||[]).length;
+    var dl=document.getElementById('device-list');dl.innerHTML='';
+    (d.devices||[]).slice(0,5).forEach(function(dev){
+      var r=document.createElement('div');r.className='proc-row';
+      r.innerHTML='<span class="proc-name" style="font-size:8px">'+dev.ip+'</span>'+
+        '<span style="font-size:8px;color:'+(dev.known?'var(--dim)':'var(--red-b)')+'">'+
+        (dev.known?'trusted':'UNKNOWN')+'</span>';
+      dl.appendChild(r);
+    });
+  }catch(e){}
+}
+
+async function runSpeedTest(){
+  document.getElementById('net-speed').textContent='Running speed test...';
+  try{
+    const res=await fetch(API+'/api/network/speed',{method:'POST'});
+    const d=await res.json();
+    document.getElementById('net-speed').textContent=d.message||'—';
+  }catch(e){document.getElementById('net-speed').textContent='Speed test failed.';}
+}
+
+// Notes
+function showAddNote(){
+  var f=document.getElementById('add-note-form');
+  f.style.display=f.style.display==='none'?'block':'none';
+}
+
+async function submitNote(){
+  var title=document.getElementById('note-title').value.trim();
+  var body=document.getElementById('note-body').value.trim();
+  if(!title){showToast('MISSING INFO','Please enter a title for the note.');return;}
+  await fetch(API+'/api/notes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,body})});
+  document.getElementById('add-note-form').style.display='none';
+  document.getElementById('note-title').value='';
+  document.getElementById('note-body').value='';
+  addLog('Note saved: '+title,'ok');
+  loadNotes();
+}
+
+async function loadNotes(){
+  try{
+    const res=await fetch(API+'/api/notes');
+    const d=await res.json();
+    var nl=document.getElementById('notes-list');nl.innerHTML='';
+    if(!d.notes||!d.notes.length){
+      nl.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">No notes yet. Say "Friday, make a note" to start.</div>';
+      return;
+    }
+    d.notes.slice(0,8).forEach(function(n){
+      var r=document.createElement('div');r.className='proc-row';
+      r.style.cssText='flex-direction:column;align-items:flex-start;padding:5px 0;';
+      r.innerHTML='<div style="display:flex;width:100%;justify-content:space-between">'+
+        '<span class="proc-name" style="color:'+(n.pinned?'var(--gold-b)':'var(--text)')+'">'+
+        (n.pinned?'&#128204; ':'')+n.title+'</span>'+
+        '<button onclick="deleteNoteById('+n.id+')" style="background:transparent;border:none;color:rgba(192,57,43,.5);cursor:pointer;font-size:10px">&#10005;</button>'+
+        '</div>'+
+        '<span style="font-size:8px;color:var(--dim)">'+n.updated+'</span>';
+      nl.appendChild(r);
+    });
+  }catch(e){}
+}
+
+async function deleteNoteById(id){
+  await fetch(API+'/api/notes/'+id,{method:'DELETE'});
+  loadNotes();
+}
+
+// Routines
+let rbSteps = [];   // working array of steps for the builder
+let rbEditingId = null;
+let rbViewMode = 'visual';
+
+const STEP_TYPES = [
+  {value:'launch_app',      label:'Launch App',      fields:[{key:'app',level:false,placeholder:'app name (e.g. chrome)'}]},
+  {value:'play_music',      label:'Play Music',      fields:[{key:'query',placeholder:'song / playlist search'}]},
+  {value:'music_control',   label:'Music Control',   fields:[{key:'action',select:['pause','resume','next','prev']}]},
+  {value:'volume',          label:'Set Volume',      fields:[{key:'level',number:true,placeholder:'0-100'}]},
+  {value:'open_url',        label:'Open URL',        fields:[{key:'url',placeholder:'https://...'}]},
+  {value:'clean_desktop',   label:'Clean Desktop',   fields:[]},
+  {value:'speak',           label:'Speak / Announce',fields:[{key:'message',placeholder:'what FRIDAY should say'}]},
+  {value:'delay',           label:'Wait / Delay',    fields:[{key:'seconds',number:true,placeholder:'seconds to wait'}]},
+];
+
+function getStepType(t){return STEP_TYPES.find(s=>s.value===t)||STEP_TYPES[0];}
+
+function openRoutineBuilder(routine){
+  rbEditingId = routine ? routine.id : null;
+  document.getElementById('routine-modal-title').textContent = routine ? 'EDIT ROUTINE' : 'NEW ROUTINE';
+  document.getElementById('rb-name').value = routine ? routine.name : '';
+  document.getElementById('rb-desc').value = routine ? routine.description : '';
+  rbSteps = routine ? JSON.parse(JSON.stringify(routine.steps)) : [];
+  renderSteps();
+  document.getElementById('rb-text-json').value = JSON.stringify(rbSteps, null, 2);
+  toggleStepView('visual');
+  document.getElementById('routine-modal').style.display='flex';
+}
+
+function closeRoutineBuilder(){
+  document.getElementById('routine-modal').style.display='none';
+}
+
+function toggleStepView(mode){
+  rbViewMode = mode;
+  if(mode==='text'){
+    // Sync visual -> text
+    document.getElementById('rb-text-json').value = JSON.stringify(rbSteps, null, 2);
+    document.getElementById('rb-text-view').style.display='block';
+    document.getElementById('rb-visual-view').style.display='none';
+    document.getElementById('view-text-btn').style.background='rgba(212,160,23,.1)';
+    document.getElementById('view-visual-btn').style.background='transparent';
+  } else {
+    // Sync text -> visual
+    try{
+      const parsed = JSON.parse(document.getElementById('rb-text-json').value);
+      if(Array.isArray(parsed)) rbSteps = parsed;
+    }catch(e){}
+    renderSteps();
+    document.getElementById('rb-text-view').style.display='none';
+    document.getElementById('rb-visual-view').style.display='block';
+    document.getElementById('view-visual-btn').style.background='rgba(212,160,23,.1)';
+    document.getElementById('view-text-btn').style.background='transparent';
+  }
+}
+
+function addStep(){
+  rbSteps.push({type:'launch_app', app:''});
+  renderSteps();
+}
+
+function removeStep(idx){
+  rbSteps.splice(idx,1);
+  renderSteps();
+}
+
+function moveStep(idx,dir){
+  const newIdx=idx+dir;
+  if(newIdx<0||newIdx>=rbSteps.length)return;
+  const tmp=rbSteps[idx];rbSteps[idx]=rbSteps[newIdx];rbSteps[newIdx]=tmp;
+  renderSteps();
+}
+
+function changeStepType(idx,newType){
+  const st=getStepType(newType);
+  const newStep={type:newType};
+  st.fields.forEach(f=>{newStep[f.key]='';});
+  rbSteps[idx]=newStep;
+  renderSteps();
+}
+
+function updateStepField(idx,key,value){
+  rbSteps[idx][key]=value;
+}
+
+function renderSteps(){
+  const list=document.getElementById('rb-steps-list');
+  list.innerHTML='';
+  if(!rbSteps.length){
+    list.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px">No steps yet. Add one below.</div>';
+    return;
+  }
+  rbSteps.forEach((step,idx)=>{
+    const st=getStepType(step.type);
+    const card=document.createElement('div');
+    card.style.cssText='border:1px solid var(--bdr);background:rgba(5,2,0,.55);padding:8px;margin-bottom:6px;';
+    let fieldsHtml='';
+    st.fields.forEach(f=>{
+      const val=step[f.key]!==undefined?step[f.key]:'';
+      if(f.select){
+        let opts='';
+        f.select.forEach(opt=>{opts+='<option value="'+opt+'"'+(val===opt?' selected':'')+'>'+opt+'</option>';});
+        fieldsHtml+='<select data-step-idx="'+idx+'" data-field-key="'+f.key+'" '+
+          'oninput="updateStepField('+idx+',\''+f.key+'\',this.value)" '+
+          'style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold);font-family:Share Tech Mono,monospace;font-size:9px;padding:5px;margin-top:4px;outline:none">'+opts+'</select>';
+      } else {
+        fieldsHtml+='<input data-step-idx="'+idx+'" data-field-key="'+f.key+'" '+
+          'value="'+(val+'').replace(/"/g,'&quot;').replace(/'/g,'&#39;')+'" '+
+          'placeholder="'+f.placeholder+'" type="'+(f.number?'number':'text')+'" '+
+          'oninput="updateStepField('+idx+',\''+f.key+'\',this.value)" '+
+          'style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:9px;padding:5px 7px;margin-top:4px;outline:none"/>';
+      }
+    });
+    let typeOptions='';
+    STEP_TYPES.forEach(t=>{typeOptions+='<option value="'+t.value+'"'+(t.value===step.type?' selected':'')+'>'+t.label+'</option>';});
+    card.innerHTML=
+      '<div style="display:flex;align-items:center;gap:6px">'+
+        '<span style="font-size:9px;color:var(--dim);min-width:14px">#'+(idx+1)+'</span>'+
+        '<select oninput="changeStepType('+idx+',this.value)" style="flex:1;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:9px;padding:5px;outline:none">'+typeOptions+'</select>'+
+        '<button onclick="moveStep('+idx+',-1)" style="background:transparent;border:none;color:var(--dim);cursor:pointer;font-size:11px;padding:0 3px">&#9650;</button>'+
+        '<button onclick="moveStep('+idx+',1)" style="background:transparent;border:none;color:var(--dim);cursor:pointer;font-size:11px;padding:0 3px">&#9660;</button>'+
+        '<button onclick="removeStep('+idx+')" style="background:transparent;border:none;color:rgba(192,57,43,.6);cursor:pointer;font-size:12px;padding:0 3px">&#10005;</button>'+
+      '</div>'+
+      fieldsHtml;
+    list.appendChild(card);
+  });
+}
+
+async function saveRoutineFromBuilder(){
+  const name=document.getElementById('rb-name').value.trim();
+  const desc=document.getElementById('rb-desc').value.trim();
+  if(!name){showToast('MISSING INFO','Please name your routine.');return;}
+
+  let steps;
+
+  if(rbViewMode==='text'){
+    // Parse from text editor
+    try{
+      steps=JSON.parse(document.getElementById('rb-text-json').value);
+      if(!Array.isArray(steps)){showToast('INVALID JSON','Steps must be a JSON array.');return;}
+    }catch(e){
+      showToast('INVALID JSON','Could not parse steps JSON. Check syntax.');
+      return;
+    }
+  } else {
+    // Force-read all input/select values from the visual builder DOM before saving
+    const stepCards = document.getElementById('rb-steps-list').querySelectorAll('div[data-step-idx]');
+    // Re-collect from rbSteps array but force-read from DOM inputs too
+    const allInputs = document.getElementById('rb-steps-list').querySelectorAll('input, select');
+    allInputs.forEach(function(el){
+      if(el.dataset.stepIdx !== undefined && el.dataset.fieldKey){
+        const idx = parseInt(el.dataset.stepIdx);
+        if(rbSteps[idx]) rbSteps[idx][el.dataset.fieldKey] = el.type==='number' ? parseFloat(el.value)||0 : el.value;
+      }
+    });
+    steps = rbSteps.filter(s => s.type); // filter any empty steps
+    if(!steps.length){showToast('NO STEPS','Add at least one step to the routine.');return;}
+  }
+
+  try{
+    let res;
+    if(rbEditingId){
+      res = await fetch(API+'/api/routines/'+rbEditingId,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,description:desc,steps})});
+    } else {
+      res = await fetch(API+'/api/routines',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,description:desc,steps})});
+    }
+    const d = await res.json();
+    if(d.success===false){
+      showToast('SAVE ERROR', d.error||'Could not save routine.');
+      return;
+    }
+    addLog((rbEditingId?'Routine updated: ':'Routine created: ')+name,'ok');
+    showToast('ROUTINE SAVED', name+' saved successfully.');
+    closeRoutineBuilder();
+    loadRoutines();
+  }catch(e){
+    showToast('SAVE ERROR','Could not reach server. Is FRIDAY running?');
+  }
+}
+
+async function loadRoutines(){
+  try{
+    const res=await fetch(API+'/api/routines');
+    const d=await res.json();
+    var rl=document.getElementById('routines-list');rl.innerHTML='';
+    if(!d.routines||!d.routines.length){
+      rl.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">No routines yet. Click + NEW to create one.</div>';
+      return;
+    }
+    d.routines.forEach(function(r){
+      var el=document.createElement('div');el.className='proc-row';
+      el.style.cssText='flex-direction:column;align-items:stretch;padding:6px 0;border-bottom:1px solid rgba(212,160,23,.08);';
+      el.innerHTML='<div style="display:flex;width:100%;align-items:center;gap:6px">'+
+        '<button onclick="runRoutineById('+r.id+')" style="padding:4px 8px;border:1px solid rgba(212,160,23,.4);background:rgba(212,160,23,.07);color:var(--gold);font-family:Share Tech Mono,monospace;font-size:8px;cursor:pointer;letter-spacing:1px">RUN</button>'+
+        '<div style="flex:1;cursor:pointer" onclick="openRoutineBuilder('+JSON.stringify(r).replace(/"/g,'&quot;')+')">'+
+        '<div style="font-size:10px;color:var(--gold-b)">'+r.name+' <span style="font-size:8px;color:var(--dim)">('+r.steps.length+' steps)</span></div>'+
+        '<div style="font-size:8px;color:var(--dim)">'+r.description+'</div></div>'+
+        '<button onclick="openRoutineBuilder('+JSON.stringify(r).replace(/"/g,'&quot;')+')" style="background:transparent;border:none;color:var(--gold);cursor:pointer;font-size:10px">&#9998;</button>'+
+        '<button onclick="deleteRoutineById('+r.id+')" style="background:transparent;border:none;color:rgba(192,57,43,.4);cursor:pointer;font-size:10px">&#10005;</button>'+
+        '</div>';
+      rl.appendChild(el);
+    });
+  }catch(e){}
+}
+
+async function runRoutineById(id){
+  const res=await fetch(API+'/api/routines/'+id+'/run',{method:'POST'});
+  const d=await res.json();
+  if(d.success){addLog('Routine started','ok');showToast('ROUTINE STARTED',d.message);}
+}
+
+async function deleteRoutineById(id){
+  await fetch(API+'/api/routines/'+id,{method:'DELETE'});
+  loadRoutines();
+  addLog('Routine removed');
+}
+
+// Screen
+async function captureScreen(){
+  document.getElementById('screen-result').textContent='Capturing...';
+  try{
+    const res=await fetch(API+'/api/screen/capture',{method:'POST'});
+    const d=await res.json();
+    document.getElementById('screen-result').textContent=d.message||'Done.';
+    addLog('Screenshot saved','ok');
+  }catch(e){document.getElementById('screen-result').textContent='Capture failed.';}
+}
+
+async function analyseScreen(){
+  document.getElementById('screen-result').textContent='Analysing screen with vision AI...';
+  try{
+    const res=await fetch(API+'/api/screen/analyse',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'What is on the screen? Be concise.'})});
+    const d=await res.json();
+    document.getElementById('screen-result').textContent=d.description||'No description.';
+    if(d.description)speakResponse(d.description);
+  }catch(e){document.getElementById('screen-result').textContent='Analysis failed. Make sure llava is installed: ollama pull llava';}
+}
+
+async function actClipboard(){
+  document.getElementById('screen-result').textContent='Reading clipboard...';
+  try{
+    const res=await fetch(API+'/api/screen/clipboard/act',{method:'POST'});
+    const d=await res.json();
+    document.getElementById('screen-result').textContent='['+d.type.toUpperCase()+'] '+d.result;
+    if(d.result)speakResponse(d.result.substring(0,200));
+  }catch(e){document.getElementById('screen-result').textContent='Clipboard action failed.';}
+}
+
+async function refreshEmail(){
+  try{
+    const statusRes=await fetch(API+'/api/email/status');
+    const status=await statusRes.json();
+    if(!status.available){
+      document.getElementById('email-summary').textContent='Outlook not installed. Install Microsoft Outlook to enable.';
+      document.getElementById('cal-summary').textContent='—';
+      return;
+    }
+    const [emailRes,calRes]=await Promise.all([
+      fetch(API+'/api/email/summary'),
+      fetch(API+'/api/calendar/today')
+    ]);
+    const emailData=await emailRes.json();
+    const calData=await calRes.json();
+    document.getElementById('email-summary').innerHTML=(emailData.summary||'Inbox clear.').replace(/\n/g,'<br>');
+    document.getElementById('cal-summary').innerHTML=(calData.summary||'No events today.').replace(/\n/g,'<br>');
+  }catch(e){
+    document.getElementById('email-summary').textContent='Outlook not connected.';
+    document.getElementById('cal-summary').textContent='—';
+  }
+}
+
+// Scheduler
+async function loadTasks(){
+  try{
+    const res=await fetch(API+'/api/scheduler/tasks');
+    const d=await res.json();
+    const tl=document.getElementById('task-list');
+    if(!d.tasks||!d.tasks.length){
+      tl.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">No tasks scheduled.</div>';
+      return;
+    }
+    tl.innerHTML='';
+    d.tasks.forEach(function(t){
+      var r=document.createElement('div');
+      r.className='proc-row';
+      r.style.cssText='flex-direction:column;align-items:flex-start;padding:5px 0;';
+      r.innerHTML='<div style="display:flex;width:100%;justify-content:space-between;align-items:center">'+
+        '<span class="proc-name" style="color:'+(t.enabled?'var(--gold-b)':'var(--dim)')+'">'+t.name+'</span>'+
+        '<button onclick="deleteTask('+t.id+')" style="background:transparent;border:none;color:rgba(192,57,43,.5);cursor:pointer;font-size:11px;padding:0 4px">&#10005;</button>'+
+        '</div>'+
+        '<span style="font-size:8px;color:var(--dim);letter-spacing:1px">'+t.schedule_human+' &#9679; Next: '+t.next_run+'</span>';
+      tl.appendChild(r);
+    });
+  }catch(e){}
+}
+
+function showAddTask(){
+  var f=document.getElementById('add-task-form');
+  f.style.display=f.style.display==='none'?'block':'none';
+}
+
+async function submitTask(){
+  var name=document.getElementById('task-name').value.trim();
+  var ttype=document.getElementById('task-type').value;
+  var tdata=document.getElementById('task-data').value.trim();
+  var sched=document.getElementById('task-schedule').value.trim();
+  if(!name||!sched){showToast('MISSING INFO','Please fill in task name and schedule.');return;}
+  var schedRes=await fetch(API+'/api/scheduler/parse',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:sched})});
+  var schedData=await schedRes.json();
+  var taskData={};
+  if(ttype==='play_music')taskData={query:tdata};
+  else if(ttype==='launch_app')taskData={app:tdata};
+  else if(ttype==='speak')taskData={message:tdata};
+  else if(ttype==='scan_filesystem')taskData={auto_confirm:true};
+  await fetch(API+'/api/scheduler/tasks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,task_type:ttype,task_data:taskData,schedule:schedData.schedule})});
+  document.getElementById('add-task-form').style.display='none';
+  document.getElementById('task-name').value='';
+  document.getElementById('task-data').value='';
+  document.getElementById('task-schedule').value='';
+  addLog('Task scheduled: '+name,'ok');
+  showToast('TASK SCHEDULED',name+' — '+schedData.human);
+  loadTasks();
+}
+
+async function deleteTask(id){
+  await fetch(API+'/api/scheduler/tasks/'+id,{method:'DELETE'});
+  loadTasks();addLog('Task removed');
+}
+
+// Smart suggestions — check once after 2 min (enough time for habits to be counted)
+async function checkSuggestions(){
+  try{
+    const res=await fetch(API+'/api/memory/suggestions');
+    const d=await res.json();
+    if(d.suggestions&&d.suggestions.length){
+      var apps=d.suggestions.join(', ');
+      showToast('FRIDAY SUGGESTION','You usually open '+apps+' around this time, Boss. Want me to launch them?');
+      speakResponse('You usually open '+apps+' around this time. Want me to launch them?');
+    }
+  }catch(e){}
+}
+
+greet();checkOllama();updateMetrics();updateSpotify();loadMemory();
+refreshEmail();loadTasks();loadNews();updateNetwork();loadNotes();loadRoutines();loadParlays();
+setInterval(updateMetrics,4000);
+setInterval(checkOllama,15000);
+setInterval(updateSpotify,3000);
+setInterval(pollAlerts,8000);
+setInterval(loadMemory,30000);
+setInterval(loadTasks,60000);
+setInterval(refreshEmail,120000);
+setInterval(updateNetwork,30000);
+setInterval(loadNews,600000);
+setInterval(loadNotes,60000);
+setTimeout(checkSuggestions,120000);
+window.addEventListener('load',function(){setTimeout(startVoice,1500);});
+</script>
+</body>
+</html>
