@@ -1,1 +1,19 @@
-node_modules/ 
+node_modules/
+__pycache__/
+*.pyc
+
+# Local runtime data — regenerated on first run, never commit
+.env
+.spotify_cache
+friday_memory.db
+friday_pin.json
+friday_faces/
+friday_faces_config.json
+friday_face_model.yml
+
+# Downloaded at install time
+piper/
+
+# Build output
+dist/
+build/

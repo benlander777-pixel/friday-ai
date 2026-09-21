@@ -230,7 +230,7 @@ def install_presets():
         {"type": "speak",      "message": "Good morning, Boss. Starting your morning routine."},
         {"type": "play_music", "query": "morning chill playlist"},
         {"type": "launch_app", "app": "chrome"},
-        {"delay": 2},
+        {"type": "delay", "seconds": 2},
     ], description="Starts music, opens Chrome, sets volume")
 
     # Work mode

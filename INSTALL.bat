@@ -7,25 +7,34 @@ echo    F.R.I.D.A.Y.  --  INSTALLATION
 echo  ============================================================
 echo.
 
-echo  [1/6] Checking Python...
+echo  [1/7] Checking Python...
 python --version >nul 2>&1
 if errorlevel 1 (echo  ERROR: Python not found. Install from https://python.org & pause & exit /b 1)
 echo       OK
 
-echo  [2/6] Installing Python packages...
-pip install flask flask-cors requests psutil spotipy pywin32 pillow opencv-python face-recognition --quiet
+echo  [2/7] Installing Python packages...
+pip install -r requirements.txt --quiet
 echo       OK
 
-echo  [3/6] Checking Node.js...
+echo  [3/7] Checking .env configuration...
+if not exist ".env" (
+    copy /y ".env.example" ".env" >nul
+    echo       Created .env — add your Spotify credentials before first launch.
+    echo       See: https://developer.spotify.com/dashboard
+) else (
+    echo       .env already exists.
+)
+
+echo  [4/7] Checking Node.js...
 node --version >nul 2>&1
 if errorlevel 1 (echo  ERROR: Node.js not found. Install from https://nodejs.org & pause & exit /b 1)
 echo       OK
 
-echo  [4/6] Installing Electron...
+echo  [5/7] Installing Electron...
 npm install --save-dev electron electron-builder --silent
 echo       OK
 
-echo  [5/6] Downloading Piper voice model (one-time, ~50MB)...
+echo  [6/7] Downloading Piper voice model (one-time, ~50MB)...
 if not exist "piper" mkdir piper
 if not exist "piper\piper.exe" (
     echo     Downloading Piper...
@@ -38,7 +47,7 @@ if not exist "piper\piper.exe" (
 ) else (echo     Piper already installed.)
 echo       OK
 
-echo  [6/6] Checking Ollama...
+echo  [7/7] Checking Ollama...
 ollama --version >nul 2>&1
 if errorlevel 1 (
     echo  NOTE: Ollama not found. Download from https://ollama.ai

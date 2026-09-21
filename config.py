@@ -2,16 +2,25 @@
 #  F.R.I.D.A.Y. CONFIGURATION
 # ============================================================
 
+import os
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 # Ollama model
 OLLAMA_MODEL      = "llama3"
 OLLAMA_URL        = "http://localhost:11434/api/generate"
 OLLAMA_VISION_MODEL = "llava"   # ollama pull llava
 
-# Spotify
-SPOTIFY_CLIENT_ID     = "4a079c9f93c248b3b1a39626f5f9a4f7"
-SPOTIFY_CLIENT_SECRET = "5bca1bdf19da4204a2e0985eebf17545"
-SPOTIFY_USERNAME      = "benlander777"
-SPOTIFY_REDIRECT_URI  = "http://127.0.0.1:8888/callback"
+# Spotify — set these in a local .env file (copy .env.example to .env).
+# Never commit real credentials to git.
+SPOTIFY_CLIENT_ID     = os.environ.get("SPOTIFY_CLIENT_ID", "")
+SPOTIFY_CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET", "")
+SPOTIFY_USERNAME      = os.environ.get("SPOTIFY_USERNAME", "")
+SPOTIFY_REDIRECT_URI  = os.environ.get("SPOTIFY_REDIRECT_URI", "http://127.0.0.1:8888/callback")
 SPOTIFY_SCOPE         = (
     "user-modify-playback-state "
     "user-read-playback-state "

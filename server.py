@@ -3,10 +3,13 @@ F.R.I.D.A.Y. Backend Server
 Requirements: pip install flask flask-cors requests psutil spotipy
 """
 
-import os, glob, json, time, shutil, fnmatch, subprocess, threading
+import os, glob, json, time, shutil, fnmatch, subprocess, threading, logging, webbrowser
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import requests as req
+
+logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(levelname)s: %(message)s", datefmt="%H:%M:%S")
+log = logging.getLogger("friday")
 
 import config
 import cleaner as fs_cleaner
@@ -59,6 +62,9 @@ def get_spotify():
     with sp_lock:
         if sp is not None:
             return sp
+        if not config.SPOTIFY_CLIENT_ID or not config.SPOTIFY_CLIENT_SECRET:
+            print("[Spotify] Not configured — add SPOTIFY_CLIENT_ID / SPOTIFY_CLIENT_SECRET to .env")
+            return None
         try:
             import spotipy
             from spotipy.oauth2 import SpotifyOAuth
@@ -521,7 +527,8 @@ def execute_action(action: dict) -> dict:
             subprocess.Popen(cmds[cmd], shell=True)
             return {"success": True, "message": f"System {cmd} initiated, Boss."}
         return {"success": False, "message": f"Unknown system command: {cmd}"}
-        return {"success": True, "message": f"Opened {action.get('url','')}"}
+    if t == "open_url":
+        return open_url(action.get("url", ""))
     if t in ("volume","set_volume"):
         set_volume(action.get("level", 50))
         return {"success": True, "message": f"Volume set to {action.get('level',50)}%"}
@@ -570,6 +577,16 @@ def launch_app(name: str) -> dict:
         return {"success": True, "message": f"Launching {name}"}
     except Exception as e:
         return {"success": False, "message": str(e)}
+
+
+def open_url(url: str) -> dict:
+    if not url:
+        return {"success": False, "message": "No URL provided."}
+    try:
+        webbrowser.open(url)
+        return {"success": True, "message": f"Opened {url}"}
+    except Exception as e:
+        return {"success": False, "message": f"Could not open URL: {e}"}
 
 
 # ── Desktop Cleaner ───────────────────────────────────────────────────────────

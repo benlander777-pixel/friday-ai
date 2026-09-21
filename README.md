@@ -15,30 +15,45 @@
 
 ## First-Time Setup
 
-### 1. Spotify — Add Redirect URI
-1. Go to https://developer.spotify.com/dashboard
-2. Click your app → **Settings**
+### 1. Spotify — create an app and get credentials
+1. Go to https://developer.spotify.com/dashboard and create an app.
+2. Click your app → **Settings**.
 3. Under **Redirect URIs**, add: `http://127.0.0.1:8888/callback`
-4. Click **Save**
+4. Click **Save**, then copy your **Client ID** and **Client Secret**.
 
 ### 2. Run the installer
-Double-click **INSTALL.bat**
+Double-click **INSTALL.bat**. It installs Python/Node dependencies and, on
+first run, creates a `.env` file for you from `.env.example`.
 
-### 3. Pull an Ollama model (first time only)
+### 3. Add your Spotify credentials
+Open `.env` in a text editor and fill in:
+```
+SPOTIFY_CLIENT_ID=your_client_id
+SPOTIFY_CLIENT_SECRET=your_client_secret
+SPOTIFY_USERNAME=your_spotify_username
+```
+`.env` is gitignored — it stays on your machine only, never committed.
+
+### 4. Pull an Ollama model (first time only)
 ```
 ollama pull llama3
 ```
 
-### 4. Start Ollama
+### 5. Start Ollama
 ```
 ollama serve
 ```
 
-### 5. Launch FRIDAY
+### 6. Launch FRIDAY
 Double-click **START_FRIDAY.bat**
 
 On first launch, a browser window will open asking you to authorise Spotify.
-Log in and click Allow — this only happens once. A `.spotify_cache` file is saved locally.
+Log in and click Allow — this only happens once. A `.spotify_cache` file is
+saved locally (gitignored, never committed) with your Spotify session token.
+
+Face enrollment (photos) and your PIN hash are likewise stored only in local,
+gitignored files (`friday_faces/`, `friday_pin.json`) — nothing about your
+face or PIN ever leaves your machine or gets committed to git.
 
 ---
 
@@ -76,7 +91,9 @@ friday-app/
 ├── main.js           Electron app shell
 ├── preload.js        Secure IPC bridge
 ├── server.py         Flask + Ollama + Spotify backend
-├── config.py         All settings (model, credentials, etc.)
+├── config.py         All settings (model, ports, etc.)
+├── .env              Your local secrets (gitignored — created from .env.example)
+├── requirements.txt  Python dependencies
 ├── package.json      Node/Electron config
 ├── static/
 │   └── index.html    The Iron Man HUD

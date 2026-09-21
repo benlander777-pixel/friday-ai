@@ -1,0 +1,17 @@
+flask
+flask-cors
+requests
+psutil
+spotipy
+python-dotenv
+pywin32
+pillow
+numpy
+# NOTE: must be opencv-contrib-python, not opencv-python — face_auth.py
+# uses cv2.face (LBPH recognizer), which only ships in the contrib build.
+opencv-contrib-python
+
+# Optional — enables the GPU panel if you have an NVIDIA card. Not installed
+# by default: it's unmaintained and can fail to build on newer Python/pip.
+# Install manually if you want it: pip install GPUtil
+
