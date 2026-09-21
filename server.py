@@ -24,6 +24,7 @@ import network as net_mod
 import routines as routines_mod
 import prizepicks as pp_mod
 import face_auth as face_mod
+from platform_utils import IS_WINDOWS, IS_LINUX, which_first, run_silent, user_dir
 
 # Holds the last scan result until user confirms
 _pending_scan = None
@@ -102,10 +103,21 @@ def get_best_device(client) -> str | None:
 
         if not devices:
             # Spotify app might not be registered yet — open it and wait
-            sp_path = os.path.expandvars(r"%APPDATA%\Spotify\Spotify.exe")
-            if os.path.exists(sp_path):
+            launch_cmd = None
+            if IS_WINDOWS:
+                sp_path = os.path.expandvars(r"%APPDATA%\Spotify\Spotify.exe")
+                if os.path.exists(sp_path):
+                    launch_cmd = [sp_path]
+            else:
+                native = which_first("spotify")
+                if native:
+                    launch_cmd = [native]
+                elif which_first("flatpak"):
+                    launch_cmd = ["flatpak", "run", "com.spotify.Client"]
+
+            if launch_cmd:
                 print("[Spotify] Opening Spotify app...")
-                subprocess.Popen([sp_path])
+                subprocess.Popen(launch_cmd)
                 time.sleep(4)
                 devices = client.devices().get("devices", [])
 
@@ -516,17 +528,29 @@ def execute_action(action: dict) -> dict:
         return {"success": True, "message": f"Available routines:\n{lines}"}
     if t == "system_command":
         cmd = action.get("command","").lower()
-        cmds = {
-            "shutdown":  "shutdown /s /t 30",
-            "restart":   "shutdown /r /t 30",
-            "sleep":     "rundll32.exe powrprof.dll,SetSuspendState 0,1,0",
-            "lock":      "rundll32.exe user32.dll,LockWorkStation",
-            "hibernate": "shutdown /h",
-        }
-        if cmd in cmds:
+        if IS_WINDOWS:
+            cmds = {
+                "shutdown":  "shutdown /s /t 30",
+                "restart":   "shutdown /r /t 30",
+                "sleep":     "rundll32.exe powrprof.dll,SetSuspendState 0,1,0",
+                "lock":      "rundll32.exe user32.dll,LockWorkStation",
+                "hibernate": "shutdown /h",
+            }
+            if cmd not in cmds:
+                return {"success": False, "message": f"Unknown system command: {cmd}"}
             subprocess.Popen(cmds[cmd], shell=True)
-            return {"success": True, "message": f"System {cmd} initiated, Boss."}
-        return {"success": False, "message": f"Unknown system command: {cmd}"}
+        else:
+            cmds = {
+                "shutdown":  ["systemctl", "poweroff"],
+                "restart":   ["systemctl", "reboot"],
+                "sleep":     ["systemctl", "suspend"],
+                "lock":      ["loginctl", "lock-session"],
+                "hibernate": ["systemctl", "hibernate"],
+            }
+            if cmd not in cmds:
+                return {"success": False, "message": f"Unknown system command: {cmd}"}
+            subprocess.Popen(cmds[cmd])
+        return {"success": True, "message": f"System {cmd} initiated, Boss."}
     if t == "open_url":
         return open_url(action.get("url", ""))
     if t in ("volume","set_volume"):
@@ -538,7 +562,7 @@ def execute_action(action: dict) -> dict:
 
 
 # ── App Launcher ──────────────────────────────────────────────────────────────
-COMMON_APPS = {
+COMMON_APPS_WINDOWS = {
     "notepad":      "notepad.exe",
     "calculator":   "calc.exe",
     "paint":        "mspaint.exe",
@@ -560,23 +584,65 @@ COMMON_APPS = {
     "terminal":     "wt.exe",
 }
 
+# Each value is a list of candidate [binary, *args] commands, tried in order —
+# first one found on PATH wins. Prefers KDE Plasma-native apps first since
+# that's the reference desktop, with common alternatives as fallbacks.
+COMMON_APPS_LINUX = {
+    "notepad":      [["kate"], ["gedit"], ["kwrite"], ["featherpad"], ["xed"]],
+    "calculator":   [["kcalc"], ["gnome-calculator"], ["qalculate-gtk"]],
+    "paint":        [["kolourpaint"], ["gimp"]],
+    "explorer":     [["dolphin"], ["nautilus"], ["thunar"], ["pcmanfm"]],
+    "chrome":       [["google-chrome-stable"], ["google-chrome"], ["chromium"], ["chromium-browser"]],
+    "firefox":      [["firefox"]],
+    "edge":         [["microsoft-edge-stable"], ["microsoft-edge"]],
+    "spotify":      [["spotify"]],
+    "vlc":          [["vlc"]],
+    "vscode":       [["code"]],
+    "word":         [["libreoffice", "--writer"]],
+    "excel":        [["libreoffice", "--calc"]],
+    "cmd":          [["konsole"], ["gnome-terminal"], ["xterm"]],
+    "powershell":   [["konsole"], ["gnome-terminal"], ["xterm"]],
+    "task manager": [["plasma-systemmonitor"], ["ksysguard"], ["gnome-system-monitor"]],
+    "settings":     [["systemsettings"], ["systemsettings5"], ["gnome-control-center"]],
+    "discord":      [["discord"]],
+    "steam":        [["steam"]],
+    "terminal":     [["konsole"], ["gnome-terminal"], ["xterm"]],
+}
+
+COMMON_APPS = COMMON_APPS_LINUX if IS_LINUX else COMMON_APPS_WINDOWS
+
+
 def launch_app(name: str) -> dict:
     key = name.lower().strip()
-    path = COMMON_APPS.get(key)
-    if path:
+
+    if IS_WINDOWS:
+        path = COMMON_APPS.get(key)
+        if path:
+            try:
+                if path.startswith("ms-"):
+                    subprocess.Popen(["start", path], shell=True)
+                else:
+                    subprocess.Popen([path])
+                return {"success": True, "message": f"Launched {name}"}
+            except FileNotFoundError:
+                pass
         try:
-            if path.startswith("ms-"):
-                subprocess.Popen(["start", path], shell=True)
-            else:
-                subprocess.Popen([path])
+            subprocess.Popen(["start", name], shell=True)
+            return {"success": True, "message": f"Launching {name}"}
+        except Exception as e:
+            return {"success": False, "message": str(e)}
+
+    # Linux
+    for cmd in COMMON_APPS.get(key, [[key]]):
+        binary = which_first(cmd[0])
+        if not binary:
+            continue
+        try:
+            subprocess.Popen([binary, *cmd[1:]])
             return {"success": True, "message": f"Launched {name}"}
-        except FileNotFoundError:
-            pass
-    try:
-        subprocess.Popen(["start", name], shell=True)
-        return {"success": True, "message": f"Launching {name}"}
-    except Exception as e:
-        return {"success": False, "message": str(e)}
+        except Exception:
+            continue
+    return {"success": False, "message": f"Could not find an app for '{name}' on this system."}
 
 
 def open_url(url: str) -> dict:
@@ -591,7 +657,7 @@ def open_url(url: str) -> dict:
 
 # ── Desktop Cleaner ───────────────────────────────────────────────────────────
 def clean_desktop() -> dict:
-    desktop     = os.path.join(os.path.expanduser("~"), "Desktop")
+    desktop     = user_dir("Desktop")
     sort_folder = os.path.join(desktop, config.DESKTOP_SORT_FOLDER)
     os.makedirs(sort_folder, exist_ok=True)
 
@@ -657,8 +723,7 @@ def clean_desktop() -> dict:
 
 
 # ── Volume ────────────────────────────────────────────────────────────────────
-def set_volume(level: int):
-    level = max(0, min(100, int(level)))
+def _set_volume_windows(level: int):
     script = f"""
 $vol = {level / 100.0}
 Add-Type -TypeDefinition @'
@@ -690,16 +755,36 @@ public class Audio{{
 '@
 [Audio]::Volume = $vol
 """
+    subprocess.run(["powershell", "-Command", script], capture_output=True, timeout=10)
+
+
+def _set_volume_linux(level: int):
+    # Try WirePlumber (modern PipeWire default), then PulseAudio/pipewire-pulse,
+    # then plain ALSA — whichever is actually running wins.
+    if which_first("wpctl"):
+        run_silent(["wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", f"{level / 100.0}"])
+    elif which_first("pactl"):
+        run_silent(["pactl", "set-sink-volume", "@DEFAULT_SINK@", f"{level}%"])
+    elif which_first("amixer"):
+        run_silent(["amixer", "-D", "pulse", "sset", "Master", f"{level}%"])
+        run_silent(["amixer", "sset", "Master", f"{level}%"])
+
+
+def set_volume(level: int):
+    level = max(0, min(100, int(level)))
     try:
-        subprocess.run(["powershell","-Command",script], capture_output=True, timeout=10)
-    except:
+        if IS_WINDOWS:
+            _set_volume_windows(level)
+        else:
+            _set_volume_linux(level)
+    except Exception:
         pass
 
 
 # ── File Search ───────────────────────────────────────────────────────────────
 def search_files(query: str) -> list:
     results = []
-    for path in [os.path.expanduser("~/Desktop"), os.path.expanduser("~/Documents"), os.path.expanduser("~/Downloads")]:
+    for path in [user_dir("Desktop"), user_dir("Documents"), user_dir("Downloads")]:
         if os.path.exists(path):
             results += glob.glob(os.path.join(path, f"*{query}*"))
     return results[:10]

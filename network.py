@@ -14,6 +14,7 @@ import re
 import requests
 
 import memory
+from platform_utils import IS_WINDOWS, which_first, run_silent
 
 _alert_cb   = None
 _net_running = False
@@ -44,14 +45,15 @@ def _fire(atype: str, title: str, msg: str, speak: bool = True):
 def ping(host: str = PING_HOST) -> float | None:
     """Returns ping in ms, or None if unreachable."""
     try:
-        result = subprocess.run(
-            ["ping", "-n", "1", "-w", "2000", host],
-            capture_output=True, text=True, timeout=5
-        )
-        match = re.search(r"Average = (\d+)ms", result.stdout)
+        if IS_WINDOWS:
+            cmd = ["ping", "-n", "1", "-w", "2000", host]
+        else:
+            cmd = ["ping", "-c", "1", "-W", "2", host]
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
+        match = re.search(r"Average = (\d+)ms", result.stdout)   # Windows summary line
         if match:
             return float(match.group(1))
-        match = re.search(r"time[=<](\d+)ms", result.stdout)
+        match = re.search(r"time[=<]\s*([\d.]+)\s*ms", result.stdout)   # Windows/Linux per-reply line
         if match:
             return float(match.group(1))
         return None
@@ -102,30 +104,45 @@ def test_speed() -> dict:
 
 def get_connected_devices() -> list:
     """
-    Use ARP table to list devices on the local network.
+    List devices on the local network via the neighbor/ARP table.
+    Windows: `arp -a`. Linux: `ip neigh show` (falls back to `arp -a` if
+    iproute2 isn't installed, though it ships standard on virtually every
+    modern distro including Arch).
     Returns list of {ip, mac, known}
     """
     devices = []
     try:
-        result = subprocess.run(
-            ["arp", "-a"],
-            capture_output=True, text=True, timeout=10
-        )
-        # Parse ARP output
-        for line in result.stdout.splitlines():
-            match = re.search(
-                r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+([\w-]{17})\s+(\w+)",
-                line
-            )
-            if match:
-                ip  = match.group(1)
-                mac = match.group(2).upper()
-                t   = match.group(3)
-                if t == "dynamic" and not ip.endswith(".255"):
-                    known = mac in _get_known_macs()
-                    devices.append({"ip": ip, "mac": mac, "known": known})
+        if IS_WINDOWS:
+            result = subprocess.run(["arp", "-a"], capture_output=True, text=True, timeout=10)
+            for line in result.stdout.splitlines():
+                match = re.search(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+([\w-]{17})\s+(\w+)", line)
+                if match:
+                    ip, mac, t = match.group(1), match.group(2).upper(), match.group(3)
+                    if t == "dynamic" and not ip.endswith(".255"):
+                        devices.append({"ip": ip, "mac": mac, "known": mac in _get_known_macs()})
+        elif which_first("ip"):
+            result = run_silent(["ip", "neigh", "show"], timeout=10)
+            if result:
+                for line in result.stdout.splitlines():
+                    match = re.search(
+                        r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}).*?lladdr\s+([0-9a-fA-F:]{17})\s+(\w+)",
+                        line
+                    )
+                    if match:
+                        ip, mac, state = match.group(1), match.group(2).upper(), match.group(3)
+                        if state not in ("FAILED", "INCOMPLETE") and not ip.endswith(".255"):
+                            devices.append({"ip": ip, "mac": mac, "known": mac in _get_known_macs()})
+        else:
+            result = run_silent(["arp", "-a"], timeout=10)
+            if result:
+                for line in result.stdout.splitlines():
+                    match = re.search(r"\(([\d.]+)\)\s+at\s+([0-9a-fA-F:]{17})", line)
+                    if match:
+                        ip, mac = match.group(1), match.group(2).upper()
+                        if not ip.endswith(".255"):
+                            devices.append({"ip": ip, "mac": mac, "known": mac in _get_known_macs()})
     except Exception as e:
-        print(f"[Network] ARP error: {e}")
+        print(f"[Network] Device scan error: {e}")
 
     return devices
 

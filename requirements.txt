@@ -4,7 +4,7 @@ requests
 psutil
 spotipy
 python-dotenv
-pywin32
+pywin32; sys_platform == "win32"
 pillow
 numpy
 # NOTE: must be opencv-contrib-python, not opencv-python — face_auth.py

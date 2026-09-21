@@ -13,9 +13,11 @@ import time
 import requests
 from datetime import datetime
 
+from platform_utils import IS_WINDOWS, which_first, user_dir, run_silent
+
 OLLAMA_VISION_URL = "http://localhost:11434/api/generate"
 VISION_MODEL      = "llava"   # ollama pull llava
-SCREENSHOT_DIR    = os.path.join(os.path.expanduser("~"), "Desktop", "FRIDAY_Screenshots")
+SCREENSHOT_DIR    = os.path.join(user_dir("Desktop"), "FRIDAY_Screenshots")
 
 _clipboard_prev   = ""
 _clipboard_cb     = None   # callback(content, type)
@@ -24,15 +26,8 @@ _clip_running     = False
 
 # ── SCREENSHOT ────────────────────────────────────────────────────────────────
 
-def take_screenshot(save: bool = True) -> tuple[str, str | None]:
-    """
-    Takes a screenshot using PowerShell.
-    Returns (base64_png, saved_path | None)
-    """
-    try:
-        # Use PowerShell to capture screen to temp file
-        tmp = os.path.join(os.environ.get("TEMP", "C:\\Temp"), "friday_screen.png")
-        script = f"""
+def _capture_screen_windows(tmp: str):
+    script = f"""
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 $screen = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
@@ -43,7 +38,50 @@ $bmp.Save('{tmp}')
 $g.Dispose()
 $bmp.Dispose()
 """
-        subprocess.run(["powershell", "-Command", script], capture_output=True, timeout=10)
+    subprocess.run(["powershell", "-Command", script], capture_output=True, timeout=10)
+
+
+def _capture_screen_linux(tmp: str):
+    """
+    Try tools in order until one produces a file. spectacle covers KDE Plasma
+    on both X11 and Wayland; grim covers wlroots Wayland compositors; scrot
+    and ImageMagick's import cover X11 elsewhere.
+    """
+    candidates = [
+        (["spectacle", "-b", "-n", "-o", tmp], None),
+        (["grim", tmp], None),
+        (["scrot", "--overwrite", tmp], None),
+        (["import", "-window", "root", tmp], None),
+    ]
+    for cmd, _ in candidates:
+        if not which_first(cmd[0]):
+            continue
+        run_silent(cmd, timeout=10)
+        if os.path.exists(tmp) and os.path.getsize(tmp) > 0:
+            return
+        try:
+            os.remove(tmp)
+        except OSError:
+            pass
+
+
+def take_screenshot(save: bool = True) -> tuple[str, str | None]:
+    """
+    Takes a screenshot (Windows via PowerShell, Linux via spectacle/grim/scrot/import).
+    Returns (base64_png, saved_path | None)
+    """
+    try:
+        tmp_dir = os.environ.get("TEMP") or os.environ.get("TMPDIR") or "/tmp"
+        tmp = os.path.join(tmp_dir, "friday_screen.png")
+        try:
+            os.remove(tmp)
+        except OSError:
+            pass
+
+        if IS_WINDOWS:
+            _capture_screen_windows(tmp)
+        else:
+            _capture_screen_linux(tmp)
 
         if not os.path.exists(tmp):
             return "", None
@@ -108,15 +146,24 @@ def screenshot_and_save() -> dict:
 # ── CLIPBOARD MONITOR ─────────────────────────────────────────────────────────
 
 def _get_clipboard() -> str:
-    """Read clipboard text via PowerShell."""
-    try:
-        result = subprocess.run(
-            ["powershell", "-Command", "Get-Clipboard"],
-            capture_output=True, text=True, timeout=5
-        )
-        return result.stdout.strip()
-    except Exception:
-        return ""
+    """Read clipboard text (Windows via PowerShell, Linux via wl-paste/xclip/xsel)."""
+    if IS_WINDOWS:
+        try:
+            result = subprocess.run(
+                ["powershell", "-Command", "Get-Clipboard"],
+                capture_output=True, text=True, timeout=5
+            )
+            return result.stdout.strip()
+        except Exception:
+            return ""
+
+    for cmd in (["wl-paste", "--no-newline"], ["xclip", "-selection", "clipboard", "-o"], ["xsel", "--clipboard", "--output"]):
+        if not which_first(cmd[0]):
+            continue
+        result = run_silent(cmd, timeout=5)
+        if result and result.returncode == 0:
+            return result.stdout.strip()
+    return ""
 
 
 def _detect_clipboard_type(text: str) -> str:

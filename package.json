@@ -6,6 +6,7 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder --win --x64",
+    "build:linux": "electron-builder --linux --x64",
     "dev": "electron . --dev"
   },
   "build": {
@@ -22,9 +23,15 @@
       "installerHeaderBitmap": "assets/installer-header.bmp",
       "deleteAppDataOnUninstall": false
     },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png",
+      "category": "Utility"
+    },
     "extraResources": [
       { "from": "server.py", "to": "server.py" },
       { "from": "config.py", "to": "config.py" },
+      { "from": "platform_utils.py", "to": "platform_utils.py" },
       { "from": "cleaner.py", "to": "cleaner.py" },
       { "from": "memory.py", "to": "memory.py" },
       { "from": "briefing.py", "to": "briefing.py" },

@@ -3,10 +3,14 @@ F.R.I.D.A.Y. File System Cleaner
 Scans, summarises, then waits for confirmation before touching anything.
 """
 
-import os, hashlib, fnmatch, stat
+import os, hashlib, fnmatch, stat, glob
+
+from platform_utils import IS_LINUX, user_dir, which_first, run_silent
+
+HOME = os.path.expanduser("~")
 
 # ── PROTECTED PATHS — FRIDAY will never touch these ──────────────────────────
-PROTECTED = [
+PROTECTED_WINDOWS = [
     # Windows system
     r"C:\Windows",
     r"C:\Windows\System32",
@@ -40,7 +44,28 @@ PROTECTED = [
     os.path.expandvars(r"%LOCALAPPDATA%\Programs"),
 ]
 
-# Normalise to lowercase for comparison
+PROTECTED_LINUX = [
+    # System
+    "/boot", "/etc", "/usr", "/var", "/opt", "/sys", "/proc", "/root",
+    "/lib", "/lib64", "/sbin", "/bin", "/srv",
+    # Games / launchers
+    os.path.join(HOME, ".steam"),
+    os.path.join(HOME, ".local", "share", "Steam"),
+    os.path.join(HOME, ".var", "app", "com.valvesoftware.Steam"),
+    os.path.join(HOME, ".local", "share", "lutris"),
+    os.path.join(HOME, ".config", "heroic"),
+    # User critical
+    user_dir("Documents"), user_dir("Pictures"), user_dir("Videos"), user_dir("Music"),
+    # App data
+    os.path.join(HOME, ".config", "spotify"),
+    os.path.join(HOME, ".config", "discord"),
+    os.path.join(HOME, ".local", "share", "flatpak"),
+    os.path.join(HOME, ".local", "bin"),
+]
+
+PROTECTED = PROTECTED_LINUX if IS_LINUX else PROTECTED_WINDOWS
+
+# Normalise to lowercase for comparison (case-insensitive filesystems; harmless on Linux too)
 PROTECTED_NORM = [os.path.normpath(p).lower() for p in PROTECTED if p]
 
 
@@ -55,24 +80,50 @@ def is_protected(path: str) -> bool:
 
 # ── JUNK TARGETS — safe to delete ────────────────────────────────────────────
 
-TEMP_DIRS = [
-    os.environ.get("TEMP", ""),
-    os.environ.get("TMP", ""),
-    os.path.expandvars(r"%LOCALAPPDATA%\Temp"),
-    os.path.expandvars(r"%WINDIR%\Temp"),
-]
+def _glob_expand(pattern: str) -> list:
+    return glob.glob(pattern) if ("*" in pattern or "?" in pattern) else [pattern]
 
-BROWSER_CACHE_DIRS = [
-    # Chrome
-    os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\User Data\Default\Cache"),
-    os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\User Data\Default\Code Cache"),
-    os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\User Data\Default\GPUCache"),
-    # Edge
-    os.path.expandvars(r"%LOCALAPPDATA%\Microsoft\Edge\User Data\Default\Cache"),
-    os.path.expandvars(r"%LOCALAPPDATA%\Microsoft\Edge\User Data\Default\Code Cache"),
-    # Firefox
-    os.path.expandvars(r"%LOCALAPPDATA%\Mozilla\Firefox\Profiles"),
-]
+if IS_LINUX:
+    TEMP_DIRS = [
+        "/tmp",
+        "/var/tmp",
+        os.environ.get("TMPDIR", ""),
+    ]
+    BROWSER_CACHE_DIRS = [p for pattern in [
+        # Chrome / Chromium
+        os.path.join(HOME, ".cache", "google-chrome", "Default", "Cache"),
+        os.path.join(HOME, ".cache", "google-chrome", "Default", "Code Cache"),
+        os.path.join(HOME, ".cache", "chromium", "Default", "Cache"),
+        os.path.join(HOME, ".cache", "chromium", "Default", "Code Cache"),
+        # Brave
+        os.path.join(HOME, ".cache", "BraveSoftware", "Brave-Browser", "Default", "Cache"),
+        # Edge
+        os.path.join(HOME, ".cache", "microsoft-edge", "Default", "Cache"),
+        # Firefox — profile dir has a random suffix, so glob it
+        os.path.join(HOME, ".cache", "mozilla", "firefox", "*", "cache2"),
+        # Flatpak variants
+        os.path.join(HOME, ".var", "app", "com.google.Chrome", "cache", "google-chrome", "Default", "Cache"),
+        os.path.join(HOME, ".var", "app", "org.chromium.Chromium", "cache", "chromium", "Default", "Cache"),
+        os.path.join(HOME, ".var", "app", "org.mozilla.firefox", "cache", "mozilla", "firefox", "*", "cache2"),
+    ] for p in _glob_expand(pattern)]
+else:
+    TEMP_DIRS = [
+        os.environ.get("TEMP", ""),
+        os.environ.get("TMP", ""),
+        os.path.expandvars(r"%LOCALAPPDATA%\Temp"),
+        os.path.expandvars(r"%WINDIR%\Temp"),
+    ]
+    BROWSER_CACHE_DIRS = [
+        # Chrome
+        os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\User Data\Default\Cache"),
+        os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\User Data\Default\Code Cache"),
+        os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\User Data\Default\GPUCache"),
+        # Edge
+        os.path.expandvars(r"%LOCALAPPDATA%\Microsoft\Edge\User Data\Default\Cache"),
+        os.path.expandvars(r"%LOCALAPPDATA%\Microsoft\Edge\User Data\Default\Code Cache"),
+        # Firefox
+        os.path.expandvars(r"%LOCALAPPDATA%\Mozilla\Firefox\Profiles"),
+    ]
 
 JUNK_PATTERNS = [
     "*.tmp", "*.temp", "~$*", "*.log", "*.bak", "*.old",
@@ -195,8 +246,9 @@ def scan_system() -> dict:
                     except Exception:
                         pass
 
-    # ── Error dumps ──
-    dump_dirs = [
+    # ── Error dumps ── (Windows only: Linux core dumps live under systemd-coredump,
+    # which is root-owned and named nothing like *.dmp/*.mdmp — not a good fit here)
+    dump_dirs = [] if IS_LINUX else [
         os.path.expandvars(r"%LOCALAPPDATA%\CrashDumps"),
         os.path.expandvars(r"%WINDIR%\Minidump"),
         os.path.expandvars(r"%WINDIR%\MEMORY.DMP"),
@@ -296,6 +348,14 @@ def _safe_rmtree(path: str) -> int:
     return removed
 
 
+def _safe_remove_or_rmtree(path: str):
+    """Remove a file or directory, whichever it is."""
+    if os.path.isdir(path) and not os.path.islink(path):
+        _safe_rmtree(path)
+    else:
+        _safe_remove(path)
+
+
 # ── EXECUTE CLEAN (called after user confirms) ────────────────────────────────
 
 def execute_clean(scan_result: dict) -> dict:
@@ -370,13 +430,24 @@ def execute_clean(scan_result: dict) -> dict:
             except Exception:
                 report["errors"] += 1
 
-    # ── Empty Recycle Bin via PowerShell ──
+    # ── Empty Recycle Bin / Trash ──
     try:
-        import subprocess
-        subprocess.run(
-            ["powershell", "-Command", "Clear-RecycleBin -Force -ErrorAction SilentlyContinue"],
-            capture_output=True, timeout=15
-        )
+        if IS_LINUX:
+            if which_first("gio"):
+                run_silent(["gio", "trash", "--empty"], timeout=15)
+            else:
+                # Fall back to the freedesktop.org trash spec location directly
+                for sub in ("files", "info"):
+                    trash_sub = os.path.join(HOME, ".local", "share", "Trash", sub)
+                    if os.path.isdir(trash_sub):
+                        for name in os.listdir(trash_sub):
+                            _safe_remove_or_rmtree(os.path.join(trash_sub, name))
+        else:
+            import subprocess
+            subprocess.run(
+                ["powershell", "-Command", "Clear-RecycleBin -Force -ErrorAction SilentlyContinue"],
+                capture_output=True, timeout=15
+            )
     except Exception:
         pass
 

@@ -3,6 +3,11 @@
 
 ---
 
+FRIDAY runs on both **Windows** and **Linux** (developed/tested against
+Arch + KDE Plasma) from the same codebase — it detects the OS at runtime
+and uses the right tools under the hood for volume, screenshots,
+clipboard, app launching, and system commands.
+
 ## Prerequisites
 
 | Tool | Download |
@@ -10,6 +15,16 @@
 | Python 3.10+ | https://python.org |
 | Node.js 18+ | https://nodejs.org |
 | Ollama | https://ollama.ai |
+
+**Linux only** — install whichever of these your desktop doesn't already
+have (Arch package names shown; use your distro's equivalents):
+```
+sudo pacman -S wireplumber xclip wl-clipboard iproute2 glib2 xdg-user-dirs
+# KDE Plasma users already have spectacle (screenshots) and loginctl (lock) built in.
+# On GNOME/other desktops, also grab: sudo pacman -S grim scrot
+```
+None of these are hard requirements — FRIDAY falls back gracefully and
+just reports a feature as unavailable if a given tool isn't installed.
 
 ---
 
@@ -22,8 +37,11 @@
 4. Click **Save**, then copy your **Client ID** and **Client Secret**.
 
 ### 2. Run the installer
-Double-click **INSTALL.bat**. It installs Python/Node dependencies and, on
-first run, creates a `.env` file for you from `.env.example`.
+- **Windows:** double-click **INSTALL.bat**
+- **Linux:** `./install.sh`
+
+Either installs Python/Node dependencies and, on first run, creates a
+`.env` file for you from `.env.example`.
 
 ### 3. Add your Spotify credentials
 Open `.env` in a text editor and fill in:
@@ -45,11 +63,14 @@ ollama serve
 ```
 
 ### 6. Launch FRIDAY
-Double-click **START_FRIDAY.bat**
+- **Windows:** double-click **START_FRIDAY.bat**
+- **Linux:** `./start_friday.sh`
 
 On first launch, a browser window will open asking you to authorise Spotify.
 Log in and click Allow — this only happens once. A `.spotify_cache` file is
 saved locally (gitignored, never committed) with your Spotify session token.
+If Spotify auth ever needs a reset, run `RESET_SPOTIFY.bat` (Windows) or
+`./reset_spotify.sh` (Linux).
 
 Face enrollment (photos) and your PIN hash are likewise stored only in local,
 gitignored files (`friday_faces/`, `friday_pin.json`) — nothing about your
@@ -78,8 +99,8 @@ Voice works immediately on launch. The pill in the header shows the state:
 | "Play some jazz" | Searches and plays on Spotify |
 | "Pause / resume / next / previous" | Controls Spotify playback |
 | "Clean my desktop" | Sorts files into FRIDAY_Sorted/, deletes junk |
-| "Open Chrome / Spotify / VSCode" | Launches the app |
-| "Set volume to 70" | Sets Windows system volume |
+| "Open Chrome / Spotify / VSCode" | Launches the app (whatever's actually installed) |
+| "Set volume to 70" | Sets system volume |
 | "What's my CPU usage?" | Reads from the metrics panel |
 
 ---
@@ -91,14 +112,19 @@ friday-app/
 ├── main.js           Electron app shell
 ├── preload.js        Secure IPC bridge
 ├── server.py         Flask + Ollama + Spotify backend
+├── platform_utils.py OS detection + cross-platform helpers (Windows/Linux)
 ├── config.py         All settings (model, ports, etc.)
 ├── .env              Your local secrets (gitignored — created from .env.example)
 ├── requirements.txt  Python dependencies
 ├── package.json      Node/Electron config
 ├── static/
 │   └── index.html    The Iron Man HUD
-├── INSTALL.bat       One-time setup
-├── START_FRIDAY.bat  Daily launcher
+├── INSTALL.bat       One-time setup (Windows)
+├── START_FRIDAY.bat  Daily launcher (Windows)
+├── RESET_SPOTIFY.bat Reset Spotify auth (Windows)
+├── install.sh        One-time setup (Linux)
+├── start_friday.sh   Daily launcher (Linux)
+├── reset_spotify.sh  Reset Spotify auth (Linux)
 └── README.md
 ```
 
@@ -117,10 +143,12 @@ To any model you have: `mistral`, `phi3`, `llama3.2`, `gemma2`, etc.
 ## Desktop Cleaner
 
 Files are **never deleted** (except true junk: `.tmp`, `.log`, `Thumbs.db`, etc.).
-All your files are moved to `Desktop\FRIDAY_Sorted\` organised by type:
+All your files are moved to `Desktop/FRIDAY_Sorted/` organised by type:
 `Images / Documents / Videos / Music / Archives / Code / Installers / Other`
 
-Shortcuts (`.lnk`) are always left on your desktop untouched.
+On Windows, shortcuts (`.lnk`) are always left on your desktop untouched.
+On Linux, the actual Desktop folder used is whatever your `xdg-user-dirs`
+config points to (falls back to `~/Desktop` if that's not set up).
 
 ---
 
