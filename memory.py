@@ -8,7 +8,7 @@ import sqlite3
 import json
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "friday_memory.db")
 
@@ -231,8 +231,13 @@ def get_due_reminders() -> list:
         due.append({"id": r["id"], "message": r["message"]})
         repeat = json.loads(r["repeat_days"]) if r["repeat_days"] else None
         if repeat:
-            # Reschedule for next occurrence
-            next_time = r["remind_at"] + 86400  # advance by 1 day, then align
+            # Reschedule for the next allowed weekday (repeat = list of weekday ints)
+            next_dt = datetime.fromtimestamp(r["remind_at"]) + timedelta(days=1)
+            for _ in range(8):
+                if next_dt.weekday() in repeat:
+                    break
+                next_dt += timedelta(days=1)
+            next_time = next_dt.timestamp()
             conn.execute("UPDATE reminders SET remind_at=?, fired=0 WHERE id=?", (next_time, r["id"]))
         else:
             conn.execute("UPDATE reminders SET fired=1 WHERE id=?", (r["id"],))

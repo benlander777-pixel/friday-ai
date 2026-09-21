@@ -4,7 +4,6 @@ Runs scheduled tasks: play music, clean system, launch apps, custom commands.
 All stored in SQLite, survives restarts, runs in background thread.
 """
 
-import sqlite3
 import json
 import time
 import threading

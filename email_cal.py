@@ -5,10 +5,7 @@ Read emails, summarise inbox, create calendar events, check today's schedule.
 Falls back gracefully if Outlook is not installed.
 """
 
-import os
-import json
 from datetime import datetime, timedelta
-from typing import Optional
 
 OUTLOOK_AVAILABLE = False
 

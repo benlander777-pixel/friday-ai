@@ -27,7 +27,6 @@ except ImportError:
 # OpenCV face detector XML - built into opencv
 CASCADE_PATH = None
 if CV2_AVAILABLE:
-    import cv2
     CASCADE_PATH = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
 
 

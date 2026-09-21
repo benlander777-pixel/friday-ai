@@ -4,9 +4,6 @@ Create, search, list, delete notes locally.
 Optional: sync to Outlook tasks/calendar.
 """
 
-import sqlite3
-import os
-import time
 from datetime import datetime
 import memory
 

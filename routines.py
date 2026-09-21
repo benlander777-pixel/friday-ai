@@ -4,7 +4,6 @@ Multi-step task chains: "morning routine" runs several actions in sequence.
 Stored in SQLite, triggerable by voice or schedule.
 """
 
-import sqlite3
 import json
 import time
 import threading

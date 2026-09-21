@@ -507,11 +507,12 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <select id="task-type" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold);font-family:Share Tech Mono,monospace;font-size:10px;padding:5px;margin-bottom:4px;outline:none">
         <option value="play_music">Play Music</option>
         <option value="launch_app">Launch App</option>
+        <option value="volume">Set Volume</option>
         <option value="scan_filesystem">Clean System</option>
         <option value="clean_desktop">Clean Desktop</option>
         <option value="speak">Announcement</option>
       </select>
-      <input id="task-data" placeholder="Query / App name / Message" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:10px;padding:5px 8px;margin-bottom:4px;outline:none"/>
+      <input id="task-data" placeholder="Query / App name / Volume 0-100 / Message" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:10px;padding:5px 8px;margin-bottom:4px;outline:none"/>
       <input id="task-schedule" placeholder='e.g. "every weekday at 8am"' style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:10px;padding:5px 8px;margin-bottom:6px;outline:none"/>
       <div style="display:flex;gap:4px">
         <button onclick="submitTask()" style="flex:1;padding:6px;border:1px solid rgba(212,160,23,.5);background:rgba(212,160,23,.08);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:9px;cursor:pointer;letter-spacing:1px">SCHEDULE</button>
@@ -1700,6 +1701,7 @@ async function submitTask(){
   var taskData={};
   if(ttype==='play_music')taskData={query:tdata};
   else if(ttype==='launch_app')taskData={app:tdata};
+  else if(ttype==='volume')taskData={level:Math.max(0,Math.min(100,parseInt(tdata)||50))};
   else if(ttype==='speak')taskData={message:tdata};
   else if(ttype==='scan_filesystem')taskData={auto_confirm:true};
   await fetch(API+'/api/scheduler/tasks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,task_type:ttype,task_data:taskData,schedule:schedData.schedule})});

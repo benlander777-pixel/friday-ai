@@ -7,7 +7,6 @@ No API keys required.
 import requests
 import xml.etree.ElementTree as ET
 import time
-from datetime import datetime
 
 # ── RSS FEEDS ─────────────────────────────────────────────────────────────────
 FEEDS = {

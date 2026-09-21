@@ -12,7 +12,6 @@ import threading
 import time
 import requests
 from datetime import datetime
-from pathlib import Path
 
 OLLAMA_VISION_URL = "http://localhost:11434/api/generate"
 VISION_MODEL      = "llava"   # ollama pull llava

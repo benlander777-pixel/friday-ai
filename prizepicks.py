@@ -11,7 +11,6 @@ statistically hard to beat over time. Nothing here is a guarantee.
 import requests
 import time
 import random
-from datetime import datetime
 
 PRIZEPICKS_URL = "https://api.prizepicks.com/projections"
 

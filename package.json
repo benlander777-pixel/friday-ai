@@ -23,18 +23,22 @@
       "deleteAppDataOnUninstall": false
     },
     "extraResources": [
-      {
-        "from": "server.py",
-        "to": "server.py"
-      },
-      {
-        "from": "config.py",
-        "to": "config.py"
-      },
-      {
-        "from": "static",
-        "to": "static"
-      }
+      { "from": "server.py", "to": "server.py" },
+      { "from": "config.py", "to": "config.py" },
+      { "from": "cleaner.py", "to": "cleaner.py" },
+      { "from": "memory.py", "to": "memory.py" },
+      { "from": "briefing.py", "to": "briefing.py" },
+      { "from": "scheduler.py", "to": "scheduler.py" },
+      { "from": "email_cal.py", "to": "email_cal.py" },
+      { "from": "screen.py", "to": "screen.py" },
+      { "from": "notes.py", "to": "notes.py" },
+      { "from": "news.py", "to": "news.py" },
+      { "from": "network.py", "to": "network.py" },
+      { "from": "routines.py", "to": "routines.py" },
+      { "from": "prizepicks.py", "to": "prizepicks.py" },
+      { "from": "face_auth.py", "to": "face_auth.py" },
+      { "from": "requirements.txt", "to": "requirements.txt" },
+      { "from": "static", "to": "static" }
     ],
     "files": [
       "main.js",

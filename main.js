@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain, shell, session } = require('electron')
+const { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain, shell } = require('electron')
 const path  = require('path')
 const { spawn } = require('child_process')
 const http  = require('http')
@@ -12,14 +12,19 @@ let tray       = null
 let pyServer   = null
 const PORT     = 5000
 
+// In a packaged build, server.py and the other Python modules live in
+// extraResources (process.resourcesPath), not inside the app.asar that
+// __dirname points into — so they resolve differently in dev vs. packaged.
+const appRoot = app.isPackaged ? process.resourcesPath : __dirname
+
 // ── Launch Python backend ─────────────────────────────────────────────────────
 function startPythonServer() {
-  const serverPath = path.join(__dirname, 'server.py')
+  const serverPath = path.join(appRoot, 'server.py')
 
   // Try 'python' then 'python3'
   const cmd = process.platform === 'win32' ? 'python' : 'python3'
   pyServer = spawn(cmd, [serverPath], {
-    cwd: __dirname,
+    cwd: appRoot,
     windowsHide: true,
     stdio: ['ignore', 'pipe', 'pipe'],
   })

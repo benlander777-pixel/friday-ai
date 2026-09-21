@@ -3,8 +3,7 @@ F.R.I.D.A.Y. File System Cleaner
 Scans, summarises, then waits for confirmation before touching anything.
 """
 
-import os, hashlib, shutil, fnmatch, ctypes, stat
-from pathlib import Path
+import os, hashlib, fnmatch, stat
 
 # ── PROTECTED PATHS — FRIDAY will never touch these ──────────────────────────
 PROTECTED = [
