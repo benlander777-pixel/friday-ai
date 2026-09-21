@@ -4,177 +4,226 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>F.R.I.D.A.Y.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap');
 :root{
   --red:#c0392b;--red-b:#e74c3c;--gold:#d4a017;--gold-b:#f0c040;
-  --bg:#0a0301;--panel:rgba(20,6,4,.9);--text:#e8cda0;
-  --dim:rgba(212,160,23,.42);--bdr:rgba(212,160,23,.17);--bdr-hi:rgba(212,160,23,.55);
-  --rbdr:rgba(192,57,43,.32);--gold-glow:rgba(212,160,23,.15);
+  --bg:#0a0301;--panel:#140604;--panel2:#0e0503;--text:#e8cda0;
+  --dim:rgba(212,160,23,.45);--dim2:rgba(212,160,23,.28);
+  --bdr:rgba(212,160,23,.16);--bdr-hi:rgba(212,160,23,.5);
+  --rbdr:rgba(192,57,43,.3);--gold-glow:rgba(212,160,23,.12);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--gold);font-family:'Share Tech Mono',monospace;height:100vh;overflow:hidden;user-select:none;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(212,160,23,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(212,160,23,.022) 1px,transparent 1px);background-size:38px 38px;pointer-events:none;z-index:0;}
-#titlebar{position:fixed;top:0;left:0;right:0;height:32px;background:rgba(8,2,1,.95);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:1000;-webkit-app-region:drag;}
-#titlebar .tl-logo{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:4px;color:var(--gold);opacity:.7;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(212,160,23,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(212,160,23,.02) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-thumb{background:var(--bdr-hi);}
+::-webkit-scrollbar-track{background:transparent;}
+
+/* ── Titlebar ─────────────────────────────────────────────────────────── */
+#titlebar{position:fixed;top:0;left:0;right:0;height:30px;background:#080201;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;padding:0 10px;z-index:1000;-webkit-app-region:drag;}
+#titlebar .tl-logo{font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;color:var(--gold);opacity:.65;}
 #titlebar .tl-logo span{color:var(--red-b);}
 .win-btns{display:flex;gap:4px;-webkit-app-region:no-drag;}
-.wb{width:28px;height:20px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;font-family:monospace;}
+.wb{width:26px;height:18px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;}
 .wb:hover{background:rgba(212,160,23,.1);color:var(--gold-b);}
 .wb.close:hover{background:rgba(192,57,43,.25);border-color:var(--red-b);color:var(--red-b);}
-#app{position:relative;z-index:1;display:grid;grid-template-rows:48px 1fr 58px;grid-template-columns:200px 1fr 240px;height:100vh;gap:6px;padding:6px;padding-top:38px;}
-.co{position:fixed;width:30px;height:30px;pointer-events:none;z-index:20;}
-.tl{top:32px;left:0;border-top:1px solid rgba(212,160,23,.45);border-left:1px solid rgba(212,160,23,.45);}
-.tr{top:32px;right:0;border-top:1px solid rgba(212,160,23,.45);border-right:1px solid rgba(212,160,23,.45);}
-.bl{bottom:0;left:0;border-bottom:1px solid rgba(212,160,23,.45);border-left:1px solid rgba(212,160,23,.45);}
-.br{bottom:0;right:0;border-bottom:1px solid rgba(212,160,23,.45);border-right:1px solid rgba(212,160,23,.45);}
-#hdr{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bdr);padding:0 12px;position:relative;}
-.logo{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:900;letter-spacing:5px;color:var(--gold-b);text-shadow:0 0 14px var(--gold);}
+
+/* ── App shell ────────────────────────────────────────────────────────── */
+#app{position:relative;z-index:1;display:grid;grid-template-rows:44px 1fr 54px;grid-template-columns:64px 1fr 300px;height:100vh;padding-top:30px;}
+.co{position:fixed;width:26px;height:26px;pointer-events:none;z-index:20;opacity:.5;}
+.tl{top:30px;left:0;border-top:1px solid var(--gold);border-left:1px solid var(--gold);}
+.tr{top:30px;right:0;border-top:1px solid var(--gold);border-right:1px solid var(--gold);}
+.bl{bottom:0;left:0;border-bottom:1px solid var(--gold);border-left:1px solid var(--gold);}
+.br{bottom:0;right:0;border-bottom:1px solid var(--gold);border-right:1px solid var(--gold);}
+
+/* ── Header ───────────────────────────────────────────────────────────── */
+#hdr{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bdr);padding:0 14px;background:var(--panel2);}
+.logo{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:900;letter-spacing:5px;color:var(--gold-b);text-shadow:0 0 10px rgba(212,160,23,.5);}
 .logo span{color:var(--red-b);}
-.hm{display:flex;align-items:center;gap:12px;font-size:9px;color:var(--dim);letter-spacing:2px;}
-.sdot{width:6px;height:6px;border-radius:50%;background:var(--red-b);box-shadow:0 0 7px var(--red-b);animation:pu 2.2s infinite;}
-.sdot.on{background:var(--gold);box-shadow:0 0 7px var(--gold);}
-@keyframes pu{0%,100%{opacity:1}50%{opacity:.3}}
-.hr{display:flex;gap:8px;}
-.chip{padding:3px 8px;border:1px solid var(--bdr);font-size:9px;color:var(--dim);}
-.chip b{color:var(--gold-b);}
-.sline{position:absolute;bottom:-1px;left:0;height:1px;background:var(--gold);box-shadow:0 0 7px var(--gold);animation:sc 5s linear infinite;opacity:.35;}
-@keyframes sc{0%{width:0;left:0}50%{width:100%;left:0}50.01%{width:0;left:100%}100%{width:0;left:0}}
-#vpill{display:flex;align-items:center;gap:6px;padding:3px 9px;border:1px solid var(--bdr);font-size:9px;letter-spacing:1px;cursor:pointer;transition:all .13s;}
-#vpill.listening{border-color:var(--red-b);color:var(--red-b);background:rgba(192,57,43,.08);}
-#vpill.awake{border-color:var(--gold-b);color:var(--gold-b);background:rgba(212,160,23,.1);animation:vpa .8s infinite;}
-@keyframes vpa{0%,100%{box-shadow:none}50%{box-shadow:0 0 10px rgba(212,160,23,.25)}}
+.hm{display:flex;align-items:center;gap:10px;font-size:9px;color:var(--dim);letter-spacing:1.5px;}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--red-b);box-shadow:0 0 6px var(--red-b);}
+.sdot.on{background:var(--gold);box-shadow:0 0 6px var(--gold);animation:pu 2.4s infinite;}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.35}}
+.hr{display:flex;gap:6px;align-items:center;}
+.chip{padding:3px 8px;border:1px solid var(--bdr);font-size:9px;color:var(--dim);white-space:nowrap;}
+.chip b{color:var(--gold-b);font-weight:500;}
+.iconbtn{display:flex;align-items:center;gap:5px;padding:3px 9px;border:1px solid var(--bdr);font-size:9px;letter-spacing:1px;cursor:pointer;transition:all .12s;background:transparent;color:var(--dim);}
+.iconbtn:hover{border-color:var(--bdr-hi);color:var(--gold-b);}
+#vpill.listening{border-color:var(--red-b);color:var(--red-b);background:rgba(192,57,43,.07);}
+#vpill.awake{border-color:var(--gold-b);color:var(--gold-b);background:rgba(212,160,23,.1);}
 .vdot{width:5px;height:5px;border-radius:50%;background:currentColor;}
-.pnl{background:var(--panel);border:1px solid var(--bdr);padding:10px;position:relative;backdrop-filter:blur(5px);}
-.pnl::before{content:'';position:absolute;top:0;left:0;width:22px;height:2px;background:var(--gold);box-shadow:0 0 6px var(--gold);}
-.plbl{font-size:8px;letter-spacing:3px;color:var(--dim);margin-bottom:8px;text-transform:uppercase;}
-#lp{grid-row:2;grid-column:1;display:flex;flex-direction:column;gap:6px;}
-.arc{display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:7px;}
-.arc-ring{width:70px;height:70px;border-radius:50%;border:2px solid rgba(192,57,43,.4);display:flex;align-items:center;justify-content:center;position:relative;}
-.arc-ring::before{content:'';position:absolute;inset:5px;border-radius:50%;border:1px solid rgba(212,160,23,.18);}
-.arc-ring::after{content:'';position:absolute;inset:12px;border-radius:50%;border:1px solid rgba(192,57,43,.18);}
-.arc-core{width:28px;height:28px;border-radius:50%;background:radial-gradient(circle,rgba(220,80,40,.7)0%,rgba(180,60,20,.2)100%);border:1px solid var(--red-b);box-shadow:0 0 18px var(--red),0 0 40px rgba(192,57,43,.2);animation:ag 2s ease-in-out infinite;}
-@keyframes ag{0%,100%{box-shadow:0 0 18px var(--red),0 0 40px rgba(192,57,43,.2)}50%{box-shadow:0 0 28px var(--red-b),0 0 55px rgba(192,57,43,.32)}}
-.albl{font-size:8px;color:var(--dim);text-align:center;letter-spacing:1px;line-height:1.7;}
-.qb{display:flex;align-items:center;gap:7px;padding:7px 9px;border:1px solid var(--bdr);background:transparent;color:var(--gold);font-size:10px;cursor:pointer;width:100%;text-align:left;letter-spacing:1px;margin-bottom:3px;font-family:'Share Tech Mono',monospace;transition:all .13s;}
-.qb:hover{background:var(--gold-glow);border-color:var(--bdr-hi);color:var(--gold-b);}
-.qb:active{transform:scale(.98);}
-#ca{grid-row:2;grid-column:2;display:flex;flex-direction:column;border:1px solid var(--bdr);background:var(--panel);backdrop-filter:blur(5px);position:relative;overflow:hidden;}
-#ca::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--red-b),var(--gold-b),transparent);}
-.chdr{padding:8px 13px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;font-size:9px;letter-spacing:2px;color:var(--dim);}
-#msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;}
-#msgs::-webkit-scrollbar{width:2px;}
-#msgs::-webkit-scrollbar-thumb{background:var(--bdr);}
-.msg{display:flex;gap:8px;animation:mi .18s ease;}
-@keyframes mi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+#lockbtn{color:var(--red-b);border-color:var(--rbdr);}
+
+/* ── Nav rail ─────────────────────────────────────────────────────────── */
+#navrail{grid-row:2;grid-column:1;background:var(--panel2);border-right:1px solid var(--bdr);display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:3px;}
+.nav-btn{width:48px;height:48px;border:1px solid transparent;background:transparent;color:var(--dim);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transition:all .13s;}
+.nav-btn .ni{width:16px;height:16px;border:1.5px solid currentColor;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:8px;}
+.nav-btn .nl{font-size:6.5px;letter-spacing:.5px;font-family:'Orbitron',sans-serif;}
+.nav-btn:hover{color:var(--gold);background:rgba(212,160,23,.05);}
+.nav-btn.active{color:var(--gold-b);background:rgba(212,160,23,.09);border-color:var(--bdr-hi);}
+.nav-btn.active .ni{box-shadow:0 0 6px var(--gold);}
+.nav-sep{width:32px;height:1px;background:var(--bdr);margin:6px 0;}
+
+/* ── Chat column ──────────────────────────────────────────────────────── */
+#chatcol{grid-row:2;grid-column:2;display:flex;flex-direction:column;min-width:0;border-right:1px solid var(--bdr);}
+#qa-row{display:flex;gap:6px;padding:8px 12px;overflow-x:auto;border-bottom:1px solid var(--bdr);background:var(--panel2);flex-shrink:0;}
+#qa-row::-webkit-scrollbar{height:0;}
+.qa-chip{flex-shrink:0;padding:5px 10px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-size:9px;letter-spacing:.5px;white-space:nowrap;cursor:pointer;transition:all .12s;font-family:'Share Tech Mono',monospace;}
+.qa-chip:hover{border-color:var(--bdr-hi);color:var(--gold-b);background:var(--gold-glow);}
+#ca{flex:1;display:flex;flex-direction:column;min-height:0;background:var(--bg);}
+.chdr{padding:6px 14px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;font-size:8.5px;letter-spacing:2px;color:var(--dim);flex-shrink:0;}
+#offbar{display:none;padding:6px 14px;background:rgba(192,57,43,.08);border-bottom:1px solid var(--rbdr);color:var(--red-b);font-size:9.5px;letter-spacing:1px;text-align:center;flex-shrink:0;}
+#offbar.show{display:block;}
+#msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.msg{display:flex;gap:8px;max-width:100%;}
 .msg.u{flex-direction:row-reverse;}
-.av{width:26px;height:26px;border-radius:50%;border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0;font-family:'Orbitron',sans-serif;}
-.msg.u .av{background:rgba(212,160,23,.1);color:var(--gold-b);}
-.msg.f .av{background:rgba(192,57,43,.15);color:var(--red-b);box-shadow:0 0 8px rgba(192,57,43,.3);}
-.bub{max-width:78%;padding:9px 12px;border:1px solid var(--bdr);font-size:12px;line-height:1.65;}
-.msg.u .bub{background:rgba(212,160,23,.06);border-color:rgba(212,160,23,.28);color:var(--gold-b);}
-.msg.f .bub{background:rgba(10,3,1,.7);border-color:var(--rbdr);color:var(--text);}
-.mt{font-size:8px;color:var(--dim);margin-top:3px;letter-spacing:1px;}
-.atag{display:inline-flex;align-items:center;gap:4px;font-size:9px;padding:2px 7px;background:rgba(212,160,23,.07);border:1px solid rgba(212,160,23,.22);color:var(--gold);margin-top:5px;letter-spacing:1px;}
-.typing{display:flex;gap:4px;align-items:center;padding:9px 12px;border:1px solid var(--rbdr);background:rgba(10,3,1,.7);width:fit-content;}
+.av{width:24px;height:24px;border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:7.5px;flex-shrink:0;font-family:'Orbitron',sans-serif;}
+.msg.u .av{background:rgba(212,160,23,.08);color:var(--gold-b);}
+.msg.f .av{background:rgba(192,57,43,.12);color:var(--red-b);}
+.bub{max-width:70ch;padding:8px 12px;border:1px solid var(--bdr);font-size:12px;line-height:1.6;}
+.msg.u .bub{background:rgba(212,160,23,.05);border-color:rgba(212,160,23,.25);color:var(--gold-b);}
+.msg.f .bub{background:var(--panel2);border-color:var(--rbdr);color:var(--text);}
+.mt{font-size:7.5px;color:var(--dim);margin-top:3px;letter-spacing:1px;}
+.atag{display:inline-flex;align-items:center;gap:4px;font-size:8.5px;padding:2px 6px;background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.2);color:var(--gold);margin-top:5px;letter-spacing:.5px;}
+.typing{display:flex;gap:4px;align-items:center;padding:8px 12px;border:1px solid var(--rbdr);background:var(--panel2);width:fit-content;}
 .td{width:4px;height:4px;border-radius:50%;background:var(--red-b);animation:ty 1.2s infinite;}
 .td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
 @keyframes ty{0%,100%{opacity:.2;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
-#offbar{display:none;padding:7px 12px;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.25);color:var(--red-b);font-size:10px;letter-spacing:1px;text-align:center;}
-#offbar.show{display:block;}
-#rp{grid-row:2;grid-column:3;display:flex;flex-direction:column;gap:6px;overflow-y:auto;}
-#rp::-webkit-scrollbar{width:2px;}
-#rp::-webkit-scrollbar-thumb{background:var(--bdr);}
+
+/* ── Footer / input ───────────────────────────────────────────────────── */
+#foot{grid-column:1/-1;display:flex;align-items:center;gap:8px;border-top:1px solid var(--bdr);padding:0 12px;background:var(--panel2);}
+#inw{flex:1;display:flex;align-items:center;gap:8px;border:1px solid var(--bdr);padding:0 12px;height:36px;background:rgba(0,0,0,.4);}
+.pfx{color:var(--red-b);font-size:12px;font-family:'Orbitron',sans-serif;opacity:.6;flex-shrink:0;}
+#inp{flex:1;background:transparent;border:none;color:var(--gold-b);font-family:'Share Tech Mono',monospace;font-size:12px;outline:none;}
+#inp::placeholder{color:var(--dim);}
+.sbtn{padding:0 16px;height:36px;background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.5);color:var(--red-b);font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;cursor:pointer;transition:all .13s;}
+.sbtn:hover{background:rgba(192,57,43,.2);}
+.sbtn:disabled{opacity:.4;cursor:not-allowed;}
+.cbtn{padding:0 10px;height:36px;background:transparent;border:1px solid var(--bdr);color:var(--dim);font-size:9px;cursor:pointer;letter-spacing:1px;}
+.cbtn:hover{border-color:var(--rbdr);color:var(--red-b);}
+
+/* ── Right tab panel ──────────────────────────────────────────────────── */
+#tabpanel{grid-row:2;grid-column:3;background:var(--panel2);overflow-y:auto;padding:12px;}
+.tsec{display:none;flex-direction:column;gap:10px;}
+.tsec.show{display:flex;}
+.card{background:var(--panel);border:1px solid var(--bdr);padding:10px;position:relative;}
+.card::before{content:'';position:absolute;top:0;left:0;width:18px;height:2px;background:var(--gold);}
+.clbl{font-size:8px;letter-spacing:2.5px;color:var(--dim);margin-bottom:8px;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;}
+.mini-btn{padding:2px 7px;font-size:7.5px;letter-spacing:1px;border:1px solid var(--bdr);background:transparent;color:var(--dim);cursor:pointer;font-family:'Share Tech Mono',monospace;transition:all .12s;text-transform:none;}
+.mini-btn:hover{border-color:var(--bdr-hi);color:var(--gold);}
+.mini-btn.on{background:rgba(212,160,23,.1);border-color:var(--bdr-hi);color:var(--gold-b);}
+.subhdr{font-size:8px;letter-spacing:2px;color:var(--dim);margin:10px 0 6px;text-transform:uppercase;}
+.subhdr:first-child{margin-top:0;}
+
+/* stat grid / meters (System tab) */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:6px;}
+.sg{padding:5px 7px;border:1px solid var(--bdr);background:rgba(0,0,0,.35);}
+.sg .sl{font-size:6.5px;color:var(--dim);letter-spacing:1.5px;margin-bottom:2px;}
+.sg .sv{font-size:11px;color:var(--gold-b);font-family:'Orbitron',sans-serif;}
+.sg .sv.alert{color:var(--red-b);}
+.meter{margin-bottom:6px;}
+.mhdr{display:flex;justify-content:space-between;font-size:8px;color:var(--dim);margin-bottom:3px;}
+.mbar{height:4px;background:rgba(212,160,23,.08);}
+.mf{height:100%;background:var(--gold);transition:width .6s ease;}
+.mf.warm{background:#c08020;}
+.mf.hot{background:var(--red-b);}
+.cores-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;}
+.core-cell{padding:3px 4px;border:1px solid var(--bdr);text-align:center;}
+.core-cell .cn{font-size:6.5px;color:var(--dim);}
+.core-cell .cv{font-size:9px;color:var(--gold-b);font-family:'Orbitron',sans-serif;}
+.core-cell.hot-core .cv{color:var(--red-b);}
+.row-item{display:flex;align-items:center;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(212,160,23,.05);font-size:8.5px;}
+.row-item:last-child{border-bottom:none;}
+.ri-name{color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px;}
+.ri-val{color:var(--gold);flex-shrink:0;}
+.ri-val.hot{color:var(--red-b);}
+#loglist{max-height:80px;overflow-y:auto;}
+.log-e{font-size:8.5px;color:var(--dim);padding:2px 0;line-height:1.5;}
+.log-e .lt{color:rgba(212,160,23,.3);margin-right:5px;}
+.log-e.ok .lt{color:rgba(212,160,23,.55);}
+.log-e.warn{color:rgba(192,57,43,.65);}
+
+/* spotify */
 .sp-now{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.sp-art{width:40px;height:40px;border:1px solid var(--bdr);background:rgba(0,0,0,.4);flex-shrink:0;object-fit:cover;}
-.sp-art-ph{width:40px;height:40px;border:1px solid var(--bdr);background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.sp-art,.sp-art-ph{width:38px;height:38px;border:1px solid var(--bdr);background:rgba(0,0,0,.4);flex-shrink:0;object-fit:cover;display:flex;align-items:center;justify-content:center;font-size:16px;}
 .sp-info{flex:1;overflow:hidden;}
-.sp-track{font-size:11px;color:var(--gold-b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sp-track{font-size:10.5px;color:var(--gold-b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .sp-artist{font-size:9px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .sp-controls{display:flex;gap:4px;margin-top:6px;}
-.sc-btn{flex:1;padding:5px;border:1px solid var(--bdr);background:transparent;color:var(--gold);font-size:11px;cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;}
-.sc-btn:hover{background:var(--gold-glow);border-color:var(--bdr-hi);}
-.sp-bar{height:3px;background:rgba(212,160,23,.1);margin-top:6px;}
-.sp-prog{height:100%;background:var(--gold);box-shadow:0 0 4px var(--gold);transition:width .5s linear;}
-.sp-offline{font-size:10px;color:var(--dim);text-align:center;padding:12px 0;}
-.meter{margin-bottom:8px;}
-.mhdr{display:flex;justify-content:space-between;font-size:9px;color:var(--dim);margin-bottom:3px;}
-.mbar{height:4px;background:rgba(212,160,23,.1);}
-.mf{height:100%;background:var(--gold);box-shadow:0 0 5px var(--gold);transition:width .9s ease;}
-.mf.warm{background:#c08020;box-shadow:0 0 5px #c08020;}
-.mf.hot{background:var(--red-b);box-shadow:0 0 5px var(--red-b);}
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:6px;}
-.sg{padding:5px 7px;border:1px solid var(--bdr);background:rgba(5,2,0,.5);}
-.sg .sl{font-size:7px;color:var(--dim);letter-spacing:2px;margin-bottom:2px;}
-.sg .sv{font-size:12px;color:var(--gold-b);font-family:'Orbitron',sans-serif;font-weight:500;}
-.sg .sv.alert{color:var(--red-b);}
-.cores-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-top:4px;}
-.core-cell{padding:3px 4px;border:1px solid var(--bdr);text-align:center;}
-.core-cell .cn{font-size:7px;color:var(--dim);letter-spacing:1px;}
-.core-cell .cv{font-size:10px;color:var(--gold-b);font-family:'Orbitron',sans-serif;}
-.core-cell.hot-core .cv{color:var(--red-b);}
-.proc-row{display:flex;align-items:center;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(212,160,23,.05);font-size:9px;}
-.proc-name{color:var(--text);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.proc-cpu{color:var(--gold);min-width:36px;text-align:right;}
-.proc-cpu.hot{color:var(--red-b);}
-.cam-wrap{border:1px solid var(--rbdr);overflow:hidden;position:relative;aspect-ratio:4/3;background:#050101;}
-.cam-wrap::before,.cam-wrap::after{content:'';position:absolute;width:12px;height:12px;z-index:3;pointer-events:none;}
-.cam-wrap::before{top:3px;left:3px;border-top:1px solid var(--gold);border-left:1px solid var(--gold);}
-.cam-wrap::after{bottom:3px;right:3px;border-bottom:1px solid var(--gold);border-right:1px solid var(--gold);}
-#cam-video{width:100%;height:100%;object-fit:cover;display:block;transform:scaleX(-1);}
-.cam-off{display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:4/3;background:rgba(0,0,0,.5);border:1px solid var(--rbdr);cursor:pointer;gap:6px;}
-.cam-off:hover{border-color:var(--bdr-hi);}
-.cam-bio{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;}
-.bio-cell{padding:5px 7px;border:1px solid var(--bdr);background:rgba(5,2,0,.5);}
-.bio-cell .bl_{font-size:7px;color:var(--dim);letter-spacing:2px;margin-bottom:2px;}
-.bio-cell .bv{font-size:12px;color:var(--gold-b);font-family:'Orbitron',sans-serif;}
-.bio-cell .bv.hi{color:var(--red-b);}
-.stress-wrap{margin-top:6px;}
-.stress-lbl{display:flex;justify-content:space-between;font-size:8px;color:var(--dim);margin-bottom:3px;}
-.sbar{height:5px;background:rgba(212,160,23,.1);}
-.sfill{height:100%;background:var(--gold);box-shadow:0 0 5px var(--gold);transition:width .6s ease;}
-.sfill.med{background:#c08020;box-shadow:0 0 5px #c08020;}
-.sfill.hi{background:var(--red-b);box-shadow:0 0 5px var(--red-b);animation:sp2 .6s infinite;}
-@keyframes sp2{0%,100%{opacity:1}50%{opacity:.55}}
-.cam-toggle{padding:2px 8px;font-size:8px;letter-spacing:2px;border:1px solid var(--bdr);background:transparent;color:var(--dim);cursor:pointer;font-family:'Share Tech Mono',monospace;float:right;transition:all .13s;}
-.pp-league-btn{float:none;}
-.pp-league-btn.active{background:rgba(212,160,23,.12);border-color:var(--bdr-hi);color:var(--gold-b);}
-.pp-card{border:1px solid var(--bdr);background:rgba(5,2,0,.55);padding:8px;margin-bottom:6px;}
-.pp-card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
-.pp-leg{display:flex;justify-content:space-between;font-size:9px;padding:2px 0;border-bottom:1px solid rgba(212,160,23,.05);}
+.sc-btn{flex:1;padding:5px;border:1px solid var(--bdr);background:transparent;color:var(--gold);font-size:11px;cursor:pointer;}
+.sc-btn:hover{background:var(--gold-glow);}
+.sp-bar{height:2px;background:rgba(212,160,23,.1);margin-top:6px;}
+.sp-prog{height:100%;background:var(--gold);}
+.sp-offline{font-size:9.5px;color:var(--dim);text-align:center;padding:10px 0;}
+
+/* news / notes / routines / tasks / email / sports lists */
+.list-item{font-size:9px;color:var(--text);padding:4px 0;border-bottom:1px solid rgba(212,160,23,.05);line-height:1.4;cursor:pointer;}
+.list-item:hover{color:var(--gold-b);}
+.empty-hint{font-size:9px;color:var(--dim);text-align:center;padding:10px 0;}
+.pp-card{border:1px solid var(--bdr);background:rgba(0,0,0,.3);padding:7px;}
+.pp-card-hdr{font-size:9.5px;color:var(--gold-b);letter-spacing:1px;margin-bottom:4px;}
+.pp-leg{display:flex;justify-content:space-between;font-size:8.5px;padding:2px 0;border-bottom:1px solid rgba(212,160,23,.05);}
 .pp-leg:last-child{border-bottom:none;}
 .pp-pick-more{color:var(--gold-b);}
 .pp-pick-less{color:var(--red-b);}
-.cam-toggle:hover{border-color:var(--bdr-hi);color:var(--gold);}
-.log-e{font-size:9px;color:var(--dim);padding:3px 0;border-bottom:1px solid rgba(212,160,23,.04);letter-spacing:.5px;line-height:1.5;}
-.log-e .lt{color:rgba(212,160,23,.28);margin-right:5px;}
-.log-e.ok .lt{color:rgba(212,160,23,.5);}
-.log-e.warn{color:rgba(192,57,43,.65);}
-#loglist{max-height:90px;overflow-y:auto;}
-#loglist::-webkit-scrollbar{width:2px;}
-#loglist::-webkit-scrollbar-thumb{background:var(--bdr);}
-#foot{grid-column:1/-1;display:flex;align-items:center;gap:7px;border-top:1px solid var(--bdr);padding-top:7px;position:relative;}
-#foot::before{content:'FRIDAY INPUT TERMINAL';position:absolute;top:-9px;left:13px;font-size:8px;letter-spacing:3px;color:var(--dim);background:var(--bg);padding:0 7px;}
-#inw{flex:1;display:flex;align-items:center;gap:8px;border:1px solid var(--bdr);padding:0 12px;height:40px;background:rgba(10,3,1,.5);}
-.pfx{color:var(--red-b);font-size:13px;font-family:'Orbitron',sans-serif;opacity:.65;flex-shrink:0;}
-#inp{flex:1;background:transparent;border:none;color:var(--gold-b);font-family:'Share Tech Mono',monospace;font-size:12px;outline:none;letter-spacing:.5px;}
-#inp::placeholder{color:var(--dim);}
-.sbtn{padding:0 16px;height:40px;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.5);color:var(--red-b);font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:3px;cursor:pointer;transition:all .13s;}
-.sbtn:hover{background:rgba(192,57,43,.22);}
-.sbtn:active{transform:scale(.98);}
-.sbtn:disabled{opacity:.4;cursor:not-allowed;}
-.cbtn{padding:0 10px;height:40px;background:transparent;border:1px solid var(--bdr);color:var(--dim);font-family:'Share Tech Mono',monospace;font-size:10px;cursor:pointer;transition:all .13s;letter-spacing:1px;}
-.cbtn:hover{border-color:var(--rbdr);color:var(--red-b);}
-#toast{position:fixed;bottom:72px;right:12px;background:rgba(18,4,2,.97);border:1px solid var(--red-b);border-left:3px solid var(--red-b);padding:10px 14px;font-size:11px;color:var(--text);max-width:260px;z-index:200;display:none;box-shadow:0 0 16px rgba(192,57,43,.22);}
-#toast.show{display:block;animation:si .2s ease;}
-@keyframes si{from{transform:translateX(16px);opacity:0}to{transform:translateX(0);opacity:1}}
+.pill-row{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px;}
+.pill-row .mini-btn{flex:1;text-align:center;}
+.pill-row .mini-btn.active{background:rgba(212,160,23,.1);border-color:var(--bdr-hi);color:var(--gold-b);}
+
+/* small input fields used across panels */
+.f-input,.f-textarea,.f-select{width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:'Share Tech Mono',monospace;font-size:10px;padding:6px 8px;margin-bottom:6px;outline:none;}
+.f-textarea{resize:vertical;}
+.f-row{display:flex;gap:5px;}
+.f-row .f-btn{flex:1;padding:6px;border:1px solid rgba(212,160,23,.5);background:rgba(212,160,23,.08);color:var(--gold-b);font-size:9px;cursor:pointer;letter-spacing:.5px;}
+.f-row .f-btn.cancel{border-color:var(--bdr);background:transparent;color:var(--dim);flex:0 0 auto;padding:6px 12px;}
+.row-x{background:transparent;border:none;color:rgba(192,57,43,.55);cursor:pointer;font-size:10px;}
+.row-edit{background:transparent;border:none;color:var(--gold);cursor:pointer;font-size:10px;}
+
+/* Security tab */
+.arc-mini{display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:6px;}
+.arc-ring{width:56px;height:56px;border-radius:50%;border:2px solid rgba(192,57,43,.4);display:flex;align-items:center;justify-content:center;position:relative;}
+.arc-ring::before{content:'';position:absolute;inset:5px;border-radius:50%;border:1px solid rgba(212,160,23,.18);}
+.arc-core{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle,rgba(220,80,40,.7)0%,rgba(180,60,20,.2)100%);border:1px solid var(--red-b);box-shadow:0 0 14px var(--red);animation:ag 2.2s ease-in-out infinite;}
+@keyframes ag{0%,100%{box-shadow:0 0 12px var(--red)}50%{box-shadow:0 0 22px var(--red-b)}}
+.cam-wrap{border:1px solid var(--rbdr);overflow:hidden;position:relative;aspect-ratio:4/3;background:#050101;}
+#cam-video{width:100%;height:100%;object-fit:cover;display:block;transform:scaleX(-1);}
+.cam-off{display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:4/3;background:rgba(0,0,0,.4);border:1px solid var(--rbdr);cursor:pointer;gap:6px;}
+.cam-bio{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;}
+.sbar{height:4px;background:rgba(212,160,23,.1);}
+.sfill{height:100%;background:var(--gold);transition:width .6s ease;}
+.sfill.med{background:#c08020;}
+.sfill.hi{background:var(--red-b);}
+
+/* Home tab briefing */
+.brief-text{font-size:10.5px;color:var(--text);line-height:1.7;}
+
+/* Toast */
+#toast{position:fixed;bottom:66px;right:12px;background:#120402;border:1px solid var(--red-b);border-left:3px solid var(--red-b);padding:10px 14px;font-size:11px;color:var(--text);max-width:260px;z-index:200;display:none;}
+#toast.show{display:block;}
 #toast-title{font-size:9px;color:var(--red-b);letter-spacing:2px;margin-bottom:4px;font-family:'Orbitron',sans-serif;}
 .tc{float:right;cursor:pointer;color:var(--dim);margin-left:8px;}
+
+/* Lock screen */
+#lock-screen{display:none;position:fixed;inset:0;background:#0a0301;z-index:9999;flex-direction:column;align-items:center;justify-content:center;gap:18px;}
+
+/* Modals */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;align-items:center;justify-content:center;display:none;}
+.modal-bg.show{display:flex;}
+.modal-box{background:var(--panel);border:1px solid var(--bdr-hi);width:460px;max-height:82vh;overflow-y:auto;padding:18px;}
+.modal-title{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:3px;color:var(--gold-b);margin-bottom:4px;}
+.modal-sub{font-size:8.5px;color:var(--dim);letter-spacing:.5px;margin-bottom:14px;}
+
+@media (max-width:900px){
+  #app{grid-template-columns:56px 1fr 0;}
+  #tabpanel{display:none;}
+}
 </style>
 </head>
 <body>
 <div id="titlebar">
-  <div class="tl-logo">F.R.I.D.A.Y.<span> // </span>MARK VII</div>
+  <div class="tl-logo">F.R.I.D.A.Y.<span> // </span>MARK VIII</div>
   <div class="win-btns">
     <button class="wb" onclick="if(window.friday)window.friday.minimize()">&#8212;</button>
     <button class="wb" onclick="if(window.friday)window.friday.maximize()">&#9633;</button>
@@ -183,359 +232,346 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 </div>
 
 <!-- LOCK SCREEN -->
-<div id="lock-screen" style="display:none;position:fixed;inset:0;background:#0a0301;z-index:9999;flex-direction:column;align-items:center;justify-content:center;gap:20px;">
-  <div style="font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;letter-spacing:8px;color:var(--gold-b);text-shadow:0 0 20px var(--gold)">F.R.I.D.A.Y.</div>
-  <div style="font-size:10px;color:var(--dim);letter-spacing:3px">IDENTITY VERIFICATION REQUIRED</div>
-
-  <!-- Arc reactor animation on lock screen -->
-  <div style="margin:10px 0">
-    <div class="arc-ring" style="width:100px;height:100px;"><div class="arc-core" style="width:40px;height:40px;"></div></div>
-  </div>
-
-  <!-- Face scan view -->
+<div id="lock-screen">
+  <div style="font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;letter-spacing:8px;color:var(--gold-b);text-shadow:0 0 18px var(--gold)">F.R.I.D.A.Y.</div>
+  <div style="font-size:9px;color:var(--dim);letter-spacing:3px">IDENTITY VERIFICATION REQUIRED</div>
+  <div class="arc-ring" style="width:90px;height:90px;"><div class="arc-core" style="width:34px;height:34px;"></div></div>
   <div id="lock-face-view" style="display:none;flex-direction:column;align-items:center;gap:10px">
     <div style="position:relative;border:1px solid var(--rbdr);">
-      <video id="lock-video" autoplay muted playsinline style="width:280px;height:210px;object-fit:cover;display:block;transform:scaleX(-1)"></video>
-      <div style="position:absolute;top:4px;left:4px;width:14px;height:14px;border-top:1px solid var(--gold);border-left:1px solid var(--gold)"></div>
-      <div style="position:absolute;bottom:4px;right:4px;width:14px;height:14px;border-bottom:1px solid var(--gold);border-right:1px solid var(--gold)"></div>
+      <video id="lock-video" autoplay muted playsinline style="width:260px;height:195px;object-fit:cover;display:block;transform:scaleX(-1)"></video>
     </div>
-    <div id="lock-face-status" style="font-size:10px;color:var(--dim);letter-spacing:2px">SCANNING...</div>
-    <div id="lock-face-bar" style="width:280px;height:4px;background:rgba(212,160,23,.1)"><div id="lock-face-fill" style="height:100%;background:var(--gold);width:0%;transition:width .4s"></div></div>
+    <div id="lock-face-status" style="font-size:9px;color:var(--dim);letter-spacing:2px">SCANNING...</div>
+    <div style="width:260px;height:3px;background:rgba(212,160,23,.1)"><div id="lock-face-fill" style="height:100%;background:var(--gold);width:0%;transition:width .4s"></div></div>
   </div>
-
-  <!-- PIN fallback -->
   <div id="lock-pin-view" style="display:none;flex-direction:column;align-items:center;gap:10px">
-    <div style="font-size:10px;color:var(--dim);letter-spacing:2px">ENTER PIN</div>
+    <div style="font-size:9px;color:var(--dim);letter-spacing:2px">ENTER PIN</div>
     <input id="lock-pin-input" type="password" maxlength="8" placeholder="&#9679;&#9679;&#9679;&#9679;"
-      style="background:rgba(0,0,0,.5);border:1px solid var(--bdr-hi);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:20px;text-align:center;padding:10px 20px;outline:none;letter-spacing:8px;width:200px"/>
-    <button onclick="submitPin()" style="padding:8px 24px;border:1px solid rgba(212,160,23,.5);background:rgba(212,160,23,.08);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:3px;cursor:pointer">VERIFY</button>
-    <div id="lock-pin-error" style="font-size:9px;color:var(--red-b);letter-spacing:2px"></div>
+      style="background:rgba(0,0,0,.5);border:1px solid var(--bdr-hi);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:18px;text-align:center;padding:9px 18px;outline:none;letter-spacing:7px;width:190px"/>
+    <button onclick="submitPin()" style="padding:7px 22px;border:1px solid rgba(212,160,23,.5);background:rgba(212,160,23,.08);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:3px;cursor:pointer">VERIFY</button>
+    <div id="lock-pin-error" style="font-size:8.5px;color:var(--red-b);letter-spacing:2px"></div>
   </div>
-
-  <div style="display:flex;gap:12px;margin-top:8px">
-    <button id="lock-face-btn" onclick="startFaceScan()" style="padding:7px 16px;border:1px solid var(--bdr-hi);background:rgba(212,160,23,.08);color:var(--gold);font-family:Share Tech Mono,monospace;font-size:9px;letter-spacing:2px;cursor:pointer">&#128247; FACE SCAN</button>
-    <button onclick="showPinView()" style="padding:7px 16px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-family:Share Tech Mono,monospace;font-size:9px;letter-spacing:2px;cursor:pointer">&#128274; PIN</button>
+  <div style="display:flex;gap:10px;margin-top:6px">
+    <button id="lock-face-btn" onclick="startFaceScan()" style="padding:6px 14px;border:1px solid var(--bdr-hi);background:rgba(212,160,23,.08);color:var(--gold);font-size:8.5px;letter-spacing:2px;cursor:pointer">FACE SCAN</button>
+    <button onclick="showPinView()" style="padding:6px 14px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-size:8.5px;letter-spacing:2px;cursor:pointer">PIN</button>
   </div>
-  <div id="lock-enroll-hint" style="font-size:8px;color:rgba(212,160,23,.25);letter-spacing:1px;margin-top:4px"></div>
+  <div id="lock-enroll-hint" style="font-size:7.5px;color:rgba(212,160,23,.25);letter-spacing:1px"></div>
 </div>
+
 <div class="co tl"></div><div class="co tr"></div><div class="co bl"></div><div class="co br"></div>
 <div id="toast"><span class="tc" onclick="closeToast()">&#10005;</span><div id="toast-title">FRIDAY ALERT</div><div id="toast-body"></div></div>
 <canvas id="cam-canvas" style="display:none" width="160" height="120"></canvas>
+
 <div id="app">
-<header id="hdr">
-  <div class="logo">F.R.I.D.A.Y.<span> //</span> MARK VII</div>
-  <div class="hm">
-    <div class="sdot" id="sdot"></div>
-    <span id="stxt">CONNECTING...</span>
-    <span style="opacity:.3">|</span>
-    <span id="mdl" style="color:var(--gold)">—</span>
-    <span style="opacity:.3">|</span>
-    <div id="vpill" class="chip" onclick="toggleVoice()">
-      <span class="vdot" id="vdot" style="background:var(--dim)"></span>
-      <span id="vtxt">VOICE OFF</span>
+  <header id="hdr">
+    <div class="logo">F.R.I.D.A.Y.<span> //</span> MK8</div>
+    <div class="hm">
+      <div class="sdot" id="sdot"></div>
+      <span id="stxt">CONNECTING...</span>
+      <span style="opacity:.3">|</span>
+      <span id="mdl" style="color:var(--gold)">—</span>
     </div>
-    <div id="mute-btn" class="chip" onclick="toggleMute()" title="Mute/Unmute FRIDAY's voice" style="cursor:pointer">
-      <span id="mute-icon">&#128266;</span>
-      <span id="mute-txt">SPEAK ON</span>
+    <div class="hr">
+      <div class="chip">CPU <b id="h-cpu">—</b></div>
+      <div class="chip">MEM <b id="h-mem">—</b></div>
+      <div class="chip" id="clk">--:--:--</div>
+      <div id="vpill" class="iconbtn" onclick="toggleVoice()">
+        <span class="vdot" id="vdot" style="background:var(--dim)"></span>
+        <span id="vtxt">VOICE OFF</span>
+      </div>
+      <div id="mute-btn" class="iconbtn" onclick="toggleMute()" title="Mute/unmute FRIDAY">
+        <span id="mute-icon">&#128266;</span><span id="mute-txt">ON</span>
+      </div>
+      <div id="lockbtn" class="iconbtn" onclick="lockFriday()">&#128274; LOCK</div>
     </div>
-    <div class="chip" onclick="lockFriday()" title="Lock FRIDAY" style="cursor:pointer;color:var(--red-b);border-color:var(--rbdr)">
-      &#128274; LOCK
+  </header>
+
+  <nav id="navrail">
+    <button class="nav-btn active" data-tab="home" onclick="switchTab('home')"><span class="ni">&#9673;</span><span class="nl">HOME</span></button>
+    <button class="nav-btn" data-tab="system" onclick="switchTab('system')"><span class="ni">&#9881;</span><span class="nl">SYS</span></button>
+    <button class="nav-btn" data-tab="media" onclick="switchTab('media')"><span class="ni">&#9835;</span><span class="nl">MEDIA</span></button>
+    <button class="nav-btn" data-tab="tasks" onclick="switchTab('tasks')"><span class="ni">&#9776;</span><span class="nl">TASKS</span></button>
+    <button class="nav-btn" data-tab="inbox" onclick="switchTab('inbox')"><span class="ni">&#9993;</span><span class="nl">INBOX</span></button>
+    <button class="nav-btn" data-tab="sports" onclick="switchTab('sports')"><span class="ni">&#9733;</span><span class="nl">SPORT</span></button>
+    <div class="nav-sep"></div>
+    <button class="nav-btn" data-tab="security" onclick="switchTab('security')"><span class="ni">&#128274;</span><span class="nl">SEC</span></button>
+  </nav>
+
+  <section id="chatcol">
+    <div id="qa-row">
+      <button class="qa-chip" onclick="qc('Open Chrome browser')">BROWSER</button>
+      <button class="qa-chip" onclick="qc('Open File Explorer')">FILES</button>
+      <button class="qa-chip" onclick="qc('Clean my desktop')">CLEAN DESKTOP</button>
+      <button class="qa-chip" onclick="qc('Play some music')">PLAY MUSIC</button>
+      <button class="qa-chip" onclick="qc('Pause music')">PAUSE</button>
+      <button class="qa-chip" onclick="qc('Set volume to 50 percent')">VOLUME 50%</button>
+      <button class="qa-chip" onclick="qc('What is on my screen right now?')">ANALYSE SCREEN</button>
+      <button class="qa-chip" onclick="qc('Run my morning routine')">MORNING ROUTINE</button>
+      <button class="qa-chip" onclick="qc('Check my network status')">NETWORK</button>
+      <button class="qa-chip" onclick="qc('Lock my computer')" style="border-color:var(--rbdr);color:var(--red-b)">LOCK PC</button>
     </div>
-  </div>
-  <div class="hr">
-    <div class="chip">CPU <b id="h-cpu">—</b></div>
-    <div class="chip">MEM <b id="h-mem">—</b></div>
-    <div class="chip">DISK <b id="h-disk">—</b></div>
-    <div class="chip" id="clk">--:--:--</div>
-  </div>
-  <div class="sline"></div>
-</header>
-<aside id="lp">
-  <div class="pnl">
-    <div class="arc">
-      <div class="arc-ring"><div class="arc-core"></div></div>
-      <div class="albl">ARC REACTOR<br>ONLINE</div>
+    <div id="ca">
+      <div class="chdr"><span>NEURAL INTERFACE — ACTIVE</span><span id="mc">0 EXCHANGES</span></div>
+      <div id="offbar">&#9888; OLLAMA OFFLINE — Run: ollama serve</div>
+      <div id="msgs"></div>
     </div>
-  </div>
-  <div class="pnl" style="flex:1">
-    <div class="plbl">QUICK COMMANDS</div>
-    <button class="qb" onclick="qc('Open Chrome browser')">&#127758; BROWSER</button>
-    <button class="qb" onclick="qc('Open Notepad')">&#128221; NOTEPAD</button>
-    <button class="qb" onclick="qc('Open File Explorer')">&#128193; FILE EXPLORER</button>
-    <button class="qb" onclick="qc('Open Calculator')">&#128290; CALCULATOR</button>
-    <button class="qb" onclick="qc('Clean my desktop')">&#129529; CLEAN DESKTOP</button>
-    <button class="qb" onclick="qc('Scan my system for junk files')">&#128269; SCAN SYSTEM</button>
-    <button class="qb" onclick="qc('Play some music')">&#127925; PLAY MUSIC</button>
-    <button class="qb" onclick="qc('Pause music')">&#9208; PAUSE MUSIC</button>
-    <button class="qb" onclick="qc('Set volume to 50 percent')">&#128266; VOLUME 50%</button>
-    <button class="qb" onclick="qc('What is on my screen right now?')">&#128247; ANALYSE SCREEN</button>
-    <button class="qb" onclick="qc('Explain what is in my clipboard')">&#128203; CLIPBOARD</button>
-    <button class="qb" onclick="qc('Run my morning routine')">&#127775; MORNING ROUTINE</button>
-    <button class="qb" onclick="qc('Show me the latest news')">&#128240; NEWS BRIEF</button>
-    <button class="qb" onclick="qc('Check my network status')">&#127760; NETWORK STATUS</button>
-    <button class="qb" onclick="qc('Show me some parlay ideas for today')">&#127942; PARLAY IDEAS</button>
-    <button class="qb" onclick="qc('Open Task Manager')">&#9889; TASK MANAGER</button>
-    <button class="qb" onclick="qc('Lock my computer')" style="border-color:var(--rbdr);color:var(--red-b)">&#128274; LOCK PC</button>
-    <button class="qb" onclick="enrollFace()" style="border-color:var(--rbdr);color:var(--red-b)">&#128247; ENROLL FACE</button>
-    <button class="qb" onclick="setPin()">&#128272; SET PIN</button>
-  </div>
-</aside>
-<main id="ca">
-  <div class="chdr">
-    <span>NEURAL INTERFACE — ACTIVE</span>
-    <span id="mc">0 EXCHANGES</span>
-  </div>
-  <div id="offbar">&#9888; OLLAMA OFFLINE — Run: ollama serve</div>
-  <div id="msgs"></div>
-</main>
-<aside id="rp">
-  <div class="pnl">
-    <div class="plbl">SPOTIFY</div>
-    <div id="sp-online" style="display:none">
-      <div class="sp-now">
-        <div class="sp-art-ph" id="sp-art-ph">&#9835;</div>
-        <img class="sp-art" id="sp-art" style="display:none" alt="art"/>
-        <div class="sp-info">
-          <div class="sp-track" id="sp-track">—</div>
-          <div class="sp-artist" id="sp-artist">—</div>
+  </section>
+
+  <aside id="tabpanel">
+
+    <!-- HOME -->
+    <div class="tsec show" data-tab="home">
+      <div class="card">
+        <div class="arc-mini"><div class="arc-ring"><div class="arc-core"></div></div><div style="font-size:8px;color:var(--dim);letter-spacing:1px">ARC REACTOR ONLINE</div></div>
+      </div>
+      <div class="card">
+        <div class="clbl">DAILY BRIEFING <button class="mini-btn" onclick="loadBriefing()">REFRESH</button></div>
+        <div class="brief-text" id="home-briefing">Loading...</div>
+      </div>
+      <div class="card">
+        <div class="clbl">FRIDAY MEMORY</div>
+        <div id="memory-panel"><div class="empty-hint">Loading...</div></div>
+      </div>
+    </div>
+
+    <!-- SYSTEM -->
+    <div class="tsec" data-tab="system">
+      <div class="card">
+        <div class="clbl">PROCESSOR</div>
+        <div class="stat-grid">
+          <div class="sg"><div class="sl">USAGE</div><div class="sv" id="s-cpu">—</div></div>
+          <div class="sg"><div class="sl">FREQ</div><div class="sv" id="s-freq">—</div></div>
+          <div class="sg"><div class="sl">CORES</div><div class="sv" id="s-cores">—</div></div>
+          <div class="sg"><div class="sl">TEMP</div><div class="sv" id="s-temp">—</div></div>
+        </div>
+        <div class="meter"><div class="mhdr"><span>LOAD</span><span id="cpu-pct">—</span></div><div class="mbar"><div class="mf" id="cpu-bar" style="width:0%"></div></div></div>
+        <div class="subhdr">CORE MAP</div>
+        <div class="cores-grid" id="cores-grid"></div>
+      </div>
+      <div class="card">
+        <div class="clbl">MEMORY</div>
+        <div class="stat-grid">
+          <div class="sg"><div class="sl">USED</div><div class="sv" id="s-mused">—</div></div>
+          <div class="sg"><div class="sl">TOTAL</div><div class="sv" id="s-mtotal">—</div></div>
+        </div>
+        <div class="meter"><div class="mhdr"><span>RAM</span><span id="mem-pct">—</span></div><div class="mbar"><div class="mf" id="mem-bar" style="width:0%"></div></div></div>
+        <div class="meter"><div class="mhdr"><span>SWAP</span><span id="swap-pct">—</span></div><div class="mbar"><div class="mf" id="swap-bar" style="width:0%"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="clbl">STORAGE &amp; NET</div>
+        <div class="stat-grid">
+          <div class="sg"><div class="sl">DISK USED</div><div class="sv" id="s-dused">—</div></div>
+          <div class="sg"><div class="sl">DISK FREE</div><div class="sv" id="s-dfree">—</div></div>
+        </div>
+        <div class="meter"><div class="mhdr"><span>DISK</span><span id="disk-pct">—</span></div><div class="mbar"><div class="mf" id="disk-bar" style="width:0%"></div></div></div>
+        <div class="stat-grid" style="margin-top:6px">
+          <div class="sg"><div class="sl">NET SENT</div><div class="sv" id="s-nsent">—</div></div>
+          <div class="sg"><div class="sl">NET RECV</div><div class="sv" id="s-nrecv">—</div></div>
         </div>
       </div>
-      <div class="sp-bar"><div class="sp-prog" id="sp-prog" style="width:0%"></div></div>
-      <div class="sp-controls">
-        <button class="sc-btn" onclick="spCtrl('prev')">&#9198;</button>
-        <button class="sc-btn" onclick="spCtrl('resume')">&#9654;</button>
-        <button class="sc-btn" onclick="spCtrl('pause')">&#9208;</button>
-        <button class="sc-btn" onclick="spCtrl('next')">&#9197;</button>
+      <div class="card" id="gpu-panel" style="display:none">
+        <div class="clbl">GPU</div>
+        <div id="gpu-info"></div>
+      </div>
+      <div class="card">
+        <div class="clbl">TOP PROCESSES</div>
+        <div id="proc-list"></div>
+        <div class="subhdr">UPTIME</div>
+        <div class="sg"><div class="sl">SYSTEM UP</div><div class="sv" id="s-uptime">—</div></div>
+      </div>
+      <div class="card">
+        <div class="clbl">NETWORK <button class="mini-btn" onclick="runSpeedTest()">SPEED TEST</button></div>
+        <div class="stat-grid">
+          <div class="sg"><div class="sl">STATUS</div><div class="sv" id="net-status">—</div></div>
+          <div class="sg"><div class="sl">PING</div><div class="sv" id="net-ping">—</div></div>
+          <div class="sg"><div class="sl">LOCAL IP</div><div class="sv" id="net-ip" style="font-size:9px">—</div></div>
+          <div class="sg"><div class="sl">DEVICES</div><div class="sv" id="net-devices">—</div></div>
+        </div>
+        <div id="net-speed" style="font-size:8.5px;color:var(--dim);margin-top:4px"></div>
+        <div id="device-list" style="margin-top:4px"></div>
+      </div>
+      <div class="card">
+        <div class="clbl">ACTIVITY LOG</div>
+        <div id="loglist"></div>
       </div>
     </div>
-    <div id="sp-offline" class="sp-offline">Spotify not connected.<br><span style="font-size:8px;letter-spacing:1px">Authorise on first launch.</span></div>
-  </div>
-  <div class="pnl">
-    <div class="plbl">VISUAL MONITOR <button class="cam-toggle" id="cam-btn" onclick="toggleCam()">ENABLE</button></div>
-    <div id="cam-off" class="cam-off" onclick="toggleCam()">
-      <div style="font-size:22px;opacity:.3">&#128247;</div>
-      <div style="font-size:9px;color:var(--dim);letter-spacing:2px">CLICK TO ENABLE</div>
-    </div>
-    <div id="cam-live" style="display:none">
-      <div class="cam-wrap"><video id="cam-video" autoplay muted playsinline></video></div>
-      <div class="cam-bio">
-        <div class="bio-cell"><div class="bl_">STRESS</div><div class="bv" id="stress-lbl">--</div></div>
-        <div class="bio-cell"><div class="bl_">MOTION</div><div class="bv" id="motion-lbl">--</div></div>
+
+    <!-- MEDIA -->
+    <div class="tsec" data-tab="media">
+      <div class="card">
+        <div class="clbl">SPOTIFY</div>
+        <div id="sp-online" style="display:none">
+          <div class="sp-now">
+            <div class="sp-art-ph" id="sp-art-ph">&#9835;</div>
+            <img class="sp-art" id="sp-art" style="display:none" alt="art"/>
+            <div class="sp-info"><div class="sp-track" id="sp-track">—</div><div class="sp-artist" id="sp-artist">—</div></div>
+          </div>
+          <div class="sp-bar"><div class="sp-prog" id="sp-prog" style="width:0%"></div></div>
+          <div class="sp-controls">
+            <button class="sc-btn" onclick="spCtrl('prev')">&#9198;</button>
+            <button class="sc-btn" onclick="spCtrl('resume')">&#9654;</button>
+            <button class="sc-btn" onclick="spCtrl('pause')">&#9208;</button>
+            <button class="sc-btn" onclick="spCtrl('next')">&#9197;</button>
+          </div>
+        </div>
+        <div id="sp-offline" class="sp-offline">Spotify not connected.<br><span style="font-size:8px">Add credentials to .env and restart.</span></div>
       </div>
-      <div class="stress-wrap">
-        <div class="stress-lbl"><span>BIOMETRIC INDEX</span><span id="stress-pct">0%</span></div>
-        <div class="sbar"><div class="sfill" id="sfill" style="width:0%"></div></div>
-      </div>
-    </div>
-  </div>
-  <div class="pnl">
-    <div class="plbl">PROCESSOR</div>
-    <div class="stat-grid">
-      <div class="sg"><div class="sl">USAGE</div><div class="sv" id="s-cpu">—</div></div>
-      <div class="sg"><div class="sl">FREQ</div><div class="sv" id="s-freq">—</div></div>
-      <div class="sg"><div class="sl">CORES</div><div class="sv" id="s-cores">—</div></div>
-      <div class="sg"><div class="sl">TEMP</div><div class="sv" id="s-temp">—</div></div>
-    </div>
-    <div class="meter"><div class="mhdr"><span>LOAD</span><span id="cpu-pct">—</span></div><div class="mbar"><div class="mf" id="cpu-bar" style="width:0%"></div></div></div>
-    <div class="plbl" style="margin-top:5px">CORE MAP</div>
-    <div class="cores-grid" id="cores-grid"></div>
-  </div>
-  <div class="pnl">
-    <div class="plbl">MEMORY</div>
-    <div class="stat-grid">
-      <div class="sg"><div class="sl">USED</div><div class="sv" id="s-mused">—</div></div>
-      <div class="sg"><div class="sl">TOTAL</div><div class="sv" id="s-mtotal">—</div></div>
-      <div class="sg"><div class="sl">AVAIL</div><div class="sv" id="s-mavail">—</div></div>
-      <div class="sg"><div class="sl">SWAP</div><div class="sv" id="s-swap">—</div></div>
-    </div>
-    <div class="meter"><div class="mhdr"><span>RAM</span><span id="mem-pct">—</span></div><div class="mbar"><div class="mf" id="mem-bar" style="width:0%"></div></div></div>
-    <div class="meter"><div class="mhdr"><span>SWAP</span><span id="swap-pct">—</span></div><div class="mbar"><div class="mf" id="swap-bar" style="width:0%"></div></div></div>
-  </div>
-  <div class="pnl">
-    <div class="plbl">STORAGE</div>
-    <div class="stat-grid">
-      <div class="sg"><div class="sl">USED</div><div class="sv" id="s-dused">—</div></div>
-      <div class="sg"><div class="sl">FREE</div><div class="sv" id="s-dfree">—</div></div>
-    </div>
-    <div class="meter"><div class="mhdr"><span>DISK</span><span id="disk-pct">—</span></div><div class="mbar"><div class="mf" id="disk-bar" style="width:0%"></div></div></div>
-    <div class="plbl" style="margin-top:6px">NETWORK</div>
-    <div class="stat-grid">
-      <div class="sg"><div class="sl">SENT</div><div class="sv" id="s-nsent">—</div></div>
-      <div class="sg"><div class="sl">RECV</div><div class="sv" id="s-nrecv">—</div></div>
-    </div>
-  </div>
-  <div class="pnl" id="gpu-panel" style="display:none">
-    <div class="plbl">GPU</div>
-    <div id="gpu-info"></div>
-  </div>
-  <div class="pnl">
-    <div class="plbl">TOP PROCESSES</div>
-    <div id="proc-list"></div>
-    <div class="plbl" style="margin-top:8px">UPTIME</div>
-    <div class="stat-grid" style="margin-bottom:8px">
-      <div class="sg" style="grid-column:1/-1"><div class="sl">SYSTEM UP</div><div class="sv" id="s-uptime">—</div></div>
-    </div>
-    <div class="plbl">ACTIVITY LOG</div>
-    <div id="loglist"></div>
-  </div>
-
-  <!-- NEWS -->
-  <div class="pnl">
-    <div class="plbl">HEADLINES <button class="cam-toggle" onclick="loadNews()" style="float:right">REFRESH</button></div>
-    <div style="display:flex;gap:4px;margin-bottom:6px">
-      <button onclick="loadNews('fox')" class="cam-toggle" style="flex:1">FOX</button>
-      <button onclick="loadNews('cyber')" class="cam-toggle" style="flex:1">CYBER</button>
-      <button onclick="loadNews('espn')" class="cam-toggle" style="flex:1">ESPN</button>
-    </div>
-    <div id="news-list"><div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">Loading...</div></div>
-  </div>
-
-  <!-- PRIZEPICKS -->
-  <div class="pnl">
-    <div class="plbl">PRIZEPICKS <button class="cam-toggle" onclick="loadParlays()" style="float:right">NEW PARLAYS</button></div>
-    <div style="font-size:7px;color:var(--dim);letter-spacing:1px;margin-bottom:6px;line-height:1.4">Live projections — exploratory combos, not predictions</div>
-    <div style="display:flex;gap:3px;margin-bottom:6px;flex-wrap:wrap">
-      <button onclick="pp_toggleLeague('NFL')" id="pp-nfl" class="cam-toggle pp-league-btn active" style="flex:1">NFL</button>
-      <button onclick="pp_toggleLeague('NBA')" id="pp-nba" class="cam-toggle pp-league-btn active" style="flex:1">NBA</button>
-      <button onclick="pp_toggleLeague('MLB')" id="pp-mlb" class="cam-toggle pp-league-btn active" style="flex:1">MLB</button>
-      <button onclick="pp_toggleLeague('NHL')" id="pp-nhl" class="cam-toggle pp-league-btn active" style="flex:1">NHL</button>
-    </div>
-    <div style="display:flex;gap:4px;margin-bottom:8px;align-items:center">
-      <span style="font-size:8px;color:var(--dim)">LEGS:</span>
-      <select id="pp-legs" style="background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold);font-family:Share Tech Mono,monospace;font-size:9px;padding:3px 6px;outline:none">
-        <option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option>
-      </select>
-      <span style="font-size:8px;color:var(--dim);margin-left:6px">VIEW:</span>
-      <button onclick="pp_setView('parlays')" id="pp-view-parlays" class="cam-toggle" style="background:rgba(212,160,23,.1)">PARLAYS</button>
-      <button onclick="pp_setView('raw')" id="pp-view-raw" class="cam-toggle">RAW LINES</button>
-    </div>
-    <div id="pp-content"><div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">Click NEW PARLAYS to load today's lines.</div></div>
-  </div>
-
-  <!-- NETWORK -->
-  <div class="pnl">
-    <div class="plbl">NETWORK <button class="cam-toggle" onclick="runSpeedTest()" style="float:right">SPEED TEST</button></div>
-    <div class="stat-grid">
-      <div class="sg"><div class="sl">STATUS</div><div class="sv" id="net-status">—</div></div>
-      <div class="sg"><div class="sl">PING</div><div class="sv" id="net-ping">—</div></div>
-      <div class="sg"><div class="sl">LOCAL IP</div><div class="sv" id="net-ip" style="font-size:10px">—</div></div>
-      <div class="sg"><div class="sl">DEVICES</div><div class="sv" id="net-devices">—</div></div>
-    </div>
-    <div id="net-speed" style="font-size:9px;color:var(--dim);margin-top:4px"></div>
-    <div id="device-list" style="margin-top:6px"></div>
-  </div>
-
-  <!-- NOTES -->
-  <div class="pnl">
-    <div class="plbl">NOTES <button class="cam-toggle" onclick="showAddNote()" style="float:right">+ NEW</button></div>
-    <div id="add-note-form" style="display:none;margin-bottom:8px">
-      <input id="note-title" placeholder="Title" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:10px;padding:5px 8px;margin-bottom:4px;outline:none"/>
-      <textarea id="note-body" placeholder="Note..." rows="3" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:10px;padding:5px 8px;margin-bottom:4px;outline:none;resize:vertical"></textarea>
-      <div style="display:flex;gap:4px">
-        <button onclick="submitNote()" style="flex:1;padding:6px;border:1px solid rgba(212,160,23,.5);background:rgba(212,160,23,.08);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:9px;cursor:pointer">SAVE</button>
-        <button onclick="document.getElementById('add-note-form').style.display='none'" style="padding:6px 10px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-family:Share Tech Mono,monospace;font-size:9px;cursor:pointer">CANCEL</button>
+      <div class="card">
+        <div class="clbl">HEADLINES <button class="mini-btn" onclick="loadNews()">REFRESH</button></div>
+        <div class="pill-row">
+          <button class="mini-btn active" data-cat="all" onclick="loadNews('all')">ALL</button>
+          <button class="mini-btn" data-cat="fox" onclick="loadNews('fox')">FOX</button>
+          <button class="mini-btn" data-cat="cyber" onclick="loadNews('cyber')">CYBER</button>
+          <button class="mini-btn" data-cat="espn" onclick="loadNews('espn')">ESPN</button>
+        </div>
+        <div id="news-list"><div class="empty-hint">Loading...</div></div>
       </div>
     </div>
-    <div id="notes-list"><div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">No notes yet.</div></div>
-  </div>
 
-  <!-- ROUTINES -->
-  <div class="pnl">
-    <div class="plbl">ROUTINES <button class="cam-toggle" onclick="openRoutineBuilder()" style="float:right">+ NEW</button></div>
-    <div id="routines-list"></div>
-  </div>
-
-  <!-- ROUTINE BUILDER MODAL -->
-  <div id="routine-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;align-items:center;justify-content:center;">
-    <div style="background:var(--panel);border:1px solid var(--bdr-hi);width:480px;max-height:80vh;overflow-y:auto;padding:18px;position:relative;">
-      <div style="font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:3px;color:var(--gold-b);margin-bottom:4px" id="routine-modal-title">NEW ROUTINE</div>
-      <div style="font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:14px">Build a sequence of actions FRIDAY will run in order</div>
-
-      <input id="rb-name" placeholder="Routine name (e.g. morning)" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:11px;padding:7px 9px;margin-bottom:6px;outline:none"/>
-      <input id="rb-desc" placeholder="Short description" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:11px;padding:7px 9px;margin-bottom:12px;outline:none"/>
-
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <div class="plbl" style="margin:0">STEPS</div>
-        <div style="display:flex;gap:4px">
-          <button onclick="toggleStepView('visual')" id="view-visual-btn" class="cam-toggle" style="background:rgba(212,160,23,.1)">VISUAL</button>
-          <button onclick="toggleStepView('text')" id="view-text-btn" class="cam-toggle">TEXT</button>
+    <!-- TASKS -->
+    <div class="tsec" data-tab="tasks">
+      <div class="card">
+        <div class="clbl">ROUTINES <button class="mini-btn" onclick="openRoutineBuilder()">+ NEW</button></div>
+        <div id="routines-list"></div>
+      </div>
+      <div class="card">
+        <div class="clbl">SCHEDULED TASKS <button class="mini-btn" onclick="showAddTask()">+ ADD</button></div>
+        <div id="task-list"><div class="empty-hint">No tasks scheduled.</div></div>
+        <div id="add-task-form" style="display:none;margin-top:8px">
+          <input id="task-name" class="f-input" placeholder="Task name"/>
+          <select id="task-type" class="f-select">
+            <option value="play_music">Play Music</option>
+            <option value="launch_app">Launch App</option>
+            <option value="volume">Set Volume</option>
+            <option value="scan_filesystem">Clean System</option>
+            <option value="clean_desktop">Clean Desktop</option>
+            <option value="speak">Announcement</option>
+          </select>
+          <input id="task-data" class="f-input" placeholder="Query / App name / Volume 0-100 / Message"/>
+          <input id="task-schedule" class="f-input" placeholder='e.g. "every weekday at 8am"'/>
+          <div class="f-row"><button class="f-btn" onclick="submitTask()">SCHEDULE</button><button class="f-btn cancel" onclick="document.getElementById('add-task-form').style.display='none'">CANCEL</button></div>
         </div>
       </div>
-
-      <!-- Visual step builder -->
-      <div id="rb-visual-view">
-        <div id="rb-steps-list" style="margin-bottom:8px"></div>
-        <button onclick="addStep()" style="width:100%;padding:8px;border:1px dashed var(--bdr-hi);background:transparent;color:var(--gold);font-family:Share Tech Mono,monospace;font-size:10px;cursor:pointer;letter-spacing:1px;margin-bottom:12px">+ ADD STEP</button>
-      </div>
-
-      <!-- Text editor view -->
-      <div id="rb-text-view" style="display:none">
-        <div style="font-size:8px;color:var(--dim);margin-bottom:4px;letter-spacing:1px">JSON steps array — edit directly for quick changes</div>
-        <textarea id="rb-text-json" rows="10" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:10px;padding:8px;outline:none;resize:vertical;margin-bottom:12px"></textarea>
-      </div>
-
-      <div style="display:flex;gap:6px">
-        <button onclick="saveRoutineFromBuilder()" style="flex:1;padding:9px;border:1px solid rgba(212,160,23,.5);background:rgba(212,160,23,.1);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:2px;cursor:pointer">SAVE ROUTINE</button>
-        <button onclick="closeRoutineBuilder()" style="padding:9px 16px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-family:Share Tech Mono,monospace;font-size:10px;cursor:pointer">CANCEL</button>
+      <div class="card">
+        <div class="clbl">NOTES <button class="mini-btn" onclick="showAddNote()">+ NEW</button></div>
+        <div id="add-note-form" style="display:none;margin-bottom:8px">
+          <input id="note-title" class="f-input" placeholder="Title"/>
+          <textarea id="note-body" class="f-textarea" placeholder="Note..." rows="3"></textarea>
+          <div class="f-row"><button class="f-btn" onclick="submitNote()">SAVE</button><button class="f-btn cancel" onclick="document.getElementById('add-note-form').style.display='none'">CANCEL</button></div>
+        </div>
+        <div id="notes-list"><div class="empty-hint">No notes yet.</div></div>
       </div>
     </div>
-  </div>
 
-  <!-- SCREEN -->
-  <div class="pnl">
-    <div class="plbl">SCREEN AWARENESS</div>
-    <div style="display:flex;gap:4px;margin-bottom:6px">
-      <button onclick="captureScreen()" class="cam-toggle" style="flex:1">CAPTURE</button>
-      <button onclick="analyseScreen()" class="cam-toggle" style="flex:1">ANALYSE</button>
-      <button onclick="actClipboard()" class="cam-toggle" style="flex:1">CLIPBOARD</button>
-    </div>
-    <div id="screen-result" style="font-size:9px;color:var(--text);line-height:1.6;max-height:120px;overflow-y:auto"></div>
-  </div>
-  <div class="pnl" id="email-panel">
-    <div class="plbl">INBOX <button class="cam-toggle" onclick="refreshEmail()" style="float:right">REFRESH</button></div>
-    <div id="email-summary" style="font-size:10px;color:var(--text);line-height:1.6;margin-bottom:8px">Loading...</div>
-    <div class="plbl" style="margin-top:4px">TODAY'S CALENDAR</div>
-    <div id="cal-summary" style="font-size:10px;color:var(--text);line-height:1.6">Loading...</div>
-  </div>
-
-  <!-- SCHEDULED TASKS -->
-  <div class="pnl">
-    <div class="plbl">SCHEDULED TASKS <button class="cam-toggle" onclick="showAddTask()" style="float:right">+ ADD</button></div>
-    <div id="task-list"><div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">No tasks scheduled.</div></div>
-    <div id="add-task-form" style="display:none;margin-top:8px">
-      <input id="task-name" placeholder="Task name" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:10px;padding:5px 8px;margin-bottom:4px;outline:none"/>
-      <select id="task-type" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold);font-family:Share Tech Mono,monospace;font-size:10px;padding:5px;margin-bottom:4px;outline:none">
-        <option value="play_music">Play Music</option>
-        <option value="launch_app">Launch App</option>
-        <option value="volume">Set Volume</option>
-        <option value="scan_filesystem">Clean System</option>
-        <option value="clean_desktop">Clean Desktop</option>
-        <option value="speak">Announcement</option>
-      </select>
-      <input id="task-data" placeholder="Query / App name / Volume 0-100 / Message" style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:10px;padding:5px 8px;margin-bottom:4px;outline:none"/>
-      <input id="task-schedule" placeholder='e.g. "every weekday at 8am"' style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:10px;padding:5px 8px;margin-bottom:6px;outline:none"/>
-      <div style="display:flex;gap:4px">
-        <button onclick="submitTask()" style="flex:1;padding:6px;border:1px solid rgba(212,160,23,.5);background:rgba(212,160,23,.08);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:9px;cursor:pointer;letter-spacing:1px">SCHEDULE</button>
-        <button onclick="document.getElementById('add-task-form').style.display='none'" style="padding:6px 10px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-family:Share Tech Mono,monospace;font-size:9px;cursor:pointer">CANCEL</button>
+    <!-- INBOX -->
+    <div class="tsec" data-tab="inbox">
+      <div class="card">
+        <div class="clbl">INBOX <button class="mini-btn" onclick="refreshEmail()">REFRESH</button></div>
+        <div id="email-summary" class="brief-text" style="margin-bottom:10px">Loading...</div>
+        <div class="subhdr">TODAY'S CALENDAR</div>
+        <div id="cal-summary" class="brief-text">Loading...</div>
       </div>
     </div>
-  </div>
 
-  <!-- MEMORY -->
-  <div class="pnl">
-    <div class="plbl">FRIDAY MEMORY</div>
-    <div id="memory-panel"><div style="font-size:9px;color:var(--dim);text-align:center;padding:8px 0">Loading...</div></div>
-  </div>
-</aside>
-<footer id="foot">
-  <div id="inw">
-    <span class="pfx">&#9654;</span>
-    <input type="text" id="inp" placeholder="Give me a directive, Boss... or say 'Friday'" autocomplete="off"/>
-  </div>
-  <button class="sbtn" id="sbtn" onclick="send()">TRANSMIT</button>
-  <button class="cbtn" onclick="clearChat()">CLEAR</button>
-</footer>
+    <!-- SPORTS -->
+    <div class="tsec" data-tab="sports">
+      <div class="card">
+        <div class="clbl">PRIZEPICKS <button class="mini-btn" onclick="loadParlays()">NEW PARLAYS</button></div>
+        <div style="font-size:7px;color:var(--dim);line-height:1.4;margin-bottom:6px">Live projections — exploratory combos, not predictions</div>
+        <div class="pill-row">
+          <button class="mini-btn active" id="pp-nfl" onclick="pp_toggleLeague('NFL')">NFL</button>
+          <button class="mini-btn active" id="pp-nba" onclick="pp_toggleLeague('NBA')">NBA</button>
+          <button class="mini-btn active" id="pp-mlb" onclick="pp_toggleLeague('MLB')">MLB</button>
+          <button class="mini-btn active" id="pp-nhl" onclick="pp_toggleLeague('NHL')">NHL</button>
+        </div>
+        <div style="display:flex;gap:5px;margin-bottom:8px;align-items:center">
+          <span style="font-size:8px;color:var(--dim)">LEGS:</span>
+          <select id="pp-legs" class="f-select" style="width:auto;margin:0;padding:3px 6px;">
+            <option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option>
+          </select>
+          <button class="mini-btn" id="pp-view-parlays" onclick="pp_setView('parlays')">PARLAYS</button>
+          <button class="mini-btn" id="pp-view-raw" onclick="pp_setView('raw')">RAW LINES</button>
+        </div>
+        <div id="pp-content"><div class="empty-hint">Click NEW PARLAYS to load today's lines.</div></div>
+      </div>
+    </div>
+
+    <!-- SECURITY -->
+    <div class="tsec" data-tab="security">
+      <div class="card">
+        <div class="clbl">ACCESS CONTROL</div>
+        <div style="display:flex;gap:6px;margin-bottom:4px">
+          <button class="mini-btn" style="flex:1;padding:7px" onclick="enrollFace()">ENROLL FACE</button>
+          <button class="mini-btn" style="flex:1;padding:7px" onclick="setPin()">SET PIN</button>
+        </div>
+        <div id="face-status-hint" style="font-size:8.5px;color:var(--dim);margin-top:6px">—</div>
+      </div>
+      <div class="card">
+        <div class="clbl">VISUAL MONITOR <button class="mini-btn" id="cam-btn" onclick="toggleCam()">ENABLE</button></div>
+        <div id="cam-off" class="cam-off" onclick="toggleCam()">
+          <div style="font-size:20px;opacity:.3">&#128247;</div>
+          <div style="font-size:8.5px;color:var(--dim);letter-spacing:1px">CLICK TO ENABLE</div>
+        </div>
+        <div id="cam-live" style="display:none">
+          <div class="cam-wrap"><video id="cam-video" autoplay muted playsinline></video></div>
+          <div class="cam-bio">
+            <div class="sg"><div class="sl">STRESS</div><div class="sv" id="stress-lbl">--</div></div>
+            <div class="sg"><div class="sl">MOTION</div><div class="sv" id="motion-lbl">--</div></div>
+          </div>
+          <div class="meter" style="margin-top:6px"><div class="mhdr"><span>BIOMETRIC INDEX</span><span id="stress-pct">0%</span></div><div class="sbar"><div class="sfill" id="sfill" style="width:0%"></div></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="clbl">SCREEN AWARENESS</div>
+        <div style="display:flex;gap:4px;margin-bottom:6px">
+          <button class="mini-btn" style="flex:1;padding:6px" onclick="captureScreen()">CAPTURE</button>
+          <button class="mini-btn" style="flex:1;padding:6px" onclick="analyseScreen()">ANALYSE</button>
+          <button class="mini-btn" style="flex:1;padding:6px" onclick="actClipboard()">CLIPBOARD</button>
+        </div>
+        <div id="screen-result" style="font-size:8.5px;color:var(--text);line-height:1.5;max-height:110px;overflow-y:auto"></div>
+      </div>
+    </div>
+
+  </aside>
+
+  <footer id="foot">
+    <div id="inw">
+      <span class="pfx">&#9654;</span>
+      <input type="text" id="inp" placeholder="Give me a directive, Boss... or say 'Friday'" autocomplete="off"/>
+    </div>
+    <button class="sbtn" id="sbtn" onclick="send()">TRANSMIT</button>
+    <button class="cbtn" onclick="clearChat()">CLEAR</button>
+  </footer>
 </div>
+
+<!-- ROUTINE BUILDER MODAL -->
+<div id="routine-modal" class="modal-bg">
+  <div class="modal-box">
+    <div class="modal-title" id="routine-modal-title">NEW ROUTINE</div>
+    <div class="modal-sub">Build a sequence of actions FRIDAY will run in order</div>
+    <input id="rb-name" class="f-input" placeholder="Routine name (e.g. morning)"/>
+    <input id="rb-desc" class="f-input" placeholder="Short description"/>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div class="subhdr" style="margin:0">STEPS</div>
+      <div style="display:flex;gap:4px">
+        <button onclick="toggleStepView('visual')" id="view-visual-btn" class="mini-btn on">VISUAL</button>
+        <button onclick="toggleStepView('text')" id="view-text-btn" class="mini-btn">TEXT</button>
+      </div>
+    </div>
+    <div id="rb-visual-view">
+      <div id="rb-steps-list" style="margin-bottom:8px"></div>
+      <button onclick="addStep()" style="width:100%;padding:8px;border:1px dashed var(--bdr-hi);background:transparent;color:var(--gold);font-size:10px;cursor:pointer;margin-bottom:12px">+ ADD STEP</button>
+    </div>
+    <div id="rb-text-view" style="display:none">
+      <div style="font-size:8px;color:var(--dim);margin-bottom:4px">JSON steps array — edit directly for quick changes</div>
+      <textarea id="rb-text-json" class="f-textarea" rows="10" style="margin-bottom:12px"></textarea>
+    </div>
+    <div class="f-row">
+      <button class="f-btn" onclick="saveRoutineFromBuilder()">SAVE ROUTINE</button>
+      <button class="f-btn cancel" onclick="closeRoutineBuilder()">CANCEL</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const API='http://127.0.0.1:5000';
 let msgCount=0;
@@ -561,6 +597,26 @@ function showToast(title,body){
 }
 function closeToast(){document.getElementById('toast').classList.remove('show');}
 
+/* ── TAB NAVIGATION — per-tab polling starts/stops on switch ─────────────
+   Only the active tab's data refreshes on a timer; everything else is
+   fetched once (or not at all) until you switch back to it. Global
+   background systems (voice, alerts, clock, ollama status, header vitals,
+   webcam biometric monitor once enabled) keep running regardless of tab. */
+let activeTab='home';
+const TAB_POLLERS={};
+function registerTab(name,{onEnter,onLeave}){ TAB_POLLERS[name]={onEnter,onLeave,entered:false}; }
+
+function switchTab(tab){
+  if(tab===activeTab) return;
+  const prev=TAB_POLLERS[activeTab];
+  if(prev && prev.onLeave) prev.onLeave();
+  activeTab=tab;
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.querySelectorAll('.tsec').forEach(s=>s.classList.toggle('show',s.dataset.tab===tab));
+  const cur=TAB_POLLERS[tab];
+  if(cur && cur.onEnter) cur.onEnter();
+}
+
 function addMsg(role,text,actions){
   actions=actions||[];
   const msgs=document.getElementById('msgs');
@@ -570,7 +626,9 @@ function addMsg(role,text,actions){
   actions.forEach(function(a){ah+='<div class="atag">&#9889; '+a.type.toUpperCase().replace(/_/g,' ')+': '+Object.values(a).slice(1).join(' ')+'</div>';});
   const t=new Date().toLocaleTimeString('en-US',{hour12:false});
   d.innerHTML='<div class="av">'+(role==='user'?'YOU':'FR')+'</div><div><div class="bub">'+text.replace(/\n/g,'<br>')+ah+'</div><div class="mt">'+t+'</div></div>';
-  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+  msgs.appendChild(d);
+  while(msgs.children.length>120)msgs.removeChild(msgs.firstChild);
+  msgs.scrollTop=msgs.scrollHeight;
   if(role==='friday')speakResponse(text);
 }
 
@@ -595,7 +653,6 @@ async function confirmClean(){
     addLog('File system cleaned','ok');
   }catch(e){hideTyping();addMsg('friday','Error during clean. Please try again.');}
 }
-
 async function cancelClean(){
   const btn=document.getElementById('scan-confirm-msg');
   if(btn)btn.remove();
@@ -617,7 +674,6 @@ async function send(){
     if(data.error==='connection'){document.getElementById('offbar').classList.add('show');addMsg('friday',data.response);addLog('Ollama offline','warn');}
     else{
       document.getElementById('offbar').classList.remove('show');
-      // Check if a scan action was triggered — show confirm prompt instead of normal message
       const hasScan = data.actions && data.actions.some(function(a){return a.type==='scan_filesystem';});
       const scanResult = data.action_results && data.action_results.find(function(r){return r && r.scan;});
       if(hasScan && scanResult && scanResult.message){
@@ -639,388 +695,237 @@ async function clearChat(){
 function qc(cmd){document.getElementById('inp').value=cmd;send();}
 document.getElementById('inp').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey)send();});
 
-// ── MUTE ─────────────────────────────────────────────────────────────────────
+/* ── MUTE ──────────────────────────────────────────────────────────────── */
 let isMuted = false;
-
 function toggleMute(){
   isMuted = !isMuted;
-  const icon = document.getElementById('mute-icon');
-  const txt  = document.getElementById('mute-txt');
-  const btn  = document.getElementById('mute-btn');
+  const icon = document.getElementById('mute-icon'), txt = document.getElementById('mute-txt'), btn = document.getElementById('mute-btn');
   if(isMuted){
-    icon.textContent = '&#128264;';
-    txt.textContent  = 'MUTED';
-    btn.style.color  = 'var(--red-b)';
-    btn.style.borderColor = 'var(--rbdr)';
-    window.speechSynthesis.cancel();
-    addLog('FRIDAY muted');
+    icon.textContent='\u{1F507}';txt.textContent='MUTED';btn.style.color='var(--red-b)';btn.style.borderColor='var(--rbdr)';
+    window.speechSynthesis.cancel();addLog('FRIDAY muted');
   } else {
-    icon.textContent = '&#128266;';
-    txt.textContent  = 'SPEAK ON';
-    btn.style.color  = 'var(--dim)';
-    btn.style.borderColor = 'var(--bdr)';
-    addLog('FRIDAY unmuted');
-    speakResponse('Voice restored, Boss.');
+    icon.textContent='\u{1F50A}';txt.textContent='ON';btn.style.color='var(--dim)';btn.style.borderColor='var(--bdr)';
+    addLog('FRIDAY unmuted');speakResponse('Voice restored, Boss.');
   }
 }
 
-// ── IMPROVED TTS ──────────────────────────────────────────────────────────────
+/* ── TTS ───────────────────────────────────────────────────────────────── */
 function speakResponse(text){
   if(isMuted || !window.speechSynthesis) return;
   const clean = text.replace(/ACTION:.*$/gm,'').replace(/<[^>]+>/g,'').trim();
   if(!clean) return;
   window.speechSynthesis.cancel();
   const utt = new SpeechSynthesisUtterance(clean);
-  utt.rate   = 1.0;
-  utt.pitch  = 0.85;
-  utt.volume = 1;
-
-  // Pick best available voice — prefer neural/AI voices, then female
+  utt.rate=1.0; utt.pitch=0.85; utt.volume=1;
   const voices = window.speechSynthesis.getVoices();
-  const preferred = voices.find(v =>
-    /microsoft zira|microsoft eva|microsoft hazel|google uk english female|samantha|karen|victoria|moira|tessa|fiona/i.test(v.name)
-  ) || voices.find(v =>
-    /female|woman|girl/i.test(v.name) && v.lang.startsWith('en')
-  ) || voices.find(v => v.lang.startsWith('en'));
-
+  const preferred = voices.find(v => /microsoft zira|microsoft eva|microsoft hazel|google uk english female|samantha|karen|victoria|moira|tessa|fiona/i.test(v.name))
+    || voices.find(v => /female|woman|girl/i.test(v.name) && v.lang.startsWith('en'))
+    || voices.find(v => v.lang.startsWith('en'));
   if(preferred) utt.voice = preferred;
   window.speechSynthesis.speak(utt);
 }
 
-// ── IMPROVED VOICE RECOGNITION ────────────────────────────────────────────────
-let recognition = null;
-let voiceEnabled = false;
-let voiceAwake   = false;
-let voiceProcessing = false;
-let voiceSilenceTimer = null;
-let interimTranscript = '';
-
-const WAKE_WORD  = 'friday';
-const SLEEP_WORD = 'sleep friday';
-const MUTE_WORD  = 'mute friday';
-const UNMUTE_WORD = 'unmute friday';
+/* ── VOICE RECOGNITION ─────────────────────────────────────────────────── */
+let recognition = null, voiceEnabled=false, voiceAwake=false, voiceProcessing=false, voiceSilenceTimer=null;
+const WAKE_WORD='friday', SLEEP_WORD='sleep friday', MUTE_WORD='mute friday', UNMUTE_WORD='unmute friday';
 
 function toggleVoice(){ voiceEnabled ? stopVoice() : startVoice(); }
 
 function startVoice(){
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SR){ showToast('VOICE ERROR','Speech recognition not available.'); return; }
-
   recognition = new SR();
-  recognition.continuous     = true;
-  recognition.interimResults = true;   // capture partial results for faster wake word
-  recognition.lang           = 'en-US';
-  recognition.maxAlternatives = 3;     // consider multiple alternatives
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = 'en-US';
+  recognition.maxAlternatives = 3;
 
-  recognition.onstart = function(){
-    voiceEnabled = true;
-    updateVoiceUI('sleeping');
-    addLog('Voice: listening for "Friday"','ok');
-  };
+  recognition.onstart = function(){ voiceEnabled=true; updateVoiceUI('sleeping'); addLog('Voice: listening for "Friday"','ok'); };
 
   recognition.onresult = function(e){
-    let finalTranscript   = '';
-    let interimTranscript = '';
-
-    for(let i = e.resultIndex; i < e.results.length; i++){
-      const t = e.results[i][0].transcript.toLowerCase().trim();
-      if(e.results[i].isFinal){
-        finalTranscript += t + ' ';
-      } else {
-        interimTranscript += t;
-      }
+    let finalTranscript='', interimTranscript='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      const t=e.results[i][0].transcript.toLowerCase().trim();
+      if(e.results[i].isFinal) finalTranscript += t + ' '; else interimTranscript += t;
     }
-
-    // Check interim for wake word — faster response
-    const combined = (interimTranscript + ' ' + finalTranscript).trim();
-
+    const combined = (interimTranscript+' '+finalTranscript).trim();
     if(!voiceAwake){
-      if(combined.includes(WAKE_WORD)){
-        voiceAwake = true;
-        updateVoiceUI('awake');
-        addLog('FRIDAY awake','ok');
-        speakResponse('Yes, Boss?');
-      }
+      if(combined.includes(WAKE_WORD)){ voiceAwake=true; updateVoiceUI('awake'); addLog('FRIDAY awake','ok'); speakResponse('Yes, Boss?'); }
       return;
     }
-
-    // Only act on final results when awake
     if(!finalTranscript.trim()) return;
     const text = finalTranscript.trim();
-
-    // Sleep command
-    if(text.includes(SLEEP_WORD)){
-      voiceAwake = false;
-      updateVoiceUI('sleeping');
-      addLog('FRIDAY sleeping');
-      speakResponse('Going quiet, Boss.');
-      return;
-    }
-
-    // Mute/unmute by voice
+    if(text.includes(SLEEP_WORD)){ voiceAwake=false; updateVoiceUI('sleeping'); addLog('FRIDAY sleeping'); speakResponse('Going quiet, Boss.'); return; }
     if(text.includes(MUTE_WORD)){ if(!isMuted) toggleMute(); return; }
     if(text.includes(UNMUTE_WORD)){ if(isMuted) toggleMute(); return; }
-
-    // Ignore very short noise captures
     const clean = text.replace(WAKE_WORD,'').trim();
-    if(clean.length < 3 || voiceProcessing) return;
-
-    // Debounce — don't send the same phrase twice
+    if(clean.length<3 || voiceProcessing) return;
     clearTimeout(voiceSilenceTimer);
     voiceSilenceTimer = setTimeout(function(){
-      if(clean.length > 2){
-        voiceProcessing = true;
-        document.getElementById('inp').value = clean;
-        send().finally(function(){ voiceProcessing = false; });
-      }
-    }, 400);
+      if(clean.length>2){ voiceProcessing=true; document.getElementById('inp').value=clean; send().finally(function(){voiceProcessing=false;}); }
+    },400);
   };
-
   recognition.onerror = function(e){
-    if(e.error === 'no-speech') return; // normal — don't log
-    if(e.error === 'aborted')   return; // happens on restart — normal
-    addLog('Voice error: ' + e.error, 'warn');
-    if(e.error === 'not-allowed'){
-      showToast('MIC BLOCKED','Microphone access was denied. Check browser permissions.');
-      stopVoice();
-    }
+    if(e.error==='no-speech'||e.error==='aborted') return;
+    addLog('Voice error: '+e.error,'warn');
+    if(e.error==='not-allowed'){ showToast('MIC BLOCKED','Microphone access was denied. Check browser permissions.'); stopVoice(); }
   };
-
-  recognition.onend = function(){
-    if(voiceEnabled){
-      try{ recognition.start(); }catch(e){}
-    }
-  };
-
-  try{ recognition.start(); }
-  catch(e){ addLog('Voice start failed: '+e.message,'warn'); }
+  recognition.onend = function(){ if(voiceEnabled){ try{recognition.start();}catch(e){} } };
+  try{ recognition.start(); }catch(e){ addLog('Voice start failed: '+e.message,'warn'); }
 }
-
 function stopVoice(){
-  voiceEnabled = false; voiceAwake = false;
-  clearTimeout(voiceSilenceTimer);
-  if(recognition){ try{ recognition.stop(); }catch(e){} }
-  updateVoiceUI('off');
-  addLog('Voice disabled');
+  voiceEnabled=false; voiceAwake=false; clearTimeout(voiceSilenceTimer);
+  if(recognition){ try{recognition.stop();}catch(e){} }
+  updateVoiceUI('off'); addLog('Voice disabled');
 }
-
 function updateVoiceUI(state){
-  const pill = document.getElementById('vpill');
-  const dot  = document.getElementById('vdot');
-  const txt  = document.getElementById('vtxt');
-  pill.className = 'chip';
-  if(state === 'off'){
-    dot.style.background = 'var(--dim)';
-    txt.textContent = 'VOICE OFF';
-  } else if(state === 'sleeping'){
-    pill.classList.add('listening');
-    dot.style.background = 'var(--red-b)';
-    txt.textContent = 'LISTENING';
-  } else if(state === 'awake'){
-    pill.classList.add('awake');
-    dot.style.background = 'var(--gold-b)';
-    txt.textContent = 'AWAKE';
-  }
+  const pill=document.getElementById('vpill'), dot=document.getElementById('vdot'), txt=document.getElementById('vtxt');
+  pill.className='iconbtn';
+  if(state==='off'){ dot.style.background='var(--dim)'; txt.textContent='VOICE OFF'; }
+  else if(state==='sleeping'){ pill.classList.add('listening'); dot.style.background='var(--red-b)'; txt.textContent='LISTENING'; }
+  else if(state==='awake'){ pill.classList.add('awake'); dot.style.background='var(--gold-b)'; txt.textContent='AWAKE'; }
 }
 
-// ── LOCK SCREEN ───────────────────────────────────────────────────────────────
-let lockStream = null;
-let lockScanInterval = null;
-let lockCanvas = document.createElement('canvas');
-lockCanvas.width  = 320;
-lockCanvas.height = 240;
+/* ── LOCK SCREEN / FACE / PIN ──────────────────────────────────────────── */
+let lockStream=null, lockScanInterval=null;
+let lockCanvas=document.createElement('canvas'); lockCanvas.width=320; lockCanvas.height=240;
 
 function lockFriday(){
-  document.getElementById('lock-screen').style.display = 'flex';
-  // Check face enrollment status
+  document.getElementById('lock-screen').style.display='flex';
   fetch(API+'/api/face/status').then(r=>r.json()).then(function(d){
-    const hint = document.getElementById('lock-enroll-hint');
+    const hint=document.getElementById('lock-enroll-hint');
     if(!d.enrolled){
-      hint.textContent = 'No face enrolled — use PIN, or enroll via Settings';
-      document.getElementById('lock-face-btn').style.opacity = '0.4';
-      document.getElementById('lock-face-btn').onclick = function(){
-        showToast('NOT ENROLLED','No face enrolled yet. Use PIN or go to Settings to enroll.');
-      };
+      hint.textContent='No face enrolled — use PIN, or enroll from the Security tab';
+      document.getElementById('lock-face-btn').style.opacity='0.4';
+      document.getElementById('lock-face-btn').onclick=function(){ showToast('NOT ENROLLED','No face enrolled yet. Use PIN or enroll from the Security tab.'); };
     } else {
-      hint.textContent = '';
-      document.getElementById('lock-face-btn').style.opacity = '1';
-      document.getElementById('lock-face-btn').onclick = startFaceScan;
-      // Auto-start face scan if enrolled
+      hint.textContent='';
+      document.getElementById('lock-face-btn').style.opacity='1';
+      document.getElementById('lock-face-btn').onclick=startFaceScan;
       startFaceScan();
     }
-  }).catch(function(){
-    showPinView();
-  });
+  }).catch(function(){ showPinView(); });
 }
-
 function unlockFriday(){
   stopFaceScan();
-  document.getElementById('lock-screen').style.display = 'none';
-  document.getElementById('lock-face-view').style.display = 'none';
-  document.getElementById('lock-pin-view').style.display = 'none';
-  document.getElementById('lock-pin-input').value = '';
-  document.getElementById('lock-pin-error').textContent = '';
+  document.getElementById('lock-screen').style.display='none';
+  document.getElementById('lock-face-view').style.display='none';
+  document.getElementById('lock-pin-view').style.display='none';
+  document.getElementById('lock-pin-input').value='';
+  document.getElementById('lock-pin-error').textContent='';
   speakResponse('Welcome back, Boss.');
   addLog('FRIDAY unlocked','ok');
 }
-
 async function startFaceScan(){
-  document.getElementById('lock-face-view').style.display = 'flex';
-  document.getElementById('lock-pin-view').style.display  = 'none';
-  document.getElementById('lock-face-status').textContent = 'SCANNING...';
-  document.getElementById('lock-face-fill').style.width   = '0%';
-
+  document.getElementById('lock-face-view').style.display='flex';
+  document.getElementById('lock-pin-view').style.display='none';
+  document.getElementById('lock-face-status').textContent='SCANNING...';
+  document.getElementById('lock-face-fill').style.width='0%';
   try{
-    lockStream = await navigator.mediaDevices.getUserMedia({video:{width:320,height:240,facingMode:'user'},audio:false});
-    const v = document.getElementById('lock-video');
-    v.srcObject = lockStream;
-    await v.play();
-
-    let attempts = 0;
-    const maxAttempts = 20;
-
-    lockScanInterval = setInterval(async function(){
+    lockStream=await navigator.mediaDevices.getUserMedia({video:{width:320,height:240,facingMode:'user'},audio:false});
+    const v=document.getElementById('lock-video'); v.srcObject=lockStream; await v.play();
+    let attempts=0; const maxAttempts=20;
+    lockScanInterval=setInterval(async function(){
       attempts++;
-      if(attempts > maxAttempts){
-        clearInterval(lockScanInterval);
-        document.getElementById('lock-face-status').textContent = 'SCAN FAILED — Try PIN';
-        stopFaceScan();
-        showPinView();
-        return;
-      }
-
-      // Progress bar
-      document.getElementById('lock-face-fill').style.width = Math.round((attempts/maxAttempts)*100)+'%';
-
-      // Capture frame
-      const ctx = lockCanvas.getContext('2d');
-      ctx.drawImage(v, 0, 0, 320, 240);
-      const frameB64 = lockCanvas.toDataURL('image/jpeg',0.7).split(',')[1];
-
-      const res = await fetch(API+'/api/face/verify',{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({frame:frameB64})
-      });
-      const d = await res.json();
-
+      if(attempts>maxAttempts){ clearInterval(lockScanInterval); document.getElementById('lock-face-status').textContent='SCAN FAILED — Try PIN'; stopFaceScan(); showPinView(); return; }
+      document.getElementById('lock-face-fill').style.width=Math.round((attempts/maxAttempts)*100)+'%';
+      const ctx=lockCanvas.getContext('2d'); ctx.drawImage(v,0,0,320,240);
+      const frameB64=lockCanvas.toDataURL('image/jpeg',0.7).split(',')[1];
+      const res=await fetch(API+'/api/face/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({frame:frameB64})});
+      const d=await res.json();
       if(d.verified){
-        document.getElementById('lock-face-status').textContent = 'IDENTITY CONFIRMED — '+d.confidence+'%';
-        document.getElementById('lock-face-fill').style.background = 'var(--gold-b)';
-        clearInterval(lockScanInterval);
-        setTimeout(unlockFriday, 600);
-      } else if(d.confidence > 0){
-        document.getElementById('lock-face-status').textContent = 'SCANNING... '+d.confidence+'%';
+        document.getElementById('lock-face-status').textContent='IDENTITY CONFIRMED — '+d.confidence+'%';
+        document.getElementById('lock-face-fill').style.background='var(--gold-b)';
+        clearInterval(lockScanInterval); setTimeout(unlockFriday,600);
+      } else if(d.confidence>0){
+        document.getElementById('lock-face-status').textContent='SCANNING... '+d.confidence+'%';
       }
-    }, 800);
-
-  }catch(e){
-    document.getElementById('lock-face-status').textContent = 'CAMERA ERROR — Use PIN';
-    showPinView();
-  }
+    },800);
+  }catch(e){ document.getElementById('lock-face-status').textContent='CAMERA ERROR — Use PIN'; showPinView(); }
 }
-
-function stopFaceScan(){
-  clearInterval(lockScanInterval);
-  if(lockStream){ lockStream.getTracks().forEach(t=>t.stop()); lockStream=null; }
-}
-
+function stopFaceScan(){ clearInterval(lockScanInterval); if(lockStream){lockStream.getTracks().forEach(t=>t.stop());lockStream=null;} }
 function showPinView(){
   stopFaceScan();
-  document.getElementById('lock-face-view').style.display = 'none';
-  document.getElementById('lock-pin-view').style.display  = 'flex';
-  setTimeout(function(){ document.getElementById('lock-pin-input').focus(); },100);
+  document.getElementById('lock-face-view').style.display='none';
+  document.getElementById('lock-pin-view').style.display='flex';
+  setTimeout(function(){document.getElementById('lock-pin-input').focus();},100);
 }
-
 async function submitPin(){
-  const pin = document.getElementById('lock-pin-input').value;
-  if(!pin){ return; }
-  const res  = await fetch(API+'/api/pin/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin})});
-  const d    = await res.json();
-  if(d.verified){
-    unlockFriday();
-  } else {
-    document.getElementById('lock-pin-error').textContent = 'INCORRECT PIN';
-    document.getElementById('lock-pin-input').value = '';
-    document.getElementById('lock-pin-input').focus();
-  }
+  const pin=document.getElementById('lock-pin-input').value;
+  if(!pin)return;
+  const res=await fetch(API+'/api/pin/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin})});
+  const d=await res.json();
+  if(d.verified){ unlockFriday(); }
+  else { document.getElementById('lock-pin-error').textContent='INCORRECT PIN'; document.getElementById('lock-pin-input').value=''; document.getElementById('lock-pin-input').focus(); }
 }
+document.getElementById('lock-pin-input').addEventListener('keydown', function(e){ if(e.key==='Enter') submitPin(); });
 
-document.addEventListener('DOMContentLoaded', function(){
-  const pinInput = document.getElementById('lock-pin-input');
-  if(pinInput){
-    pinInput.addEventListener('keydown', function(e){ if(e.key==='Enter') submitPin(); });
-  }
-});
-
-// ── Face enroll from settings ─────────────────────────────────────────────────
 async function enrollFace(){
   showToast('ENROLLING','Look at your camera. Collecting 25 face samples...');
   addLog('Face enrollment started...');
-  const res = await fetch(API+'/api/face/enroll',{method:'POST'});
-  const d   = await res.json();
-  if(d.success){
-    showToast('ENROLLED',d.message);
-    addLog('Face enrolled successfully','ok');
-    speakResponse('Face enrolled successfully, Boss. I will recognise you next time.');
-  } else {
-    showToast('ENROLL FAILED',d.message);
-    addLog('Face enroll failed: '+d.message,'warn');
-  }
+  const res=await fetch(API+'/api/face/enroll',{method:'POST'});
+  const d=await res.json();
+  if(d.success){ showToast('ENROLLED',d.message); addLog('Face enrolled successfully','ok'); speakResponse('Face enrolled successfully, Boss. I will recognise you next time.'); refreshFaceStatus(); }
+  else { showToast('ENROLL FAILED',d.message); addLog('Face enroll failed: '+d.message,'warn'); }
+}
+async function refreshFaceStatus(){
+  try{
+    const res=await fetch(API+'/api/face/status');
+    const d=await res.json();
+    const el=document.getElementById('face-status-hint');
+    if(!el)return;
+    el.textContent = (d.available ? '' : 'Face recognition unavailable (opencv missing). ') + (d.enrolled ? 'Face enrolled.' : 'No face enrolled yet.') + (d.config && d.config.pin_enabled ? ' PIN is set.' : ' No PIN set.');
+  }catch(e){}
 }
 
-async function setPin(){
-  // Show a simple in-app PIN setup dialog
-  const modal = document.createElement('div');
+function setPin(){
+  const modal=document.createElement('div');
   modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:600;display:flex;align-items:center;justify-content:center;';
   modal.innerHTML=`
-    <div style="background:var(--panel);border:1px solid var(--bdr-hi);padding:24px;width:280px;text-align:center">
-      <div style="font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:3px;color:var(--gold-b);margin-bottom:16px">SET PIN</div>
+    <div style="background:var(--panel);border:1px solid var(--bdr-hi);padding:22px;width:270px;text-align:center">
+      <div style="font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:3px;color:var(--gold-b);margin-bottom:14px">SET PIN</div>
       <input id="pin-new" type="password" maxlength="8" placeholder="Enter new PIN"
-        style="width:100%;background:rgba(0,0,0,.5);border:1px solid var(--bdr-hi);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:18px;text-align:center;padding:10px;outline:none;letter-spacing:6px;margin-bottom:10px"/>
+        style="width:100%;background:rgba(0,0,0,.5);border:1px solid var(--bdr-hi);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:16px;text-align:center;padding:9px;outline:none;letter-spacing:6px;margin-bottom:9px"/>
       <input id="pin-confirm" type="password" maxlength="8" placeholder="Confirm PIN"
-        style="width:100%;background:rgba(0,0,0,.5);border:1px solid var(--bdr-hi);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:18px;text-align:center;padding:10px;outline:none;letter-spacing:6px;margin-bottom:14px"/>
-      <div id="pin-err" style="font-size:9px;color:var(--red-b);margin-bottom:10px;min-height:14px"></div>
-      <div style="display:flex;gap:8px">
-        <button id="pin-save-btn" style="flex:1;padding:9px;border:1px solid rgba(212,160,23,.5);background:rgba(212,160,23,.1);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:2px;cursor:pointer">SAVE</button>
-        <button onclick="this.closest('div[style]').remove()" style="padding:9px 14px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-family:Share Tech Mono,monospace;font-size:10px;cursor:pointer">CANCEL</button>
+        style="width:100%;background:rgba(0,0,0,.5);border:1px solid var(--bdr-hi);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:16px;text-align:center;padding:9px;outline:none;letter-spacing:6px;margin-bottom:12px"/>
+      <div id="pin-err" style="font-size:8.5px;color:var(--red-b);margin-bottom:8px;min-height:13px"></div>
+      <div style="display:flex;gap:7px">
+        <button id="pin-save-btn" style="flex:1;padding:8px;border:1px solid rgba(212,160,23,.5);background:rgba(212,160,23,.1);color:var(--gold-b);font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;cursor:pointer">SAVE</button>
+        <button id="pin-cancel-btn" style="padding:8px 12px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-size:9px;cursor:pointer">CANCEL</button>
       </div>
     </div>`;
   document.body.appendChild(modal);
   document.getElementById('pin-new').focus();
-
-  document.getElementById('pin-save-btn').onclick = async function(){
-    const p1 = document.getElementById('pin-new').value;
-    const p2 = document.getElementById('pin-confirm').value;
-    const err = document.getElementById('pin-err');
-    if(p1.length < 4){ err.textContent='PIN must be at least 4 digits.'; return; }
-    if(p1 !== p2){ err.textContent='PINs do not match.'; return; }
-    const res = await fetch(API+'/api/pin/set',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:p1})});
-    const d = await res.json();
-    if(d.success){
-      modal.remove();
-      showToast('PIN SET','PIN saved successfully, Boss.');
-      speakResponse('PIN set, Boss.');
-    } else {
-      err.textContent = d.message || 'Error saving PIN.';
-    }
+  document.getElementById('pin-cancel-btn').onclick=function(){ modal.remove(); };
+  document.getElementById('pin-save-btn').onclick=async function(){
+    const p1=document.getElementById('pin-new').value, p2=document.getElementById('pin-confirm').value, err=document.getElementById('pin-err');
+    if(p1.length<4){ err.textContent='PIN must be at least 4 digits.'; return; }
+    if(p1!==p2){ err.textContent='PINs do not match.'; return; }
+    const res=await fetch(API+'/api/pin/set',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:p1})});
+    const d=await res.json();
+    if(d.success){ modal.remove(); showToast('PIN SET','PIN saved successfully, Boss.'); speakResponse('PIN set, Boss.'); refreshFaceStatus(); }
+    else { err.textContent = d.message || 'Error saving PIN.'; }
   };
-
-  // Enter key on confirm field saves
-  document.getElementById('pin-confirm').addEventListener('keydown', function(e){
-    if(e.key==='Enter') document.getElementById('pin-save-btn').click();
-  });
+  document.getElementById('pin-confirm').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('pin-save-btn').click(); });
 }
 
-// Metrics
+/* ── METRICS (System tab) ─────────────────────────────────────────────── */
 function cls(v,hi,warn){return v>=hi?'hot':v>=warn?'warm':'';}
 function renderBar(id,pct,hi,warn){hi=hi||85;warn=warn||65;var el=document.getElementById(id);if(!el)return;el.style.width=pct+'%';el.className='mf '+cls(pct,hi,warn);}
 
-async function updateMetrics(){
+async function updateHeaderVitals(){
+  try{
+    const res=await fetch(API+'/api/system'); const d=await res.json(); if(d.error)return;
+    document.getElementById('h-cpu').textContent=d.cpu+'%';
+    document.getElementById('h-mem').textContent=d.memory+'%';
+  }catch(e){}
+}
+
+async function updateSystemTab(){
   try{
     const res=await fetch(API+'/api/system');const d=await res.json();if(d.error)return;
     document.getElementById('h-cpu').textContent=d.cpu+'%';
     document.getElementById('h-mem').textContent=d.memory+'%';
-    document.getElementById('h-disk').textContent=d.disk_percent+'%';
     document.getElementById('s-cpu').textContent=d.cpu+'%';document.getElementById('s-cpu').className='sv '+(d.cpu>=85?'alert':'');
     document.getElementById('s-freq').textContent=d.cpu_freq?d.cpu_freq+'GHz':'—';
     document.getElementById('s-cores').textContent=(d.cpu_cores&&d.cpu_threads)?d.cpu_cores+'C/'+d.cpu_threads+'T':'—';
@@ -1030,8 +935,6 @@ async function updateMetrics(){
     if(d.per_cpu&&d.per_cpu.length){cg.innerHTML='';d.per_cpu.forEach(function(v,i){var c=document.createElement('div');c.className='core-cell'+(v>=85?' hot-core':'');c.innerHTML='<div class="cn">C'+i+'</div><div class="cv">'+v+'%</div>';cg.appendChild(c);});}
     document.getElementById('s-mused').textContent=d.memory_used+'GB';
     document.getElementById('s-mtotal').textContent=d.memory_total+'GB';
-    document.getElementById('s-mavail').textContent=d.memory_available+'GB';
-    document.getElementById('s-swap').textContent=d.swap_total>0?d.swap_used+'GB':'None';
     document.getElementById('mem-pct').textContent=d.memory+'%';renderBar('mem-bar',d.memory,90,75);
     document.getElementById('swap-pct').textContent=d.swap_percent+'%';renderBar('swap-bar',d.swap_percent,80,50);
     document.getElementById('s-dused').textContent=d.disk_used+'GB';
@@ -1043,9 +946,9 @@ async function updateMetrics(){
     if(d.gpu&&d.gpu.length){
       document.getElementById('gpu-panel').style.display='block';
       var gi=document.getElementById('gpu-info');gi.innerHTML='';
-      d.gpu.forEach(function(g){gi.innerHTML+='<div style="font-size:9px;color:var(--text);margin-bottom:5px">'+g.name+'</div><div class="stat-grid" style="margin-bottom:4px"><div class="sg"><div class="sl">LOAD</div><div class="sv '+(g.load>=85?'alert':'')+'">'+g.load+'%</div></div><div class="sg"><div class="sl">TEMP</div><div class="sv '+(g.temp>=85?'alert':'')+'">'+g.temp+'°C</div></div><div class="sg"><div class="sl">V-MEM</div><div class="sv">'+g.mem_used+'MB</div></div><div class="sg"><div class="sl">TOTAL</div><div class="sv">'+g.mem_total+'MB</div></div></div><div class="meter"><div class="mhdr"><span>GPU</span><span>'+g.load+'%</span></div><div class="mbar"><div class="mf '+cls(g.load,85,65)+'" style="width:'+g.load+'%"></div></div></div>';});
+      d.gpu.forEach(function(g){gi.innerHTML+='<div style="font-size:9px;color:var(--text);margin-bottom:5px">'+g.name+'</div><div class="stat-grid"><div class="sg"><div class="sl">LOAD</div><div class="sv '+(g.load>=85?'alert':'')+'">'+g.load+'%</div></div><div class="sg"><div class="sl">TEMP</div><div class="sv '+(g.temp>=85?'alert':'')+'">'+g.temp+'°C</div></div></div>';});
     }
-    if(d.processes&&d.processes.length){var pl=document.getElementById('proc-list');pl.innerHTML='';d.processes.forEach(function(p){var r=document.createElement('div');r.className='proc-row';r.innerHTML='<span class="proc-name">'+p.name+'</span><span class="proc-cpu '+(p.cpu>=20?'hot':'')+'">'+p.cpu+'%</span>';pl.appendChild(r);});}
+    if(d.processes&&d.processes.length){var pl=document.getElementById('proc-list');pl.innerHTML='';d.processes.forEach(function(p){var r=document.createElement('div');r.className='row-item';r.innerHTML='<span class="ri-name">'+p.name+'</span><span class="ri-val '+(p.cpu>=20?'hot':'')+'">'+p.cpu+'%</span>';pl.appendChild(r);});}
     document.getElementById('s-uptime').textContent=d.uptime||'—';
     if(d.cpu>=90)addLog('High CPU: '+d.cpu+'%','warn');
   }catch(e){}
@@ -1060,6 +963,7 @@ async function checkOllama(){
   }catch(e){document.getElementById('sdot').className='sdot';document.getElementById('stxt').textContent='SERVER OFFLINE';}
 }
 
+/* ── SPOTIFY (Media tab) ──────────────────────────────────────────────── */
 async function updateSpotify(){
   try{
     const res=await fetch(API+'/api/spotify/status');const d=await res.json();
@@ -1079,7 +983,7 @@ async function spCtrl(action){
   try{await fetch(API+'/api/spotify/control',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:action})});setTimeout(updateSpotify,600);}catch(e){}
 }
 
-// Webcam
+/* ── WEBCAM STRESS MONITOR (global once enabled, lives in Security tab) ── */
 var camActive=false,camStream=null,lastFrame=null,motionHist=[],stressLvl=0,alertCD=0,camLoop;
 var ALERTS=[
   {t:'STRESS DETECTED',b:'Elevated activity detected, Boss. Consider stepping away.'},
@@ -1093,14 +997,14 @@ async function startCam(){
     camStream=await navigator.mediaDevices.getUserMedia({video:{width:320,height:240,facingMode:'user'},audio:false});
     var v=document.getElementById('cam-video');v.srcObject=camStream;await v.play();
     document.getElementById('cam-off').style.display='none';document.getElementById('cam-live').style.display='block';
-    document.getElementById('cam-btn').textContent='DISABLE';camActive=true;addLog('Visual monitor on','ok');
+    document.getElementById('cam-btn').textContent='DISABLE';document.getElementById('cam-btn').classList.add('on');camActive=true;addLog('Visual monitor on','ok');
     setTimeout(analyzeFrame,600);
   }catch(e){addLog('Camera denied','warn');showToast('CAMERA ERROR','Allow camera permissions.');}
 }
 function stopCam(){
   if(camStream)camStream.getTracks().forEach(function(t){t.stop();});camStream=null;clearTimeout(camLoop);
   document.getElementById('cam-off').style.display='flex';document.getElementById('cam-live').style.display='none';
-  document.getElementById('cam-btn').textContent='ENABLE';camActive=false;lastFrame=null;motionHist=[];addLog('Visual monitor off');
+  document.getElementById('cam-btn').textContent='ENABLE';document.getElementById('cam-btn').classList.remove('on');camActive=false;lastFrame=null;motionHist=[];addLog('Visual monitor off');
 }
 function analyzeFrame(){
   if(!camActive)return;
@@ -1114,10 +1018,10 @@ function analyzeFrame(){
   stressLvl=Math.round(stressLvl*.7+avg*.3);stressLvl=Math.min(100,Math.max(0,stressLvl));
   var sl=stressLvl<25?'CALM':stressLvl<55?'MODERATE':stressLvl<78?'ELEVATED':'HIGH';
   var ml=ms<10?'STILL':ms<30?'LOW':ms<60?'ACTIVE':'HIGH';
-  var sle=document.getElementById('stress-lbl');sle.textContent=sl;sle.className='bv'+(stressLvl>=55?' hi':'');
-  var mle=document.getElementById('motion-lbl');mle.textContent=ml;mle.className='bv'+(ms>=60?' hi':'');
-  document.getElementById('stress-pct').textContent=stressLvl+'%';
-  var sb=document.getElementById('sfill');sb.style.width=stressLvl+'%';sb.className='sfill'+(stressLvl>=78?' hi':stressLvl>=45?' med':'');
+  var sle=document.getElementById('stress-lbl');if(sle){sle.textContent=sl;sle.className='sv'+(stressLvl>=55?' alert':'');}
+  var mle=document.getElementById('motion-lbl');if(mle){mle.textContent=ml;mle.className='sv'+(ms>=60?' alert':'');}
+  var sp=document.getElementById('stress-pct');if(sp)sp.textContent=stressLvl+'%';
+  var sb=document.getElementById('sfill');if(sb){sb.style.width=stressLvl+'%';sb.className='sfill'+(stressLvl>=78?' hi':stressLvl>=45?' med':'');}
   alertCD--;
   if(stressLvl>=72&&alertCD<=0){alertCD=120;var a=ALERTS[Math.floor(Math.random()*ALERTS.length)];showToast(a.t,a.b);speakResponse(a.b);addLog('Biometric alert','warn');}
   camLoop=setTimeout(analyzeFrame,500);
@@ -1126,7 +1030,6 @@ function analyzeFrame(){
 function greet(){
   var h=new Date().getHours();
   var g=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
-  // Fetch daily briefing from server
   fetch(API+'/api/briefing').then(function(r){return r.json();}).then(function(d){
     var msg = d.briefing || (g+", Boss. All systems online. Say \"Friday\" to wake me.");
     addMsg('friday', msg);
@@ -1134,134 +1037,106 @@ function greet(){
     addMsg('friday',g+", Boss. All systems online. Say \"Friday\" to wake me, \"Sleep Friday\" to put me back to sleep.");
   });
 }
+async function loadBriefing(){
+  const el=document.getElementById('home-briefing');
+  el.textContent='Loading...';
+  try{
+    const res=await fetch(API+'/api/briefing');const d=await res.json();
+    el.textContent = d.briefing || 'Briefing unavailable.';
+  }catch(e){ el.textContent='Briefing unavailable.'; }
+}
 
-// Poll for health alerts every 8 seconds
 function pollAlerts(){
   fetch(API+'/api/alerts/poll').then(function(r){return r.json();}).then(function(d){
     if(d.alerts&&d.alerts.length){
-      d.alerts.forEach(function(a){
-        showToast(a.title, a.message);
-        if(a.speak) speakResponse(a.message);
-        addLog('Alert: '+a.title,'warn');
-      });
+      d.alerts.forEach(function(a){ showToast(a.title, a.message); if(a.speak) speakResponse(a.message); addLog('Alert: '+a.title,'warn'); });
     }
   }).catch(function(){});
 }
 
-// Load memory panel
+/* ── FRIDAY MEMORY (Home tab) ─────────────────────────────────────────── */
 async function loadMemory(){
   try{
     const [factsRes, playlistsRes, remindersRes] = await Promise.all([
-      fetch(API+'/api/memory/facts'),
-      fetch(API+'/api/memory/playlists'),
-      fetch(API+'/api/memory/reminders')
+      fetch(API+'/api/memory/facts'), fetch(API+'/api/memory/playlists'), fetch(API+'/api/memory/reminders')
     ]);
-    const facts = await factsRes.json();
-    const playlists = await playlistsRes.json();
-    const reminders = await remindersRes.json();
-
-    var mp = document.getElementById('memory-panel');
-    if(!mp) return;
-    var html = '';
-
+    const facts=await factsRes.json(), playlists=await playlistsRes.json(), reminders=await remindersRes.json();
+    var mp=document.getElementById('memory-panel'); if(!mp) return;
+    var html='';
     if(facts.facts&&facts.facts.length){
-      html += '<div class="plbl" style="margin-top:0">KNOWN FACTS</div>';
-      facts.facts.forEach(function(f){
-        html += '<div class="proc-row"><span class="proc-name" style="color:var(--dim)">'+f.key+'</span><span class="proc-cpu" style="color:var(--gold);font-size:9px">'+f.value+'</span></div>';
-      });
+      html+='<div class="subhdr" style="margin-top:0">KNOWN FACTS</div>';
+      facts.facts.forEach(function(f){ html+='<div class="row-item"><span class="ri-name" style="color:var(--dim)">'+f.key+'</span><span class="ri-val" style="font-size:8.5px">'+f.value+'</span></div>'; });
     }
-
     if(playlists.playlists&&playlists.playlists.length){
-      html += '<div class="plbl" style="margin-top:8px">SAVED PLAYLISTS</div>';
-      playlists.playlists.forEach(function(p){
-        html += '<div class="proc-row"><span class="proc-name">'+p.name+'</span><span class="proc-cpu" style="color:var(--dim);font-size:8px">'+p.query.substring(0,16)+'</span></div>';
-      });
+      html+='<div class="subhdr">SAVED PLAYLISTS</div>';
+      playlists.playlists.forEach(function(p){ html+='<div class="row-item"><span class="ri-name">'+p.name+'</span><span class="ri-val" style="color:var(--dim);font-size:8px">'+p.query.substring(0,16)+'</span></div>'; });
     }
-
     if(reminders.reminders&&reminders.reminders.length){
-      var pending = reminders.reminders.filter(function(r){return !r.fired;});
+      var pending=reminders.reminders.filter(function(r){return !r.fired;});
       if(pending.length){
-        html += '<div class="plbl" style="margin-top:8px">REMINDERS</div>';
-        pending.forEach(function(r){
-          html += '<div class="proc-row"><span class="proc-name">'+r.message.substring(0,18)+'</span><span class="proc-cpu" style="color:var(--dim);font-size:8px">'+r.time+'</span></div>';
-        });
+        html+='<div class="subhdr">REMINDERS</div>';
+        pending.forEach(function(r){ html+='<div class="row-item"><span class="ri-name">'+r.message.substring(0,18)+'</span><span class="ri-val" style="color:var(--dim);font-size:8px">'+r.time+'</span></div>'; });
       }
     }
-
-    if(!html) html = '<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px 0">Nothing remembered yet.<br>Tell me your name or preferences!</div>';
-    mp.innerHTML = html;
+    if(!html) html='<div class="empty-hint">Nothing remembered yet.<br>Tell me your name or preferences!</div>';
+    mp.innerHTML=html;
   }catch(e){}
 }
 
-// News
+/* ── NEWS (Media tab) ─────────────────────────────────────────────────── */
 async function loadNews(cat){
   cat=cat||'all';
+  document.querySelectorAll('.pill-row .mini-btn[data-cat]').forEach(b=>b.classList.toggle('active',b.dataset.cat===cat));
   const nl=document.getElementById('news-list');
-  nl.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:4px">Loading...</div>';
+  nl.innerHTML='<div class="empty-hint">Loading...</div>';
   try{
     const res=await fetch(API+'/api/news?category='+cat);
     const d=await res.json();
     nl.innerHTML='';
     var items=d.items||(cat==='all'?[...(d.fox||[]),...(d.cyber||[]),...(d.espn||[])]:[] );
-    if(!items.length){nl.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center">No headlines.</div>';return;}
-    items.slice(0,8).forEach(function(h){
+    if(!items.length){nl.innerHTML='<div class="empty-hint">No headlines.</div>';return;}
+    items.slice(0,10).forEach(function(h){
       var r=document.createElement('div');
-      r.style.cssText='font-size:9px;color:var(--text);padding:3px 0;border-bottom:1px solid rgba(212,160,23,.05);line-height:1.4;cursor:pointer;';
+      r.className='list-item';
       r.textContent=h.title;
       r.onclick=function(){if(h.link)window.open(h.link,'_blank');};
       nl.appendChild(r);
     });
-  }catch(e){nl.innerHTML='<div style="font-size:9px;color:var(--dim)">News unavailable.</div>';}
+  }catch(e){nl.innerHTML='<div class="empty-hint">News unavailable.</div>';}
 }
 
-// PrizePicks
+/* ── PRIZEPICKS (Sports tab) ──────────────────────────────────────────── */
 let ppActiveLeagues = new Set(['NFL','NBA','MLB','NHL']);
 let ppViewMode = 'parlays';
 
 function pp_toggleLeague(lg){
   const btn=document.getElementById('pp-'+lg.toLowerCase());
-  if(ppActiveLeagues.has(lg)){
-    ppActiveLeagues.delete(lg);
-    btn.classList.remove('active');
-  } else {
-    ppActiveLeagues.add(lg);
-    btn.classList.add('active');
-  }
+  if(ppActiveLeagues.has(lg)){ ppActiveLeagues.delete(lg); btn.classList.remove('active'); }
+  else { ppActiveLeagues.add(lg); btn.classList.add('active'); }
 }
-
 function pp_updateViewButtons(mode){
-  document.getElementById('pp-view-parlays').style.background = mode==='parlays' ? 'rgba(212,160,23,.1)' : 'transparent';
-  document.getElementById('pp-view-raw').style.background = mode==='raw' ? 'rgba(212,160,23,.1)' : 'transparent';
+  document.getElementById('pp-view-parlays').classList.toggle('on', mode==='parlays');
+  document.getElementById('pp-view-raw').classList.toggle('on', mode==='raw');
 }
-
 function pp_setView(mode){
   ppViewMode=mode;
   pp_updateViewButtons(mode);
   if(mode==='raw') loadRawLines();
   else loadParlays();
 }
-
 async function loadParlays(){
   ppViewMode='parlays';
   pp_updateViewButtons('parlays');
   const content=document.getElementById('pp-content');
-  content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px">Fetching live lines and building parlays...</div>';
-
+  content.innerHTML='<div class="empty-hint">Fetching live lines and building parlays...</div>';
   const leagues=Array.from(ppActiveLeagues);
-  if(!leagues.length){
-    content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">Select at least one league.</div>';
-    return;
-  }
+  if(!leagues.length){ content.innerHTML='<div class="empty-hint">Select at least one league.</div>'; return; }
   const legs=parseInt(document.getElementById('pp-legs').value);
-
   try{
     const res=await fetch(API+'/api/prizepicks/parlays',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({leagues,legs,count:3})});
     const d=await res.json();
     content.innerHTML='';
-    if(!d.parlays||!d.parlays.length){
-      content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px">No lines available right now \u2014 games may not be posted yet for today.</div>';
-      return;
-    }
+    if(!d.parlays||!d.parlays.length){ content.innerHTML='<div class="empty-hint">No lines available right now — games may not be posted yet for today.</div>'; return; }
     d.parlays.forEach(function(parlay,idx){
       const card=document.createElement('div');
       card.className='pp-card';
@@ -1271,26 +1146,18 @@ async function loadParlays(){
         legsHtml+='<div class="pp-leg"><span style="color:var(--text)">'+leg.player+' <span style="color:var(--dim)">('+leg.league+')</span></span>'+
           '<span>'+leg.stat_type+' <b class="'+pickClass+'">'+leg.pick+'</b> '+leg.line+'</span></div>';
       });
-      card.innerHTML='<div class="pp-card-hdr"><span style="font-size:10px;color:var(--gold-b);letter-spacing:1px">PARLAY '+(idx+1)+' \u2014 '+parlay.leg_count+' LEGS</span></div>'+legsHtml;
+      card.innerHTML='<div class="pp-card-hdr">PARLAY '+(idx+1)+' — '+parlay.leg_count+' LEGS</div>'+legsHtml;
       content.appendChild(card);
     });
-  }catch(e){
-    content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px">Could not reach PrizePicks. Try again shortly.</div>';
-  }
+  }catch(e){ content.innerHTML='<div class="empty-hint">Could not reach PrizePicks. Try again shortly.</div>'; }
 }
-
 async function loadRawLines(){
   ppViewMode='raw';
   pp_updateViewButtons('raw');
   const content=document.getElementById('pp-content');
-  content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px">Loading live lines...</div>';
-
+  content.innerHTML='<div class="empty-hint">Loading live lines...</div>';
   const leagues=Array.from(ppActiveLeagues);
-  if(!leagues.length){
-    content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">Select at least one league.</div>';
-    return;
-  }
-
+  if(!leagues.length){ content.innerHTML='<div class="empty-hint">Select at least one league.</div>'; return; }
   try{
     content.innerHTML='';
     for(const lg of leagues){
@@ -1299,7 +1166,8 @@ async function loadRawLines(){
       const props=d.projections||[];
       if(!props.length)continue;
       const hdr=document.createElement('div');
-      hdr.style.cssText='font-size:9px;color:var(--gold-b);letter-spacing:2px;margin:6px 0 4px;';
+      hdr.className='subhdr';
+      hdr.style.marginTop='6px';
       hdr.textContent=lg+' ('+props.length+' lines)';
       content.appendChild(hdr);
       props.slice(0,6).forEach(function(p){
@@ -1309,15 +1177,11 @@ async function loadRawLines(){
         content.appendChild(row);
       });
     }
-    if(!content.innerHTML){
-      content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px">No lines posted yet for selected leagues.</div>';
-    }
-  }catch(e){
-    content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px">Could not load lines.</div>';
-  }
+    if(!content.innerHTML){ content.innerHTML='<div class="empty-hint">No lines posted yet for selected leagues.</div>'; }
+  }catch(e){ content.innerHTML='<div class="empty-hint">Could not load lines.</div>'; }
 }
 
-// Network
+/* ── NETWORK (System tab) ─────────────────────────────────────────────── */
 async function updateNetwork(){
   try{
     const res=await fetch(API+'/api/network/status');
@@ -1329,15 +1193,12 @@ async function updateNetwork(){
     document.getElementById('net-devices').textContent=(d.devices||[]).length;
     var dl=document.getElementById('device-list');dl.innerHTML='';
     (d.devices||[]).slice(0,5).forEach(function(dev){
-      var r=document.createElement('div');r.className='proc-row';
-      r.innerHTML='<span class="proc-name" style="font-size:8px">'+dev.ip+'</span>'+
-        '<span style="font-size:8px;color:'+(dev.known?'var(--dim)':'var(--red-b)')+'">'+
-        (dev.known?'trusted':'UNKNOWN')+'</span>';
+      var r=document.createElement('div');r.className='row-item';
+      r.innerHTML='<span class="ri-name" style="font-size:8px">'+dev.ip+'</span><span class="ri-val" style="font-size:8px;color:'+(dev.known?'var(--dim)':'var(--red-b)')+'">'+(dev.known?'trusted':'UNKNOWN')+'</span>';
       dl.appendChild(r);
     });
   }catch(e){}
 }
-
 async function runSpeedTest(){
   document.getElementById('net-speed').textContent='Running speed test...';
   try{
@@ -1347,70 +1208,49 @@ async function runSpeedTest(){
   }catch(e){document.getElementById('net-speed').textContent='Speed test failed.';}
 }
 
-// Notes
-function showAddNote(){
-  var f=document.getElementById('add-note-form');
-  f.style.display=f.style.display==='none'?'block':'none';
-}
-
+/* ── NOTES (Tasks tab) ────────────────────────────────────────────────── */
+function showAddNote(){ var f=document.getElementById('add-note-form'); f.style.display=f.style.display==='none'?'block':'none'; }
 async function submitNote(){
   var title=document.getElementById('note-title').value.trim();
   var body=document.getElementById('note-body').value.trim();
   if(!title){showToast('MISSING INFO','Please enter a title for the note.');return;}
   await fetch(API+'/api/notes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,body})});
   document.getElementById('add-note-form').style.display='none';
-  document.getElementById('note-title').value='';
-  document.getElementById('note-body').value='';
+  document.getElementById('note-title').value='';document.getElementById('note-body').value='';
   addLog('Note saved: '+title,'ok');
   loadNotes();
 }
-
 async function loadNotes(){
   try{
     const res=await fetch(API+'/api/notes');
     const d=await res.json();
     var nl=document.getElementById('notes-list');nl.innerHTML='';
-    if(!d.notes||!d.notes.length){
-      nl.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">No notes yet. Say "Friday, make a note" to start.</div>';
-      return;
-    }
+    if(!d.notes||!d.notes.length){ nl.innerHTML='<div class="empty-hint">No notes yet. Say "Friday, make a note" to start.</div>'; return; }
     d.notes.slice(0,8).forEach(function(n){
-      var r=document.createElement('div');r.className='proc-row';
-      r.style.cssText='flex-direction:column;align-items:flex-start;padding:5px 0;';
+      var r=document.createElement('div');r.className='row-item';r.style.cssText='flex-direction:column;align-items:flex-start;padding:5px 0;';
       r.innerHTML='<div style="display:flex;width:100%;justify-content:space-between">'+
-        '<span class="proc-name" style="color:'+(n.pinned?'var(--gold-b)':'var(--text)')+'">'+
-        (n.pinned?'&#128204; ':'')+n.title+'</span>'+
-        '<button onclick="deleteNoteById('+n.id+')" style="background:transparent;border:none;color:rgba(192,57,43,.5);cursor:pointer;font-size:10px">&#10005;</button>'+
-        '</div>'+
-        '<span style="font-size:8px;color:var(--dim)">'+n.updated+'</span>';
+        '<span class="ri-name" style="color:'+(n.pinned?'var(--gold-b)':'var(--text)')+'">'+(n.pinned?'&#128204; ':'')+n.title+'</span>'+
+        '<button class="row-x" onclick="deleteNoteById('+n.id+')">&#10005;</button></div>'+
+        '<span style="font-size:7.5px;color:var(--dim)">'+n.updated+'</span>';
       nl.appendChild(r);
     });
   }catch(e){}
 }
+async function deleteNoteById(id){ await fetch(API+'/api/notes/'+id,{method:'DELETE'}); loadNotes(); }
 
-async function deleteNoteById(id){
-  await fetch(API+'/api/notes/'+id,{method:'DELETE'});
-  loadNotes();
-}
-
-// Routines
-let rbSteps = [];   // working array of steps for the builder
-let rbEditingId = null;
-let rbViewMode = 'visual';
-
-const STEP_TYPES = [
-  {value:'launch_app',      label:'Launch App',      fields:[{key:'app',level:false,placeholder:'app name (e.g. chrome)'}]},
-  {value:'play_music',      label:'Play Music',      fields:[{key:'query',placeholder:'song / playlist search'}]},
-  {value:'music_control',   label:'Music Control',   fields:[{key:'action',select:['pause','resume','next','prev']}]},
-  {value:'volume',          label:'Set Volume',      fields:[{key:'level',number:true,placeholder:'0-100'}]},
-  {value:'open_url',        label:'Open URL',        fields:[{key:'url',placeholder:'https://...'}]},
-  {value:'clean_desktop',   label:'Clean Desktop',   fields:[]},
-  {value:'speak',           label:'Speak / Announce',fields:[{key:'message',placeholder:'what FRIDAY should say'}]},
-  {value:'delay',           label:'Wait / Delay',    fields:[{key:'seconds',number:true,placeholder:'seconds to wait'}]},
+/* ── ROUTINES (Tasks tab) ─────────────────────────────────────────────── */
+let rbSteps=[], rbEditingId=null, rbViewMode='visual';
+const STEP_TYPES=[
+  {value:'launch_app',label:'Launch App',fields:[{key:'app',placeholder:'app name (e.g. chrome)'}]},
+  {value:'play_music',label:'Play Music',fields:[{key:'query',placeholder:'song / playlist search'}]},
+  {value:'music_control',label:'Music Control',fields:[{key:'action',select:['pause','resume','next','prev']}]},
+  {value:'volume',label:'Set Volume',fields:[{key:'level',number:true,placeholder:'0-100'}]},
+  {value:'open_url',label:'Open URL',fields:[{key:'url',placeholder:'https://...'}]},
+  {value:'clean_desktop',label:'Clean Desktop',fields:[]},
+  {value:'speak',label:'Speak / Announce',fields:[{key:'message',placeholder:'what FRIDAY should say'}]},
+  {value:'delay',label:'Wait / Delay',fields:[{key:'seconds',number:true,placeholder:'seconds to wait'}]},
 ];
-
 function getStepType(t){return STEP_TYPES.find(s=>s.value===t)||STEP_TYPES[0];}
-
 function openRoutineBuilder(routine){
   rbEditingId = routine ? routine.id : null;
   document.getElementById('routine-modal-title').textContent = routine ? 'EDIT ROUTINE' : 'NEW ROUTINE';
@@ -1420,198 +1260,120 @@ function openRoutineBuilder(routine){
   renderSteps();
   document.getElementById('rb-text-json').value = JSON.stringify(rbSteps, null, 2);
   toggleStepView('visual');
-  document.getElementById('routine-modal').style.display='flex';
+  document.getElementById('routine-modal').classList.add('show');
 }
-
-function closeRoutineBuilder(){
-  document.getElementById('routine-modal').style.display='none';
-}
-
+function closeRoutineBuilder(){ document.getElementById('routine-modal').classList.remove('show'); }
 function toggleStepView(mode){
-  rbViewMode = mode;
+  rbViewMode=mode;
   if(mode==='text'){
-    // Sync visual -> text
     document.getElementById('rb-text-json').value = JSON.stringify(rbSteps, null, 2);
     document.getElementById('rb-text-view').style.display='block';
     document.getElementById('rb-visual-view').style.display='none';
-    document.getElementById('view-text-btn').style.background='rgba(212,160,23,.1)';
-    document.getElementById('view-visual-btn').style.background='transparent';
+    document.getElementById('view-text-btn').classList.add('on');
+    document.getElementById('view-visual-btn').classList.remove('on');
   } else {
-    // Sync text -> visual
-    try{
-      const parsed = JSON.parse(document.getElementById('rb-text-json').value);
-      if(Array.isArray(parsed)) rbSteps = parsed;
-    }catch(e){}
+    try{ const parsed=JSON.parse(document.getElementById('rb-text-json').value); if(Array.isArray(parsed)) rbSteps=parsed; }catch(e){}
     renderSteps();
     document.getElementById('rb-text-view').style.display='none';
     document.getElementById('rb-visual-view').style.display='block';
-    document.getElementById('view-visual-btn').style.background='rgba(212,160,23,.1)';
-    document.getElementById('view-text-btn').style.background='transparent';
+    document.getElementById('view-visual-btn').classList.add('on');
+    document.getElementById('view-text-btn').classList.remove('on');
   }
 }
-
-function addStep(){
-  rbSteps.push({type:'launch_app', app:''});
-  renderSteps();
-}
-
-function removeStep(idx){
-  rbSteps.splice(idx,1);
-  renderSteps();
-}
-
-function moveStep(idx,dir){
-  const newIdx=idx+dir;
-  if(newIdx<0||newIdx>=rbSteps.length)return;
-  const tmp=rbSteps[idx];rbSteps[idx]=rbSteps[newIdx];rbSteps[newIdx]=tmp;
-  renderSteps();
-}
-
-function changeStepType(idx,newType){
-  const st=getStepType(newType);
-  const newStep={type:newType};
-  st.fields.forEach(f=>{newStep[f.key]='';});
-  rbSteps[idx]=newStep;
-  renderSteps();
-}
-
-function updateStepField(idx,key,value){
-  rbSteps[idx][key]=value;
-}
-
+function addStep(){ rbSteps.push({type:'launch_app', app:''}); renderSteps(); }
+function removeStep(idx){ rbSteps.splice(idx,1); renderSteps(); }
+function moveStep(idx,dir){ const newIdx=idx+dir; if(newIdx<0||newIdx>=rbSteps.length)return; const tmp=rbSteps[idx];rbSteps[idx]=rbSteps[newIdx];rbSteps[newIdx]=tmp; renderSteps(); }
+function changeStepType(idx,newType){ const st=getStepType(newType); const newStep={type:newType}; st.fields.forEach(f=>{newStep[f.key]='';}); rbSteps[idx]=newStep; renderSteps(); }
+function updateStepField(idx,key,value){ rbSteps[idx][key]=value; }
 function renderSteps(){
   const list=document.getElementById('rb-steps-list');
   list.innerHTML='';
-  if(!rbSteps.length){
-    list.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px">No steps yet. Add one below.</div>';
-    return;
-  }
+  if(!rbSteps.length){ list.innerHTML='<div class="empty-hint">No steps yet. Add one below.</div>'; return; }
   rbSteps.forEach((step,idx)=>{
     const st=getStepType(step.type);
     const card=document.createElement('div');
-    card.style.cssText='border:1px solid var(--bdr);background:rgba(5,2,0,.55);padding:8px;margin-bottom:6px;';
+    card.style.cssText='border:1px solid var(--bdr);background:rgba(0,0,0,.3);padding:8px;margin-bottom:6px;';
     let fieldsHtml='';
     st.fields.forEach(f=>{
       const val=step[f.key]!==undefined?step[f.key]:'';
       if(f.select){
-        let opts='';
-        f.select.forEach(opt=>{opts+='<option value="'+opt+'"'+(val===opt?' selected':'')+'>'+opt+'</option>';});
-        fieldsHtml+='<select data-step-idx="'+idx+'" data-field-key="'+f.key+'" '+
-          'oninput="updateStepField('+idx+',\''+f.key+'\',this.value)" '+
-          'style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold);font-family:Share Tech Mono,monospace;font-size:9px;padding:5px;margin-top:4px;outline:none">'+opts+'</select>';
+        let opts=''; f.select.forEach(opt=>{opts+='<option value="'+opt+'"'+(val===opt?' selected':'')+'>'+opt+'</option>';});
+        fieldsHtml+='<select data-step-idx="'+idx+'" data-field-key="'+f.key+'" class="f-select" style="margin-top:4px;margin-bottom:0" oninput="updateStepField('+idx+',\''+f.key+'\',this.value)">'+opts+'</select>';
       } else {
-        fieldsHtml+='<input data-step-idx="'+idx+'" data-field-key="'+f.key+'" '+
-          'value="'+(val+'').replace(/"/g,'&quot;').replace(/'/g,'&#39;')+'" '+
-          'placeholder="'+f.placeholder+'" type="'+(f.number?'number':'text')+'" '+
-          'oninput="updateStepField('+idx+',\''+f.key+'\',this.value)" '+
-          'style="width:100%;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:9px;padding:5px 7px;margin-top:4px;outline:none"/>';
+        fieldsHtml+='<input data-step-idx="'+idx+'" data-field-key="'+f.key+'" value="'+(val+'').replace(/"/g,'&quot;').replace(/'/g,'&#39;')+'" placeholder="'+f.placeholder+'" type="'+(f.number?'number':'text')+'" class="f-input" style="margin-top:4px;margin-bottom:0" oninput="updateStepField('+idx+',\''+f.key+'\',this.value)"/>';
       }
     });
-    let typeOptions='';
-    STEP_TYPES.forEach(t=>{typeOptions+='<option value="'+t.value+'"'+(t.value===step.type?' selected':'')+'>'+t.label+'</option>';});
+    let typeOptions=''; STEP_TYPES.forEach(t=>{typeOptions+='<option value="'+t.value+'"'+(t.value===step.type?' selected':'')+'>'+t.label+'</option>';});
     card.innerHTML=
       '<div style="display:flex;align-items:center;gap:6px">'+
         '<span style="font-size:9px;color:var(--dim);min-width:14px">#'+(idx+1)+'</span>'+
-        '<select oninput="changeStepType('+idx+',this.value)" style="flex:1;background:rgba(0,0,0,.4);border:1px solid var(--bdr);color:var(--gold-b);font-family:Share Tech Mono,monospace;font-size:9px;padding:5px;outline:none">'+typeOptions+'</select>'+
+        '<select oninput="changeStepType('+idx+',this.value)" class="f-select" style="flex:1;margin:0">'+typeOptions+'</select>'+
         '<button onclick="moveStep('+idx+',-1)" style="background:transparent;border:none;color:var(--dim);cursor:pointer;font-size:11px;padding:0 3px">&#9650;</button>'+
         '<button onclick="moveStep('+idx+',1)" style="background:transparent;border:none;color:var(--dim);cursor:pointer;font-size:11px;padding:0 3px">&#9660;</button>'+
-        '<button onclick="removeStep('+idx+')" style="background:transparent;border:none;color:rgba(192,57,43,.6);cursor:pointer;font-size:12px;padding:0 3px">&#10005;</button>'+
-      '</div>'+
-      fieldsHtml;
+        '<button onclick="removeStep('+idx+')" class="row-x" style="font-size:12px">&#10005;</button>'+
+      '</div>'+fieldsHtml;
     list.appendChild(card);
   });
 }
-
 async function saveRoutineFromBuilder(){
   const name=document.getElementById('rb-name').value.trim();
   const desc=document.getElementById('rb-desc').value.trim();
   if(!name){showToast('MISSING INFO','Please name your routine.');return;}
-
   let steps;
-
   if(rbViewMode==='text'){
-    // Parse from text editor
-    try{
-      steps=JSON.parse(document.getElementById('rb-text-json').value);
-      if(!Array.isArray(steps)){showToast('INVALID JSON','Steps must be a JSON array.');return;}
-    }catch(e){
-      showToast('INVALID JSON','Could not parse steps JSON. Check syntax.');
-      return;
-    }
+    try{ steps=JSON.parse(document.getElementById('rb-text-json').value); if(!Array.isArray(steps)){showToast('INVALID JSON','Steps must be a JSON array.');return;} }
+    catch(e){ showToast('INVALID JSON','Could not parse steps JSON. Check syntax.'); return; }
   } else {
-    // Force-read all input/select values from the visual builder DOM before saving
-    const stepCards = document.getElementById('rb-steps-list').querySelectorAll('div[data-step-idx]');
-    // Re-collect from rbSteps array but force-read from DOM inputs too
-    const allInputs = document.getElementById('rb-steps-list').querySelectorAll('input, select');
+    const allInputs=document.getElementById('rb-steps-list').querySelectorAll('input, select');
     allInputs.forEach(function(el){
-      if(el.dataset.stepIdx !== undefined && el.dataset.fieldKey){
-        const idx = parseInt(el.dataset.stepIdx);
-        if(rbSteps[idx]) rbSteps[idx][el.dataset.fieldKey] = el.type==='number' ? parseFloat(el.value)||0 : el.value;
+      if(el.dataset.stepIdx!==undefined && el.dataset.fieldKey){
+        const idx=parseInt(el.dataset.stepIdx);
+        if(rbSteps[idx]) rbSteps[idx][el.dataset.fieldKey]=el.type==='number'?parseFloat(el.value)||0:el.value;
       }
     });
-    steps = rbSteps.filter(s => s.type); // filter any empty steps
+    steps=rbSteps.filter(s=>s.type);
     if(!steps.length){showToast('NO STEPS','Add at least one step to the routine.');return;}
   }
-
   try{
     let res;
-    if(rbEditingId){
-      res = await fetch(API+'/api/routines/'+rbEditingId,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,description:desc,steps})});
-    } else {
-      res = await fetch(API+'/api/routines',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,description:desc,steps})});
-    }
-    const d = await res.json();
-    if(d.success===false){
-      showToast('SAVE ERROR', d.error||'Could not save routine.');
-      return;
-    }
+    if(rbEditingId) res=await fetch(API+'/api/routines/'+rbEditingId,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,description:desc,steps})});
+    else res=await fetch(API+'/api/routines',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,description:desc,steps})});
+    const d=await res.json();
+    if(d.success===false){ showToast('SAVE ERROR', d.error||'Could not save routine.'); return; }
     addLog((rbEditingId?'Routine updated: ':'Routine created: ')+name,'ok');
     showToast('ROUTINE SAVED', name+' saved successfully.');
     closeRoutineBuilder();
     loadRoutines();
-  }catch(e){
-    showToast('SAVE ERROR','Could not reach server. Is FRIDAY running?');
-  }
+  }catch(e){ showToast('SAVE ERROR','Could not reach server. Is FRIDAY running?'); }
 }
-
 async function loadRoutines(){
   try{
     const res=await fetch(API+'/api/routines');
     const d=await res.json();
     var rl=document.getElementById('routines-list');rl.innerHTML='';
-    if(!d.routines||!d.routines.length){
-      rl.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">No routines yet. Click + NEW to create one.</div>';
-      return;
-    }
+    if(!d.routines||!d.routines.length){ rl.innerHTML='<div class="empty-hint">No routines yet. Click + NEW to create one.</div>'; return; }
     d.routines.forEach(function(r){
-      var el=document.createElement('div');el.className='proc-row';
-      el.style.cssText='flex-direction:column;align-items:stretch;padding:6px 0;border-bottom:1px solid rgba(212,160,23,.08);';
+      var el=document.createElement('div');el.className='row-item';
+      el.style.cssText='flex-direction:column;align-items:stretch;padding:6px 0;';
       el.innerHTML='<div style="display:flex;width:100%;align-items:center;gap:6px">'+
-        '<button onclick="runRoutineById('+r.id+')" style="padding:4px 8px;border:1px solid rgba(212,160,23,.4);background:rgba(212,160,23,.07);color:var(--gold);font-family:Share Tech Mono,monospace;font-size:8px;cursor:pointer;letter-spacing:1px">RUN</button>'+
+        '<button onclick="runRoutineById('+r.id+')" style="padding:4px 8px;border:1px solid rgba(212,160,23,.4);background:rgba(212,160,23,.07);color:var(--gold);font-size:8px;cursor:pointer">RUN</button>'+
         '<div style="flex:1;cursor:pointer" onclick="openRoutineBuilder('+JSON.stringify(r).replace(/"/g,'&quot;')+')">'+
-        '<div style="font-size:10px;color:var(--gold-b)">'+r.name+' <span style="font-size:8px;color:var(--dim)">('+r.steps.length+' steps)</span></div>'+
+        '<div style="font-size:9.5px;color:var(--gold-b)">'+r.name+' <span style="font-size:8px;color:var(--dim)">('+r.steps.length+' steps)</span></div>'+
         '<div style="font-size:8px;color:var(--dim)">'+r.description+'</div></div>'+
-        '<button onclick="openRoutineBuilder('+JSON.stringify(r).replace(/"/g,'&quot;')+')" style="background:transparent;border:none;color:var(--gold);cursor:pointer;font-size:10px">&#9998;</button>'+
-        '<button onclick="deleteRoutineById('+r.id+')" style="background:transparent;border:none;color:rgba(192,57,43,.4);cursor:pointer;font-size:10px">&#10005;</button>'+
-        '</div>';
+        '<button class="row-edit" onclick="openRoutineBuilder('+JSON.stringify(r).replace(/"/g,'&quot;')+')">&#9998;</button>'+
+        '<button class="row-x" onclick="deleteRoutineById('+r.id+')">&#10005;</button></div>';
       rl.appendChild(el);
     });
   }catch(e){}
 }
-
 async function runRoutineById(id){
   const res=await fetch(API+'/api/routines/'+id+'/run',{method:'POST'});
   const d=await res.json();
   if(d.success){addLog('Routine started','ok');showToast('ROUTINE STARTED',d.message);}
 }
+async function deleteRoutineById(id){ await fetch(API+'/api/routines/'+id,{method:'DELETE'}); loadRoutines(); addLog('Routine removed'); }
 
-async function deleteRoutineById(id){
-  await fetch(API+'/api/routines/'+id,{method:'DELETE'});
-  loadRoutines();
-  addLog('Routine removed');
-}
-
-// Screen
+/* ── SCREEN AWARENESS (Security tab) ──────────────────────────────────── */
 async function captureScreen(){
   document.getElementById('screen-result').textContent='Capturing...';
   try{
@@ -1621,7 +1383,6 @@ async function captureScreen(){
     addLog('Screenshot saved','ok');
   }catch(e){document.getElementById('screen-result').textContent='Capture failed.';}
 }
-
 async function analyseScreen(){
   document.getElementById('screen-result').textContent='Analysing screen with vision AI...';
   try{
@@ -1631,7 +1392,6 @@ async function analyseScreen(){
     if(d.description)speakResponse(d.description);
   }catch(e){document.getElementById('screen-result').textContent='Analysis failed. Make sure llava is installed: ollama pull llava';}
 }
-
 async function actClipboard(){
   document.getElementById('screen-result').textContent='Reading clipboard...';
   try{
@@ -1642,6 +1402,7 @@ async function actClipboard(){
   }catch(e){document.getElementById('screen-result').textContent='Clipboard action failed.';}
 }
 
+/* ── EMAIL / CALENDAR (Inbox tab) ─────────────────────────────────────── */
 async function refreshEmail(){
   try{
     const statusRes=await fetch(API+'/api/email/status');
@@ -1651,12 +1412,8 @@ async function refreshEmail(){
       document.getElementById('cal-summary').textContent='—';
       return;
     }
-    const [emailRes,calRes]=await Promise.all([
-      fetch(API+'/api/email/summary'),
-      fetch(API+'/api/calendar/today')
-    ]);
-    const emailData=await emailRes.json();
-    const calData=await calRes.json();
+    const [emailRes,calRes]=await Promise.all([ fetch(API+'/api/email/summary'), fetch(API+'/api/calendar/today') ]);
+    const emailData=await emailRes.json(), calData=await calRes.json();
     document.getElementById('email-summary').innerHTML=(emailData.summary||'Inbox clear.').replace(/\n/g,'<br>');
     document.getElementById('cal-summary').innerHTML=(calData.summary||'No events today.').replace(/\n/g,'<br>');
   }catch(e){
@@ -1665,36 +1422,25 @@ async function refreshEmail(){
   }
 }
 
-// Scheduler
+/* ── SCHEDULER (Tasks tab) ────────────────────────────────────────────── */
 async function loadTasks(){
   try{
     const res=await fetch(API+'/api/scheduler/tasks');
     const d=await res.json();
     const tl=document.getElementById('task-list');
-    if(!d.tasks||!d.tasks.length){
-      tl.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:6px">No tasks scheduled.</div>';
-      return;
-    }
+    if(!d.tasks||!d.tasks.length){ tl.innerHTML='<div class="empty-hint">No tasks scheduled.</div>'; return; }
     tl.innerHTML='';
     d.tasks.forEach(function(t){
-      var r=document.createElement('div');
-      r.className='proc-row';
-      r.style.cssText='flex-direction:column;align-items:flex-start;padding:5px 0;';
+      var r=document.createElement('div');r.className='row-item';r.style.cssText='flex-direction:column;align-items:flex-start;padding:5px 0;';
       r.innerHTML='<div style="display:flex;width:100%;justify-content:space-between;align-items:center">'+
-        '<span class="proc-name" style="color:'+(t.enabled?'var(--gold-b)':'var(--dim)')+'">'+t.name+'</span>'+
-        '<button onclick="deleteTask('+t.id+')" style="background:transparent;border:none;color:rgba(192,57,43,.5);cursor:pointer;font-size:11px;padding:0 4px">&#10005;</button>'+
-        '</div>'+
-        '<span style="font-size:8px;color:var(--dim);letter-spacing:1px">'+t.schedule_human+' &#9679; Next: '+t.next_run+'</span>';
+        '<span class="ri-name" style="color:'+(t.enabled?'var(--gold-b)':'var(--dim)')+'">'+t.name+'</span>'+
+        '<button class="row-x" onclick="deleteTask('+t.id+')" style="font-size:11px">&#10005;</button></div>'+
+        '<span style="font-size:7.5px;color:var(--dim)">'+t.schedule_human+' &#9679; Next: '+t.next_run+'</span>';
       tl.appendChild(r);
     });
   }catch(e){}
 }
-
-function showAddTask(){
-  var f=document.getElementById('add-task-form');
-  f.style.display=f.style.display==='none'?'block':'none';
-}
-
+function showAddTask(){ var f=document.getElementById('add-task-form'); f.style.display=f.style.display==='none'?'block':'none'; }
 async function submitTask(){
   var name=document.getElementById('task-name').value.trim();
   var ttype=document.getElementById('task-type').value;
@@ -1711,20 +1457,13 @@ async function submitTask(){
   else if(ttype==='scan_filesystem')taskData={auto_confirm:true};
   await fetch(API+'/api/scheduler/tasks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,task_type:ttype,task_data:taskData,schedule:schedData.schedule})});
   document.getElementById('add-task-form').style.display='none';
-  document.getElementById('task-name').value='';
-  document.getElementById('task-data').value='';
-  document.getElementById('task-schedule').value='';
+  document.getElementById('task-name').value='';document.getElementById('task-data').value='';document.getElementById('task-schedule').value='';
   addLog('Task scheduled: '+name,'ok');
   showToast('TASK SCHEDULED',name+' — '+schedData.human);
   loadTasks();
 }
+async function deleteTask(id){ await fetch(API+'/api/scheduler/tasks/'+id,{method:'DELETE'}); loadTasks(); addLog('Task removed'); }
 
-async function deleteTask(id){
-  await fetch(API+'/api/scheduler/tasks/'+id,{method:'DELETE'});
-  loadTasks();addLog('Task removed');
-}
-
-// Smart suggestions — check once after 2 min (enough time for habits to be counted)
 async function checkSuggestions(){
   try{
     const res=await fetch(API+'/api/memory/suggestions');
@@ -1737,18 +1476,42 @@ async function checkSuggestions(){
   }catch(e){}
 }
 
-greet();checkOllama();updateMetrics();updateSpotify();loadMemory();
-refreshEmail();loadTasks();loadNews();updateNetwork();loadNotes();loadRoutines();loadParlays();
-setInterval(updateMetrics,4000);
+/* ── TAB LIFECYCLE WIRING ─────────────────────────────────────────────── */
+registerTab('home', {
+  onEnter(){ loadBriefing(); loadMemory(); this._t=setInterval(loadMemory,30000); },
+  onLeave(){ clearInterval(this._t); }
+});
+registerTab('system', {
+  onEnter(){ updateSystemTab(); updateNetwork(); this._t1=setInterval(updateSystemTab,4000); this._t2=setInterval(updateNetwork,30000); },
+  onLeave(){ clearInterval(this._t1); clearInterval(this._t2); }
+});
+registerTab('media', {
+  onEnter(){ updateSpotify(); loadNews('all'); this._t1=setInterval(updateSpotify,3000); this._t2=setInterval(()=>loadNews(document.querySelector('.pill-row .mini-btn.active')?.dataset.cat||'all'),600000); },
+  onLeave(){ clearInterval(this._t1); clearInterval(this._t2); }
+});
+registerTab('tasks', {
+  onEnter(){ loadRoutines(); loadTasks(); loadNotes(); this._t1=setInterval(loadTasks,60000); this._t2=setInterval(loadNotes,60000); },
+  onLeave(){ clearInterval(this._t1); clearInterval(this._t2); }
+});
+registerTab('inbox', {
+  onEnter(){ refreshEmail(); this._t=setInterval(refreshEmail,120000); },
+  onLeave(){ clearInterval(this._t); }
+});
+registerTab('sports', { onEnter(){}, onLeave(){} });
+registerTab('security', { onEnter(){ refreshFaceStatus(); }, onLeave(){} });
+
+/* ── INIT ──────────────────────────────────────────────────────────────
+   Global background systems (run regardless of active tab): clock, ollama
+   status, header CPU/MEM ticker, alert polling, voice recognition once
+   toggled, webcam biometric monitor once toggled. Everything else is
+   scoped to whichever tab is currently open via registerTab() above. */
+greet();
+checkOllama();
+updateHeaderVitals();
+TAB_POLLERS['home'].onEnter();
 setInterval(checkOllama,15000);
-setInterval(updateSpotify,3000);
+setInterval(updateHeaderVitals,6000);
 setInterval(pollAlerts,8000);
-setInterval(loadMemory,30000);
-setInterval(loadTasks,60000);
-setInterval(refreshEmail,120000);
-setInterval(updateNetwork,30000);
-setInterval(loadNews,600000);
-setInterval(loadNotes,60000);
 setTimeout(checkSuggestions,120000);
 window.addEventListener('load',function(){setTimeout(startVoice,1500);});
 </script>
