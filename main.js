@@ -1,5 +1,6 @@
 const { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain, shell } = require('electron')
 const path  = require('path')
+const fs    = require('fs')
 const { spawn } = require('child_process')
 const http  = require('http')
 
@@ -18,11 +19,18 @@ const PORT     = 5000
 const appRoot = app.isPackaged ? process.resourcesPath : __dirname
 
 // ── Launch Python backend ─────────────────────────────────────────────────────
+function pythonCommand() {
+  if (process.platform === 'win32') return 'python'
+  // Arch and modern Debian/Ubuntu mark system Python as externally managed
+  // (PEP 668), so ./install.sh sets up a venv — prefer it when present.
+  const venvPython = path.join(appRoot, '.venv', 'bin', 'python')
+  if (fs.existsSync(venvPython)) return venvPython
+  return 'python3'
+}
+
 function startPythonServer() {
   const serverPath = path.join(appRoot, 'server.py')
-
-  // Try 'python' then 'python3'
-  const cmd = process.platform === 'win32' ? 'python' : 'python3'
+  const cmd = pythonCommand()
   pyServer = spawn(cmd, [serverPath], {
     cwd: appRoot,
     windowsHide: true,

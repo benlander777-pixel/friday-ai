@@ -14,8 +14,13 @@ cleanup() {
 }
 trap cleanup EXIT
 
+PYTHON_BIN="python3"
+if [ -x ".venv/bin/python" ]; then
+    PYTHON_BIN=".venv/bin/python"
+fi
+
 echo "Starting backend server..."
-python3 server.py &
+"$PYTHON_BIN" server.py &
 PY_PID=$!
 
 # Give the server a moment to come up (Electron's main.js also waits/retries

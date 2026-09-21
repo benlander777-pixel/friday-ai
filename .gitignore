@@ -13,6 +13,7 @@ friday_face_model.yml
 
 # Downloaded at install time
 piper/
+.venv/
 
 # Build output
 dist/

@@ -16,8 +16,15 @@ fi
 echo "      OK ($(python3 --version))"
 
 echo "[2/5] Installing Python packages..."
-python3 -m pip install --user -r requirements.txt --quiet
-echo "      OK"
+# Arch (and modern Debian/Ubuntu) mark the system Python as externally
+# managed (PEP 668), so `pip install` refuses to touch it directly. Use a
+# venv instead -- the correct fix, not something to override.
+if [ ! -d ".venv" ]; then
+    python3 -m venv .venv
+fi
+.venv/bin/python -m pip install --upgrade pip --quiet
+.venv/bin/python -m pip install -r requirements.txt --quiet
+echo "      OK (installed into .venv/)"
 
 echo "[3/5] Checking .env configuration..."
 if [ ! -f ".env" ]; then
