@@ -1229,17 +1229,21 @@ function pp_toggleLeague(lg){
   }
 }
 
-function pp_setView(mode){
-  ppViewMode=mode;
+function pp_updateViewButtons(mode){
   document.getElementById('pp-view-parlays').style.background = mode==='parlays' ? 'rgba(212,160,23,.1)' : 'transparent';
   document.getElementById('pp-view-raw').style.background = mode==='raw' ? 'rgba(212,160,23,.1)' : 'transparent';
+}
+
+function pp_setView(mode){
+  ppViewMode=mode;
+  pp_updateViewButtons(mode);
   if(mode==='raw') loadRawLines();
   else loadParlays();
 }
 
 async function loadParlays(){
   ppViewMode='parlays';
-  pp_setView('parlays');
+  pp_updateViewButtons('parlays');
   const content=document.getElementById('pp-content');
   content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px">Fetching live lines and building parlays...</div>';
 
@@ -1276,7 +1280,8 @@ async function loadParlays(){
 }
 
 async function loadRawLines(){
-  pp_setView('raw');
+  ppViewMode='raw';
+  pp_updateViewButtons('raw');
   const content=document.getElementById('pp-content');
   content.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:8px">Loading live lines...</div>';
 
